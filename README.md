@@ -1,6 +1,6 @@
 # EnRoute
 
-# Project 3 - *Tweeter*
+# Group Project*
 
 **EnRoute** is an android app that allows a user find places along his route.
 
