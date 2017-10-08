@@ -8,7 +8,7 @@ Time spent: **4** hours spent in total
 
 ## User Stories
 
-The following functionality is completed:
+The following required functionality is completed:
 
 * [ ]	User can **view search results**
   * [ ] User can enter a to and from destination
@@ -19,11 +19,17 @@ The following functionality is completed:
 * [ ] User can then click on a detailed view from the map or the list view to view more detailed information about the location.
   * [ ] User can call the location from the detailed view
   * [ ] User can open maps to get directions from the detailed view. 
-* [ ] User can save settings.
+* [ ] User can save settings from the tool bar menu item.
   * [ ] User can choose the units of display for how long detour - miles or time.
-  * [ ] User can choose from advanced features.
+  * [ ] User can reset to factory settings. 
 * [ ] User can write a review from the detailed view and post it on Yelp. The review can be text and/or image. 
-   
+
+The following bonus features are completed:
+
+* [ ] User can choose from advanced features.
+  * [ ] User can upgrade to advanced features to get real time data, as he moves along the route. 
+  * [ ] User can choose from advanced features to eliminate showing locations with low rating.
+  
 
 ## Video Walkthrough
 
