@@ -8,9 +8,15 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.codepath.enroute.R;
+import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivitySearchBinding;
 import com.crashlytics.android.Crashlytics;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
 
 public class SearchActivity extends AppCompatActivity {
@@ -30,6 +36,41 @@ public class SearchActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
         setUpViews();
+        YelpClient client = YelpClient.getInstance();
+
+//        client.getSearchResult(new JsonHttpResponseHandler(){
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                super.onSuccess(statusCode, headers, response);
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+//                super.onSuccess(statusCode, headers, response);
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                super.onSuccess(statusCode, headers, responseString);
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                super.onFailure(statusCode, headers, responseString, throwable);
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                super.onFailure(statusCode, headers, throwable, errorResponse);
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+//                super.onFailure(statusCode, headers, throwable, errorResponse);
+//            }
+//        });
+
+
     }
 
     private void setUpViews() {
