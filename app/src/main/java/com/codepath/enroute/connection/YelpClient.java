@@ -44,7 +44,6 @@ public class YelpClient extends AsyncHttpClient {
 
     private static YelpClient instance;
 
-    //private String token="o7z1vHo64KNMCPXUq53wQfR6WRyK5PB5SiD-JZ5sv5mN9XO52jipwBeBTJyZnaNbleMIvDvp33wXJXrroHI2xkQsHUoY3MKl7LD4TM7KnPsAr8h6OIbAE3ITA7rdWXYx";
     private String token=null;
 
     private static String BuildJsonBody (String grant_type, String client_id, String clicent_secret){

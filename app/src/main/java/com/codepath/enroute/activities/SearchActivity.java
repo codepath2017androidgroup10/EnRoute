@@ -48,7 +48,6 @@ public class SearchActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
         setUpViews();
-        YelpClient client = YelpClient.getInstance();
     }
 
     private void setUpViews() {
