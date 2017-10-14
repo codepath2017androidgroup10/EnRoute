@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
@@ -82,6 +81,7 @@ public class PlacesActivity extends AppCompatActivity {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         }
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
@@ -92,9 +92,8 @@ public class PlacesActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+            Log.e(this.getClass().toString(), "Error - Map Fragment was null!!");
         }
-
     }
 
     @Override
@@ -113,12 +112,11 @@ public class PlacesActivity extends AppCompatActivity {
         // Display the connection status
 
         if (mCurrentLocation != null) {
-            Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
+            Log.d(this.getClass().toString(), "GPS location was found!");
             mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 17);
-            map.animateCamera(cameraUpdate);
+            zoomToLocation();
         } else {
-            Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+            Log.e(this.getClass().toString(), "Current location was null, enable GPS on emulator!");
         }
         PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
     }
@@ -133,14 +131,14 @@ public class PlacesActivity extends AppCompatActivity {
         map = googleMap;
         if (map != null) {
             // Map is ready
-            Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+            Log.d(this.getClass().toString(), "Map Fragment was loaded properly!");
             BitmapDescriptor defaultMarker =
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
             Marker toMarker = MapUtil.addMarker(map, testLatLng, "Sunnyvale Caltrain station", "Train station", defaultMarker);
             PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         } else {
-            Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+            Log.e(this.getClass().toString(), "Error - Map was null!!");
         }
     }
 
@@ -203,12 +201,15 @@ public class PlacesActivity extends AppCompatActivity {
         BitmapDescriptor defaultMarker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLocation = location;
-        LatLng fromLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = MapUtil.addMarker(map, fromLatLng, "Current Location", "", defaultMarker);
+        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Marker fromMarker = MapUtil.addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         RequestParams params = new RequestParams();
 
         params.add("origin", location.getLatitude() + "," + location.getLongitude());
         params.add("destination", testLatLng.latitude + "," + testLatLng.longitude);
+
+        zoomToLocation();
+
         GoogleClient googleClient = GoogleClient.getInstance();
 
         googleClient.getDirections(params, new JsonHttpResponseHandler() {
@@ -233,6 +234,7 @@ public class PlacesActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("PlacesActivity", errorResponse.toString());
+                //TODO: handle failure
             }
 
             @Override
@@ -283,5 +285,10 @@ public class PlacesActivity extends AppCompatActivity {
         Log.d(this.getClass().toString(), "Switching to List view");
         Intent intent = new Intent(getApplicationContext(), ListActivity.class);
         startActivity(intent);
+    }
+
+    private void zoomToLocation() {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 15);
+        map.animateCamera(cameraUpdate);
     }
 }
