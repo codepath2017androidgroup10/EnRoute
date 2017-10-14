@@ -1,6 +1,10 @@
 package com.codepath.enroute.util;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,10 +17,15 @@ import java.util.List;
  * Created by vidhya on 10/13/17.
  */
 
-// Source: http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
 
 public class MapUtil {
 
+    // Source: http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
+
+    /*
+    * Method takes an encoded polyline, decodes it and gives back a list of LatLng.
+    *
+    * */
     public static List<LatLng> decodePolyLine(String encodedPolyLine) {
         List<LatLng> poly = new ArrayList<>();
         int index = 0, len = encodedPolyLine.length();
@@ -51,6 +60,7 @@ public class MapUtil {
     }
 
 
+<<<<<<< HEAD
     //The following gets the LatLng from the detailed googleMapResponse.
     //I don't think it is necessary though.
     //We can just use the overview version. ( see below )
@@ -147,4 +157,20 @@ public class MapUtil {
 
         return path;
     }
+=======
+    public static Marker addMarker(GoogleMap map, LatLng point, String title,
+                                   String snippet,
+                                   BitmapDescriptor icon) {
+        // Creates and adds marker to the map
+        MarkerOptions options = new MarkerOptions()
+                .position(point)
+                .title(title)
+                .snippet(snippet)
+                .icon(icon);
+        Marker marker = map.addMarker(options);
+        marker.setDraggable(true);
+        return marker;
+    }
+
+>>>>>>> 6696bc73dcde8544b45f320d7b2f03046deac19d
 }
