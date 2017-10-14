@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,11 +16,16 @@ import com.codepath.enroute.R;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivitySearchBinding;
 import com.codepath.enroute.fragments.SettingFragment;
+import com.codepath.enroute.utils.Polylines;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
@@ -41,8 +47,10 @@ public class SearchActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
         setUpViews();
-        YelpClient client = YelpClient.getInstance();
+        //YelpClient client = YelpClient.getInstance();
 
+
+       // Polylines.googleRouteToPoints(null);
         //The following is an example how to use YelpApi.
 //        client.getSearchResult(new JsonHttpResponseHandler(){
 //            @Override
