@@ -4,7 +4,7 @@
 
 **EnRoute** is an android app that allows a user find places along his route.
 
-Time spent: **4** hours spent in total
+Time spent: **12** hours spent in total
 
 ## User Stories
 
@@ -19,9 +19,9 @@ The following required functionality is completed:
 * [ ] User can then click on a detailed view from the map or the list view to view more detailed information about the location.
   * [ ] User can call the location from the detailed view
   * [ ] User can open maps to get directions from the detailed view. 
-* [ ] User can save settings from the tool bar menu item.
-  * [ ] User can choose the units of display for how long detour - miles or time.
-  * [ ] User can reset to factory settings. 
+* [X] User can save settings from the tool bar menu item.
+  * [X] User can choose the units of display for how long detour - miles or time.
+  * [X] User can reset to factory settings. 
 * [ ] User can write a review from the detailed view and post it on Yelp. The review can be text and/or image. 
 
 The following bonus features are completed:
