@@ -39,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
         YelpClient client = YelpClient.getInstance();
 
 
+        //The following is an example how to use YelpApi.
 //        client.getSearchResult(new JsonHttpResponseHandler(){
 //            @Override
 //            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

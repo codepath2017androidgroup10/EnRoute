@@ -39,12 +39,12 @@
         >
 
             <RadioButton
-                android:id="@+id/radio_miles"
+                android:id="@+id/radio_detour_miles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="miles" />
-        <RadioButton android:id="@+id/radio_time"
+        <RadioButton android:id="@+id/radio_detour_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="time" />
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/llBack"
-        android:text="Advanced features" />
+        android:text="show Advanced features" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +66,7 @@
         android:orientation="vertical"
         android:id="@+id/llAdvanced"
         android:layout_below="@+id/btnAdvanced"
-        android:visibility="visible">
+        android:visibility="invisible">
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,13 +84,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
-            <RadioButton android:id="@+id/radio_yes"
+            <RadioButton android:id="@+id/radio_realtime_yes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="yes" />
 
             <RadioButton
-                android:id="@+id/radio_no"
+                android:id="@+id/radio_realtime_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -118,17 +118,17 @@
                 >
 
                 <RadioButton
-                    android:id="@+id/radio_5"
+                    android:id="@+id/radio_range_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="5 miles" />
 
-                <RadioButton android:id="@+id/radio_10"
+                <RadioButton android:id="@+id/radio_range_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10" />
-                <RadioButton android:id="@+id/radio_15"
+                <RadioButton android:id="@+id/radio_range_15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="15" />
@@ -156,16 +156,16 @@
                 >
 
                 <RadioButton
-                    android:id="@+id/radio_1"
+                    android:id="@+id/radio_min_rating_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="1" />
-                <RadioButton android:id="@+id/radio_2"
+                <RadioButton android:id="@+id/radio_min_rating_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2" />
-                <RadioButton android:id="@+id/radio_3"
+                <RadioButton android:id="@+id/radio_min_rating_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3" />
@@ -190,13 +190,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 >
-                <RadioButton android:id="@+id/radio_5miles"
+                <RadioButton android:id="@+id/radio_max_detour_5miles"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5 miles" />
 
                 <RadioButton
-                    android:id="@+id/radio_10miles"
+                    android:id="@+id/radio_max_detour_10miles"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -225,16 +225,17 @@
                 >
 
                 <RadioButton
-                    android:id="@+id/radio_car"
+                    android:id="@+id/radio_choice_car"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="car" />
-                <RadioButton android:id="@+id/radio_bike"
+                <RadioButton android:id="@+id/radio_choice_bike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="bike" />
-                <RadioButton android:id="@+id/radio_foot"
+                    android:text="bike"
+                    />
+                <RadioButton android:id="@+id/radio_choice_foot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="foot" />
