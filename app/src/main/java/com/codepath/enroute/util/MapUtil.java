@@ -60,7 +60,7 @@ public class MapUtil {
     }
 
 
-<<<<<<< HEAD
+
     //The following gets the LatLng from the detailed googleMapResponse.
     //I don't think it is necessary though.
     //We can just use the overview version. ( see below )
@@ -157,7 +157,7 @@ public class MapUtil {
 
         return path;
     }
-=======
+
     public static Marker addMarker(GoogleMap map, LatLng point, String title,
                                    String snippet,
                                    BitmapDescriptor icon) {
@@ -172,5 +172,5 @@ public class MapUtil {
         return marker;
     }
 
->>>>>>> 6696bc73dcde8544b45f320d7b2f03046deac19d
+
 }
