@@ -15,7 +15,10 @@ import android.widget.Toast;
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
 import com.codepath.enroute.connection.GoogleClient;
+import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.models.Direction;
+import com.codepath.enroute.models.PointEnRoute;
+import com.codepath.enroute.util.MapUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,7 +35,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,7 +65,8 @@ public class PlacesActivity extends AppCompatActivity {
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
+    LatLng mCurrentLatLng;
+    private long UPDATE_INTERVAL = 60000 * 3;  /* 60 secs  * 3 */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static String KEY_LOCATION = "location";
@@ -111,8 +114,8 @@ public class PlacesActivity extends AppCompatActivity {
 
         if (mCurrentLocation != null) {
             Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
-            LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 17);
             map.animateCamera(cameraUpdate);
         } else {
             Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
@@ -133,8 +136,7 @@ public class PlacesActivity extends AppCompatActivity {
             Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
             BitmapDescriptor defaultMarker =
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-            Marker toMarker = map.addMarker(new MarkerOptions().position(testLatLng).title("Sunnyvale Caltrain station").icon(defaultMarker));
-
+            Marker toMarker = MapUtil.addMarker(map, testLatLng, "Sunnyvale Caltrain station", "Train station", defaultMarker);
             PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         } else {
@@ -158,7 +160,7 @@ public class PlacesActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("PlacesActivity", "Error trying to get last gps location");
+                    Log.d(this.getClass().toString(), "Error trying to get last gps location");
                 }
             });
         }
@@ -176,7 +178,7 @@ public class PlacesActivity extends AppCompatActivity {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         //mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+       // mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         LocationSettingsRequest locationSettingsRequest = builder.build();
@@ -202,8 +204,7 @@ public class PlacesActivity extends AppCompatActivity {
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLocation = location;
         LatLng fromLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = map.addMarker(new MarkerOptions().position(fromLatLng).title("Current location").icon(defaultMarker));
-
+        Marker fromMarker = MapUtil.addMarker(map, fromLatLng, "Current Location", "", defaultMarker);
         RequestParams params = new RequestParams();
 
         params.add("origin", location.getLatitude() + "," + location.getLongitude());
@@ -214,10 +215,11 @@ public class PlacesActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                Log.d("PlacesActivity", response.toString());
+                Log.d("PlacesActivity", "Response from Google for directions: " + response.toString());
                 try {
                     directionPoints = Direction.fromJson(response);
                     drawDirections();
+                    getPointsOfInterest();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -251,6 +253,20 @@ public class PlacesActivity extends AppCompatActivity {
 
     }
 
+    private void getPointsOfInterest() {
+        YelpClient yelpClient = YelpClient.getInstance();
+//        RequestParams params = new RequestParams();
+//        params.put("latitude", mCurrentLocation.getLatitude());
+//        params.put("longitude", mCurrentLocation.getLongitude());
+        BitmapDescriptor icon =
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+        List<PointEnRoute> pointsOfInterestList = yelpClient.getPointsOfInterestEnRoute();
+        for(PointEnRoute point : pointsOfInterestList) {
+            MapUtil.addMarker(map, point.getLatLng(), point.getNameOfPlace(), point.getDescription(), icon);
+        }
+
+    }
+
     private void drawDirections() {
         PolylineOptions lineOptions = new PolylineOptions();
         for (LatLng latLng : directionPoints) {
@@ -259,8 +275,12 @@ public class PlacesActivity extends AppCompatActivity {
         map.addPolyline(lineOptions);
     }
 
+    /*
+    * Click listener for tool bar menu item to switch to list view
+    *
+    * */
     public void onClickSwitchView(MenuItem item) {
-        Log.d("DEBUG", "Switching to List view");
+        Log.d(this.getClass().toString(), "Switching to List view");
         Intent intent = new Intent(getApplicationContext(), ListActivity.class);
         startActivity(intent);
     }
