@@ -1,5 +1,6 @@
 package com.codepath.enroute.activities;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -260,7 +261,7 @@ public class PlacesActivity extends AppCompatActivity {
 
     public void onClickSwitchView(MenuItem item) {
         Log.d("DEBUG", "Switching to List view");
-        //Intent intent = new Intent(getApplicationContext(), ListActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+        startActivity(intent);
     }
 }
