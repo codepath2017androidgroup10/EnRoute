@@ -1,8 +1,5 @@
 package com.codepath.enroute.connection;
 
-import android.util.Log;
-
-import com.codepath.oauth.OAuthAsyncHttpClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -106,7 +103,6 @@ public class YelpClient extends AsyncHttpClient {
 //        params.put("radius",1000);
         instance.addHeader("Authorization","Bearer "+token);
         instance.get(apiUrl,params,handler);
-
     }
 
 
