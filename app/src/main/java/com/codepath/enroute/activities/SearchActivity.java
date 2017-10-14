@@ -16,12 +16,7 @@ import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivitySearchBinding;
 import com.codepath.enroute.fragments.SettingFragment;
 import com.crashlytics.android.Crashlytics;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
 
 public class SearchActivity extends AppCompatActivity {
@@ -42,6 +37,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         setUpViews();
         YelpClient client = YelpClient.getInstance();
+
 
 //        client.getSearchResult(new JsonHttpResponseHandler(){
 //            @Override
