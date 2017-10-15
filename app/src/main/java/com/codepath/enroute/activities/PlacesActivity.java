@@ -18,8 +18,7 @@ import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.models.Direction;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
-import com.codepath.enroute.models.PointEnRoute;
-import com.codepath.enroute.util.MapUtil;
+
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -47,11 +46,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
@@ -343,9 +340,9 @@ public class PlacesActivity extends AppCompatActivity {
 //        params.put("longitude", mCurrentLocation.getLongitude());
         BitmapDescriptor icon =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-        List<PointEnRoute> pointsOfInterestList = yelpClient.getPointsOfInterestEnRoute();
-        for (PointEnRoute point : pointsOfInterestList) {
-            MapUtil.addMarker(map, point.getLatLng(), point.getNameOfPlace(), point.getDescription(), icon);
+        List<YelpBusiness> pointsOfInterestList = yelpClient.getPointsOfInterestEnRoute();
+        for (YelpBusiness point : pointsOfInterestList) {
+            MapUtil.addMarker(map, point.getLatLng(), point.getName(), point.getDescription(), icon);
         }
 
     }
@@ -372,4 +369,7 @@ public class PlacesActivity extends AppCompatActivity {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 15);
         map.animateCamera(cameraUpdate);
     }
+
+    //TODO
+    //Find out the right setting to show both source and destination.
 }

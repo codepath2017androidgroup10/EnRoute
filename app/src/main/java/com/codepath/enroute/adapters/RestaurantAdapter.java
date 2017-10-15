@@ -2,7 +2,6 @@ package com.codepath.enroute.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codepath.enroute.R;
-import com.codepath.enroute.models.Restaurant;
+import com.codepath.enroute.models.YelpBusiness;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -26,10 +25,10 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder>{
 
-    private List<Restaurant> mRestaurants;
+    private List<YelpBusiness> mRestaurants;
     private Context mContext;
 
-    public RestaurantAdapter(Context context, List<Restaurant> restaurants) {
+    public RestaurantAdapter(Context context, List<YelpBusiness> restaurants) {
         this.mRestaurants = restaurants;
         mContext = context;
     }
@@ -74,9 +73,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     @Override
     public void onBindViewHolder(RestaurantAdapter.ViewHolder holder, int position) {
-        Restaurant restaurant = mRestaurants.get(position);
-        holder.tvName.setText(restaurant.name);
-        if (restaurant.isClosed) {
+        YelpBusiness restaurant = mRestaurants.get(position);
+        holder.tvName.setText(restaurant.getName());
+        if (!restaurant.isOpenNow()) {
             holder.tvOpen.setText("closed");
             holder.tvOpen.setTextColor(Color.RED);
         }
@@ -84,15 +83,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             holder.tvOpen.setText("open");
             holder.tvOpen.setTextColor(Color.GREEN);
         }
-        holder.tvOpen.setText(restaurant.isClosed? "closed" : "open");
+        holder.tvOpen.setText(restaurant.isOpenNow()? "open" : "closed");
 //        holder.tvDistance.setText(String.valueOf(restaurant.distance) + " mi");
         holder.tvDistance.setText(new DecimalFormat("##.##").format(restaurant.distance) + " mi");
-        holder.tvPrice.setText(restaurant.price);
-        holder.tvReviewCount.setText(String.valueOf(restaurant.reviewCount) + " reviews");
-        holder.tvCategory.setText(restaurant.categories);
-        holder.tvAddress.setText(restaurant.address);
-        holder.ratingBar.setRating((float)restaurant.rating);
-        Picasso.with(mContext).load(restaurant.imageUrl).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(holder.ivProfileImage);
+        holder.tvPrice.setText(restaurant.getPrice_level());
+        holder.tvReviewCount.setText(String.valueOf(restaurant.getReview_count()) + " reviews");
+        holder.tvCategory.setText(restaurant.getCategories());
+        holder.tvAddress.setText(restaurant.getDisplay_address());
+        holder.ratingBar.setRating((float)restaurant.getRating());
+        Picasso.with(mContext).load(restaurant.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(holder.ivProfileImage);
 
     }
 

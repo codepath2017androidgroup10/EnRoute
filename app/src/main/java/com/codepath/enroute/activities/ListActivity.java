@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import com.codepath.enroute.R;
 import com.codepath.enroute.adapters.RestaurantAdapter;
 import com.codepath.enroute.connection.YelpClient;
-import com.codepath.enroute.models.Restaurant;
+import com.codepath.enroute.models.YelpBusiness;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -23,7 +23,7 @@ import cz.msebera.android.httpclient.Header;
 public class ListActivity extends AppCompatActivity {
 
     RecyclerView rvRestaurants;
-    ArrayList<Restaurant> restaurants;
+    ArrayList<YelpBusiness> restaurants;
     RestaurantAdapter restaurantAdapter;
     YelpClient yelpClient;
 
@@ -46,9 +46,9 @@ public class ListActivity extends AppCompatActivity {
         yelpClient.getSearchResult(params, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                ArrayList<Restaurant> list = new ArrayList<>();
+                ArrayList<YelpBusiness> list = new ArrayList<>();
                 try {
-                    list = Restaurant.fromJSONArray(response.getJSONArray("businesses"));
+                    list = YelpBusiness.fromJSONArray(response.getJSONArray("businesses"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

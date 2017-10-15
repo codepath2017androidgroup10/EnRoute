@@ -1,6 +1,7 @@
 package com.codepath.enroute.connection;
 
-import com.codepath.enroute.models.PointEnRoute;
+
+import com.codepath.enroute.models.YelpBusiness;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -111,21 +112,21 @@ public class YelpClient extends AsyncHttpClient {
     * Method to give points of interest en route between origin and destination
     *
     * */
-    public List<PointEnRoute> getPointsOfInterestEnRoute() {
+    public List<YelpBusiness> getPointsOfInterestEnRoute() {
         // TODO: Replace test data with real data.
-        List<PointEnRoute> pointsOfInterestList = getTestData();
+        List<YelpBusiness> pointsOfInterestList = getTestData();
         return pointsOfInterestList;
     }
 
-    public List<PointEnRoute> getTestData() {
-        List<PointEnRoute> pointsOfInterestList = new ArrayList<>();
+    public List<YelpBusiness> getTestData() {
+        List<YelpBusiness> pointsOfInterestList = new ArrayList<>();
         double[] latitudes = {37.4274, 37.4282, 37.4278, 37.4274, 37.3774, 37.3762, 37.3764};
         double[] longitudes = {-121.9079, -121.9065, -121.9115, -121.9132, -122.0314, -122.0301, -122.0316};
         for (int i = 0; i < latitudes.length; i++) {
-            PointEnRoute poi = new PointEnRoute();
+            YelpBusiness poi = new YelpBusiness();
             poi.setLatitude(latitudes[i]);
             poi.setLongitude(longitudes[i]);
-            poi.setNameOfPlace("Point of Interest " + i);
+            poi.setName("Point of Interest " + i);
             poi.setDescription("Desc" + i);
             pointsOfInterestList.add(poi);
         }
