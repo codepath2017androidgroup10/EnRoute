@@ -45,6 +45,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        YelpClient.getInstance();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
         setUpViews();

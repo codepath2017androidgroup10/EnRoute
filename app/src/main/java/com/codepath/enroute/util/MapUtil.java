@@ -171,6 +171,4 @@ public class MapUtil {
         marker.setDraggable(true);
         return marker;
     }
-
-
 }

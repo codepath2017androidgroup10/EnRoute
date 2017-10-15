@@ -47,7 +47,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
@@ -73,9 +77,13 @@ public class PlacesActivity extends AppCompatActivity {
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static String KEY_LOCATION = "location";
+    private final static String KEY_POINTS_OF_INTEREST = "points_of_interest";
 
     private LatLng testLatLng = new LatLng(37.37, -122.03); // TODO: Get location from previous activity through intent
     private List<LatLng> directionPoints;
+
+    //This should contain a list of Points Of Interest;
+    private Map<LatLng,YelpBusiness> mPointsOfInterest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +94,12 @@ public class PlacesActivity extends AppCompatActivity {
             // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        }
+
+        if(savedInstanceState!= null && savedInstanceState.keySet().contains(KEY_POINTS_OF_INTEREST)){
+            mPointsOfInterest = savedInstanceState.getParcelable(KEY_POINTS_OF_INTEREST);
+        }else{
+            mPointsOfInterest = new HashMap<>();
         }
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
@@ -128,6 +142,7 @@ public class PlacesActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_LOCATION, mCurrentLocation);
+        //outState.putParcelable(KEY_POINTS_OF_INTEREST,mPointsOfInterest);
         super.onSaveInstanceState(outState);
     }
 
@@ -180,7 +195,7 @@ public class PlacesActivity extends AppCompatActivity {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         //mLocationRequest.setInterval(UPDATE_INTERVAL);
-       // mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        // mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         LocationSettingsRequest locationSettingsRequest = builder.build();
@@ -227,67 +242,65 @@ public class PlacesActivity extends AppCompatActivity {
                     drawDirections();
 
 
-
                     //TESTME Jim
-                    List<LatLng> googlePoints = MapUtil.getLatLngFromOverView(response,1609);
+                    List<LatLng> googlePoints = MapUtil.getLatLngFromOverView(response, 1609);
                     //The following is an example how to use YelpApi.
                     YelpClient client = YelpClient.getInstance();
-                            RequestParams params = new RequestParams();
-        params.put("term","food");
-        params.put("radius",1000);
-                    for ( int i =0;i<googlePoints.size();i++) {
+                    RequestParams params = new RequestParams();
+                    params.put("term", "food");
+                    params.put("radius", 1000);
+                    for (int i = 0; i < googlePoints.size(); i++) {
 
-                        params.put("latitude",googlePoints.get(i).latitude);
-                        params.put("longitude",googlePoints.get(i).longitude);
-        client.getSearchResult(params,new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
+                        params.put("latitude", googlePoints.get(i).latitude);
+                        params.put("longitude", googlePoints.get(i).longitude);
+                        client.getSearchResult(params, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
 
-                try {
-                    JSONArray yelpBusinesses = response.getJSONArray("businesses");
-                    for ( int i = 0; i<yelpBusinesses.length();i++){
-                        YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
+                                try {
+                                    JSONArray yelpBusinesses = response.getJSONArray("businesses");
+                                    BitmapDescriptor icon =
+                                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+                                    for (int i = 0; i < yelpBusinesses.length(); i++) {
+                                        YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
+                                        mPointsOfInterest.put(new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()),aYelpBusiness);
+                                        MapUtil.addMarker(map, new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()), aYelpBusiness.getName(), "No Description yet", icon);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                                super.onSuccess(statusCode, headers, response);
+                            }
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                                super.onSuccess(statusCode, headers, responseString);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                super.onFailure(statusCode, headers, responseString, throwable);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                            }
+                        });
 
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                super.onSuccess(statusCode, headers, responseString);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
-
-                    }
-
-
-
-
-
-                    getPointsOfInterest();
+                    //getPointsOfInterest();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -331,7 +344,7 @@ public class PlacesActivity extends AppCompatActivity {
         BitmapDescriptor icon =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
         List<PointEnRoute> pointsOfInterestList = yelpClient.getPointsOfInterestEnRoute();
-        for(PointEnRoute point : pointsOfInterestList) {
+        for (PointEnRoute point : pointsOfInterestList) {
             MapUtil.addMarker(map, point.getLatLng(), point.getNameOfPlace(), point.getDescription(), icon);
         }
 

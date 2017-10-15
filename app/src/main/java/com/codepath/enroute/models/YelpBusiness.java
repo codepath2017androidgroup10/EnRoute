@@ -20,6 +20,51 @@ public class YelpBusiness {
     String image_url;
     String url;
     int review_count;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getReview_count() {
+        return review_count;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getPrice_level() {
+        return price_level;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public String getDisplay_address() {
+        return display_address;
+    }
+
     int rating;
     String price_level;
     String phone_number;
