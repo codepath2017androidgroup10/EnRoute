@@ -4,18 +4,18 @@
 
 **EnRoute** is an android app that allows a user find places along his route.
 
-Time spent: **12** hours spent in total
+Time spent: **24** hours spent in total
 
 ## User Stories
 
 The following required functionality is completed:
 
-* [ ]	User can **view search results**
-  * [ ] User can enter a to and from destination
+* [X]	User can **view search results**
+  * [X] User can enter a to and from destination
   * [ ] User can choose options from the category, namely  Gas Station, Restaurant, Coffee Shop (through a floating action    button's options) 
   * [ ] Map view shows the pins of locations and on tap of a pin, shows a dialog of the name of the place, How far from current location, if open now. 
   * [ ] List view shows a list of locations, with each item showing the name of the place, How far from current location, if open now, category, rating for restaurants and coffee shops and more relevant information for gas stations.
-* [ ] User can toggle between a map view and a list view. 
+* [X] User can toggle between a map view and a list view. 
 * [ ] User can then click on a detailed view from the map or the list view to view more detailed information about the location.
   * [ ] User can call the location from the detailed view
   * [ ] User can open maps to get directions from the detailed view. 
@@ -35,7 +35,7 @@ The following bonus features are completed:
 
 Here's a walkthrough of implemented user stories:
 
-<Link>
+[Video Walkthrough](https://i.imgur.com/5FIhX6b.mp4)
 
 ## Notes
 
