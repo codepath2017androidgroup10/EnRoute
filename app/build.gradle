@@ -46,4 +46,6 @@ dependencies {
     compile 'com.codepath.libraries:android-oauth-handler:1.2.5'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.0.7'
+    compile 'jp.wasabeef:picasso-transformations:2.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
