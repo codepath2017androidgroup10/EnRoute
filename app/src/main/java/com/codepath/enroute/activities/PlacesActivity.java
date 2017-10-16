@@ -19,7 +19,6 @@ import com.codepath.enroute.models.Direction;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
 
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -54,7 +53,6 @@ import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
-
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 
@@ -75,9 +73,12 @@ public class PlacesActivity extends AppCompatActivity {
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static String KEY_LOCATION = "location";
     private final static String KEY_POINTS_OF_INTEREST = "points_of_interest";
+    private String origin= "";
+    private String destination = "";
 
     private LatLng testLatLng = new LatLng(37.37, -122.03); // TODO: Get location from previous activity through intent
     private List<LatLng> directionPoints;
+    private LatLng destinationLatLng;
 
     //This should contain a list of Points Of Interest;
     private Map<LatLng,YelpBusiness> mPointsOfInterest;
@@ -86,6 +87,10 @@ public class PlacesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
+
+        Bundle bundle = getIntent().getExtras();
+        destinationLatLng = new LatLng(bundle.getDouble(SearchActivity.KEY_TO_LAT), bundle.getDouble(SearchActivity.KEY_TO_LNG));
+
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
@@ -98,6 +103,7 @@ public class PlacesActivity extends AppCompatActivity {
         }else{
             mPointsOfInterest = new HashMap<>();
         }
+
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
             mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -150,7 +156,7 @@ public class PlacesActivity extends AppCompatActivity {
             Log.d(this.getClass().toString(), "Map Fragment was loaded properly!");
             BitmapDescriptor defaultMarker =
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-            Marker toMarker = MapUtil.addMarker(map, testLatLng, "Sunnyvale Caltrain station", "Train station", defaultMarker);
+            Marker toMarker = MapUtil.addMarker(map, destinationLatLng, "", "", defaultMarker);
             PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         } else {
@@ -222,7 +228,7 @@ public class PlacesActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
 
         params.add("origin", location.getLatitude() + "," + location.getLongitude());
-        params.add("destination", testLatLng.latitude + "," + testLatLng.longitude);
+        params.add("destination", destinationLatLng.latitude + "," + destinationLatLng.longitude);
 
         final GoogleClient googleClient = GoogleClient.getInstance();
 
@@ -296,9 +302,6 @@ public class PlacesActivity extends AppCompatActivity {
                         });
 
                     }
-
-                    //getPointsOfInterest();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -310,14 +313,8 @@ public class PlacesActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("PlacesActivity", errorResponse.toString());
-                //TODO: handle failure
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                super.onSuccess(statusCode, headers, responseString);
             }
 
             @Override
@@ -326,11 +323,15 @@ public class PlacesActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                super.onSuccess(statusCode, headers, responseString);
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
-
     }
 
     private void getPointsOfInterest() {

@@ -5,4 +5,5 @@
     <string name="strSearch">En Route</string>
     <string name="google_maps_api_key">AIzaSyAfa5N3xhcHHr60leENZSv-xP996hQiZf0</string>
     <string name="setting_preference">settingPreference</string>
+    <string name="originDefaultValue">Current Location</string>
 </resources>

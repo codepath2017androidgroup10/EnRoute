@@ -27,6 +27,7 @@ public class GoogleClient extends AsyncHttpClient {
 
 
     private static final String GOOGLE_API_MAPS_DIRECTIONS_URL="https://maps.googleapis.com/maps/api/directions/json"; //outputFormat?parameters
+    private static final String GOOLGE_API_MAPS_GEOCODING_API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
     private static final String API_KEY = "AIzaSyAfa5N3xhcHHr60leENZSv-xP996hQiZf0";
     private OkHttpClient okHttpClient;
 
@@ -68,8 +69,8 @@ public class GoogleClient extends AsyncHttpClient {
         googleClientInstance.get(GOOGLE_API_MAPS_DIRECTIONS_URL, params, handler);
     }
 
-    protected String getApiUrl(String path) {
-        return this.GOOGLE_API_MAPS_DIRECTIONS_URL + "/" + path;
+    public void getLocationCoordinates(RequestParams params, AsyncHttpResponseHandler handler) {
+        googleClientInstance.get(GOOLGE_API_MAPS_GEOCODING_API_URL, params, handler);
     }
 
     public static GoogleClient getInstance() {
