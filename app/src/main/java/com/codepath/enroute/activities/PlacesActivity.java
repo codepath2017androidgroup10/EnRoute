@@ -326,9 +326,14 @@ public class PlacesActivity extends AppCompatActivity {
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
                         for (int i = 0; i < yelpBusinesses.length(); i++) {
                             YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
-                            mPointsOfInterest.put(new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()),aYelpBusiness);
-                            MapUtil.addMarker(map, new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()), aYelpBusiness.getName(), "No Description yet", icon);
-                        }
+
+                            LatLng newLatLng = new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude());
+
+                            //Skip if there is a duplicate.
+                            if (!mPointsOfInterest.containsKey(newLatLng)){
+                                mPointsOfInterest.put(newLatLng,aYelpBusiness);
+                                MapUtil.addMarker(map, newLatLng, aYelpBusiness.getName(), "No Description yet", icon);
+                        }}
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

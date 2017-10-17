@@ -20,6 +20,10 @@ import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivitySearchBinding;
 import com.codepath.enroute.fragments.SettingFragment;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -49,6 +53,7 @@ public class SearchActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
         setUpViews();
+
     }
 
     private void setUpViews() {

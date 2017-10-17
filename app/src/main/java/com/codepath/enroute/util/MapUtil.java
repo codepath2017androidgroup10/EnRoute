@@ -89,7 +89,7 @@ public class MapUtil {
 
 
                 for (int k = 0; k < c.size(); k = k + hops) {
-                    System.out.println("DEBUG:" + c.get(k).latitude + ":" + c.get(k).longitude);
+                    System.out.println("DEBUG2:" + c.get(k).latitude + ":" + c.get(k).longitude);
                 }
             }
         }
@@ -107,12 +107,23 @@ public class MapUtil {
 
         int totalHops = c.size();
         //for every "distinct" meters, pick one point.
-        int hops = totalHops * distance / distanceMeters;
+        float hops = totalHops * distance / distanceMeters;
+
+        if (hops<1){
+            hops =1.0f;
+        }
 
 
-        for (int k = 0; k < c.size(); k = k + hops) {
-            System.out.println("DEBUG:" + c.get(k).latitude + "," + c.get(k).longitude);
+        //Some kind of optimization
+        //The idea is the following,
+        //I will check the start point and then incrementally check along the way.
+        //The factor below (1.3) can be adjusted so that the far away from starting point, the big the gap it is.
+        //So when factor is set to 1.3, we are check 1,1,2,2,3,4,6,8,10,13,17,23,30,39.....
+        //Usually it check less than 10 points.
+        for (int k = 0; k < c.size(); k = k + (int)hops) {
+            System.out.println("DEBUG1:" + c.get(k).latitude + "," + c.get(k).longitude);
             returnResult.add(new LatLng(c.get(k).latitude,c.get(k).longitude));
+            hops *=1.3;
         }
 
         return returnResult;

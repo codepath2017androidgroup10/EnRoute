@@ -167,7 +167,12 @@ public class YelpBusiness {
         aYelpBusiness.rating = jsonObject.getDouble("rating");
         aYelpBusiness.latitude = jsonObject.getJSONObject("coordinates").getDouble("latitude");
         aYelpBusiness.longitude = jsonObject.getJSONObject("coordinates").getDouble("longitude");
-        aYelpBusiness.price_level = jsonObject.getString("price");
+        if (jsonObject.has("price")) {
+            aYelpBusiness.price_level = jsonObject.getString("price");
+        }else
+        {
+            aYelpBusiness.price_level ="NA";
+        }
         aYelpBusiness.display_address = jsonObject.getJSONObject("location").getString("display_address");
         aYelpBusiness.phone_number = jsonObject.getString("phone");
 
