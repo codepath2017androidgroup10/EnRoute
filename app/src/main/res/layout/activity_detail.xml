@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codepath.enroute.activities.DetailActivity">
+
+
+    <ImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:numStars="5"
+        android:rating="3"
+        android:stepSize="0.5" />
+
+    <TextView
+        android:id="@+id/tvReviewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ratingBar"
+        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@+id/ratingBar"
+        android:text="100 reviews" />
+
+    <TextView
+        android:id="@+id/tvDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/ratingBar"
+        android:layout_below="@+id/ratingBar"
+        android:text="1 mile from route" />
+
+    <ImageView
+        android:id="@+id/ivPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDistance"
+        android:layout_alignStart="@+id/ratingBar"
+        app:srcCompat="@drawable/ic_phone_black_24dp" />
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="phone number"
+        android:layout_above="@+id/tvName"
+        android:layout_toEndOf="@+id/ivPhone" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfileImage"
+        android:layout_alignParentStart="true"
+        android:text="name" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tvName"
+        android:layout_below="@+id/tvName"
+        android:text="address" />
+
+    <TextView
+        android:id="@+id/tvOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tvAddress"
+        android:layout_below="@+id/tvAddress"
+        android:text="Open until 11:00" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tvName"
+        app:srcCompat="@drawable/ic_directions_black_24dp" />
+
+    <TextView
+        android:id="@+id/tvReviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvOpen"
+        android:text="Reviews" />
+
+    <TextView
+        android:id="@+id/tvReview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvReviews"
+        android:text="review1" />
+
+    <TextView
+        android:id="@+id/tvReview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvReview1"
+        android:text="review2" />
+
+    <TextView
+        android:id="@+id/tvReview3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvReview2"
+        android:text="review3" />
+
+    <ImageView
+        android:id="@+id/ivWriteReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp"
+        app:srcCompat="@drawable/ic_rate_review_black_24dp" />
+
+
+</RelativeLayout>
