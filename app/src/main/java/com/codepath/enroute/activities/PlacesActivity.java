@@ -13,12 +13,9 @@ import android.view.MenuItem;
 
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
-import com.codepath.enroute.connection.GoogleClient;
 import com.codepath.enroute.connection.YelpClient;
-import com.codepath.enroute.models.Direction;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -35,8 +32,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -79,6 +74,8 @@ public class PlacesActivity extends AppCompatActivity {
     private String origin= "";
     private String destination = "";
 
+    private JSONObject directionsJson;
+
     //private LatLng testLatLng = new LatLng(37.37, -122.03); // TODO: Get location from previous activity through intent
     private List<LatLng> directionPoints;
     //private LatLng destinationLatLng;
@@ -93,12 +90,12 @@ public class PlacesActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        //destinationLatLng = new LatLng(bundle.getDouble(SearchActivity.KEY_TO_LAT), bundle.getDouble(SearchActivity.KEY_TO_LNG));
-        if (intent.hasExtra(SearchActivity.KEY_ORIGIN)) {
-            // Send this as input param to the api instead of the current location from GPS
-            origin = intent.getStringExtra(SearchActivity.KEY_ORIGIN);
+        try {
+            directionsJson = new JSONObject(bundle.getString(SearchActivity.KEY_RESPONSE_JSON));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        destination = intent.getStringExtra(SearchActivity.KEY_DESTINATION);
+        directionPoints = MapUtil.decodePolyLine(bundle.getString(SearchActivity.KEY_DIRECTIONS));
 
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
@@ -163,33 +160,17 @@ public class PlacesActivity extends AppCompatActivity {
         map = googleMap;
         if (map != null) {
             // Map is ready
+            map.setMyLocationEnabled(true);
+            mCurrentLatLng = directionPoints.get(0);
             Log.d(this.getClass().toString(), "Map Fragment was loaded properly!");
-            PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
+            mCurrentLocation = new Location("");
+            mCurrentLocation.setLatitude(mCurrentLatLng.latitude);
+            mCurrentLocation.setLongitude(mCurrentLatLng.longitude);
+            onLocationChanged(mCurrentLocation);
+            //PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         } else {
             Log.e(this.getClass().toString(), "Error - Map was null!!");
-        }
-    }
-
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    void getMyLocation() {
-        if (map != null) {
-            // Disbled inspection for missing permission
-            map.setMyLocationEnabled(true);
-            FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
-            locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        onLocationChanged(location);
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(this.getClass().toString(), "Error trying to get last gps location");
-                }
-            });
         }
     }
 
@@ -232,71 +213,11 @@ public class PlacesActivity extends AppCompatActivity {
         mCurrentLocation = location;
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         Marker fromMarker = MapUtil.addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
-        getDirections(location);
+        zoomToLocation();
+        drawDirections();
+        getYelpBusinesses(directionsJson);
     }
 
-    private void getDirections(Location location) {
-        RequestParams params = new RequestParams();
-
-        if (origin.isEmpty()) {
-            params.add("origin", location.getLatitude() + "," + location.getLongitude());
-        } else {
-            params.add("origin", origin);
-        }
-
-        params.add("destination", destination);
-
-        final GoogleClient googleClient = GoogleClient.getInstance();
-        googleClient.getDirections(params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                Log.d("PlacesActivity", "Response from Google for directions: " + response.toString());
-                try {
-                    directionPoints = Direction.fromJson(response);
-                    if (directionPoints == null) {
-                        // Report error
-                        handleInvalidAddress();
-                    } else {
-                        zoomToLocation();
-                        drawDirections();
-                        getYelpBusinesses(response);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                super.onSuccess(statusCode, headers, responseString);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                //super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. Closing MapActivity");
-                handleInvalidAddress();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
-
-    }
 
     private void getYelpBusinesses(JSONObject response) {
         //TESTME Jim

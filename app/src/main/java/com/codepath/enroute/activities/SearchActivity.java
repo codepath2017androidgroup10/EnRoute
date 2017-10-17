@@ -2,6 +2,7 @@ package com.codepath.enroute.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,21 +15,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
 import com.codepath.enroute.connection.GoogleClient;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivitySearchBinding;
 import com.codepath.enroute.fragments.SettingFragment;
+import com.codepath.enroute.models.Direction;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class SearchActivity extends AppCompatActivity {
 
+    public static final String KEY_DIRECTIONS = "Directions";
+    public static final String KEY_RESPONSE_JSON = "JSON_RESPONSE";
     private ActivitySearchBinding mBinding;
     private String fromLocation = "";
     private String toLocation = "";
@@ -43,7 +57,7 @@ public class SearchActivity extends AppCompatActivity {
     static final String KEY_ORIGIN = "ORIGIN";
     static final String KEY_DESTINATION = "DESTINATION";
     private final GoogleClient googleClient = GoogleClient.getInstance();
-
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +66,8 @@ public class SearchActivity extends AppCompatActivity {
         YelpClient.getInstance();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         setUpViews();
-
     }
 
     private void setUpViews() {
@@ -111,30 +125,95 @@ public class SearchActivity extends AppCompatActivity {
         fromLocation = etFromLocation.getEditableText().toString();
         toLocation = etToLocation.getEditableText().toString();
         Log.d("vvv: To location - " , toLocation);
-        sendToMap();
+
+        SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(this);
+        //validateAddressAndGetDirections(fromLocation, toLocation);
+       // sendToMap();
     }
 
-    private void sendToMap() {
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void getCurrentLocationOfUser() {
+        if(fromLocation.equals("Current Location")) {
+            // Get location from FusedLocationClient.
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                validateAddressAndGetDirections(location);
+                            }
+                        }
+                    });
+        } else {
+            validateAddressAndGetDirections(null);
+        }
+    }
+
+    private void validateAddressAndGetDirections(Location originLocation) {
+        RequestParams params = new RequestParams();
+        if (originLocation == null) {
+            params.add("origin", fromLocation);
+        } else {
+            params.add("origin", originLocation.getLatitude() + "," + originLocation.getLongitude());
+        }
+        params.add("destination", toLocation);
+        final GoogleClient googleClient = GoogleClient.getInstance();
+        googleClient.getDirections(params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                Log.d("PlacesActivity", "Response from Google for directions: " + response.toString());
+                try {
+                    String encodedPolyline = "";
+                    encodedPolyline = Direction.fromJson(response);
+                    if (encodedPolyline == null || encodedPolyline.isEmpty()) {
+                        // Report error
+                        setError();
+                    } else {
+                        sendToMap(encodedPolyline, response);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                super.onSuccess(statusCode, headers, responseString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                //super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. Closing MapActivity");
+                setError();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+    private void sendToMap(String encodedPolyLine, JSONObject jsonResponse) {
 
         Intent intent = new Intent(this, PlacesActivity.class);
-        intent.putExtra(KEY_DESTINATION, toLocation);
-        if (!fromLocation.equals("Current Location")) {
-            intent.putExtra(KEY_DESTINATION, fromLocation);
-        }
-        //intent.putExtra(KEY_TO_LAT, destinationCoordinates[0].latitude);
-        //intent.putExtra(KEY_TO_LNG, destinationCoordinates[0].longitude);
-        startActivityForResult(intent, 100);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("DEBUG", "onActivityResult");
-        if (resultCode == PlacesActivity.RESPONSE_CODE) {
-            // Report Invalid address to user
-            Log.d(this.getClass().toString(), "Invalid address");
-            setError();
-        }
+        intent.putExtra(KEY_DIRECTIONS, encodedPolyLine);
+        intent.putExtra(KEY_RESPONSE_JSON, jsonResponse.toString());
+        startActivity(intent);
     }
 
     private void setError() {
