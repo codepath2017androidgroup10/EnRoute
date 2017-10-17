@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -87,12 +88,10 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.toString().isEmpty()) {
-                    etFromLocation.setError("Please enter a location");
+                    etFromLocation.setError("Please enter location");
                 }
             }
         });
-
-
         etToLocation = (EditText) findViewById(R.id.etTo);
         etToLocation.requestFocus();
         etToLocation.addTextChangedListener(new TextWatcher() {
@@ -113,6 +112,18 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+        etToLocation.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(SearchActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
 
     }
 
@@ -127,8 +138,7 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("vvv: To location - " , toLocation);
 
         SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(this);
-        //validateAddressAndGetDirections(fromLocation, toLocation);
-       // sendToMap();
+
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -151,6 +161,10 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void validateAddressAndGetDirections(Location originLocation) {
+        if (toLocation.equalsIgnoreCase(fromLocation)) {
+            setError("Please enter different addresses");
+            return;
+        }
         RequestParams params = new RequestParams();
         if (originLocation == null) {
             params.add("origin", fromLocation);
@@ -165,13 +179,17 @@ public class SearchActivity extends AppCompatActivity {
 
                 Log.d("PlacesActivity", "Response from Google for directions: " + response.toString());
                 try {
-                    String encodedPolyline = "";
-                    encodedPolyline = Direction.fromJson(response);
-                    if (encodedPolyline == null || encodedPolyline.isEmpty()) {
+                    String result = "";
+                    result = Direction.fromJson(response);
+                    if (result == null || result.isEmpty()) {
                         // Report error
-                        setError();
+                        setError("both");
+                    } else if (result.equals("Invalid From")) {
+                        setError("from");
+                    } else if (result.equals("Invalid To")) {
+                        setError("to");
                     } else {
-                        sendToMap(encodedPolyline, response);
+                        sendToMap(result, response);
                     }
 
                 } catch (JSONException e) {
@@ -181,29 +199,29 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
+                Log.d("PlacesActivity", "Response from Google for directions: JSON Array - " + response.toString());
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                super.onSuccess(statusCode, headers, responseString);
+                Log.d("PlacesActivity", "Response from Google for directions: Str -" + responseString);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. " + throwable.toString());
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 //super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. Closing MapActivity");
-                setError();
+                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. " + errorResponse.toString());
+                setError("both");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. " + throwable.toString());
             }
         });
     }
@@ -216,8 +234,18 @@ public class SearchActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void setError() {
-        etToLocation.setError("Invalid address");
+    private void setError(String error) {
+        if (error.equals("both")) {
+            etToLocation.setError("Invalid address");
+            etFromLocation.setError("Invalid address");
+        } else if (error.equals("from")) {
+            etFromLocation.setError("Invalid address");
+        } else if (error.equals("to")) {
+            etToLocation.setError("Invalid address");
+        } else {
+            etToLocation.setError(error);
+        }
+
     }
 
     @Override

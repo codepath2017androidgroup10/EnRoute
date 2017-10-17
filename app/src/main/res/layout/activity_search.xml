@@ -19,7 +19,9 @@
                 android:selectAllOnFocus="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:inputType="text"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -32,7 +34,9 @@
                 android:id="@+id/etTo"
                 android:hint="@string/strHintTo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="text"/>
         </android.support.design.widget.TextInputLayout>
 
 
