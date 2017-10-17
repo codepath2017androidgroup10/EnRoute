@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.R.attr.rating;
@@ -178,7 +179,7 @@ public class YelpBusiness {
 
         aYelpBusiness.openNow = !jsonObject.getBoolean("is_closed");
         //Mark, why we divide this by 3.3?
-        aYelpBusiness.distance = jsonObject.getDouble("distance") / 3.3 / 1600;
+        aYelpBusiness.distance = jsonObject.getDouble("distance") / 1609;
         JSONArray jsonArray = jsonObject.getJSONArray("categories");
         aYelpBusiness.categories = "";
         for (int i = 0; i < jsonArray.length(); i++) {
