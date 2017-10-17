@@ -85,7 +85,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         }
         holder.tvOpen.setText(restaurant.isOpenNow()? "open" : "closed");
 //        holder.tvDistance.setText(String.valueOf(restaurant.distance) + " mi");
-        holder.tvDistance.setText(new DecimalFormat("##.##").format(restaurant.distance) + " mi");
+        holder.tvDistance.setText(new DecimalFormat("##.#").format(restaurant.distance) + " mi");
         holder.tvPrice.setText(restaurant.getPrice_level());
         holder.tvReviewCount.setText(String.valueOf(restaurant.getReview_count()) + " reviews");
         holder.tvCategory.setText(restaurant.getCategories());

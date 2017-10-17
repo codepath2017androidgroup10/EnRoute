@@ -216,19 +216,22 @@ public class SettingFragment extends DialogFragment{
                 dismiss();
             }
         });
-        btnAdvanced.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (btnAdvanced.getText().toString().equals("show advanced features")) {
-                    llAdvanced.setVisibility(View.VISIBLE);
-                    btnAdvanced.setText("hide advanced features");
-                } else {
-                    llAdvanced.setVisibility(View.INVISIBLE);
-                    btnAdvanced.setText("show advanced features");
-                }
 
-            }
-        });
+        btnAdvanced.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (btnAdvanced.getText().toString().equals("show advanced features")){
+                        llAdvanced.setVisibility(View.VISIBLE);
+                        btnAdvanced.setText("hide advanced features");}
+                    else {
+                        llAdvanced.setVisibility(View.INVISIBLE);
+                        btnAdvanced.setText("show advanced features");
+                    }
+
+
+                }
+            });
+
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
