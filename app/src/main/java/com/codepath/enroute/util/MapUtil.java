@@ -126,6 +126,9 @@ public class MapUtil {
             hops *=1.3;
         }
 
+        //Add the destination as it is also relevant.
+        returnResult.add(new LatLng(c.get(c.size()-1).latitude,c.get(c.size()-1).longitude));
+
         return returnResult;
     }
 
