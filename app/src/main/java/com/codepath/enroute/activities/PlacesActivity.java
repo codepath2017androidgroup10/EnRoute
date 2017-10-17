@@ -18,7 +18,6 @@ import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.models.Direction;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -63,22 +62,26 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 @RuntimePermissions
 public class PlacesActivity extends AppCompatActivity {
 
-    private SupportMapFragment mapFragment;
-    private GoogleMap map;
-    private LocationRequest mLocationRequest;
-    Location mCurrentLocation;
-    LatLng mCurrentLatLng;
+    public static final String KEY_ADDRESS_INVALID = "KEY_ADDRESS_INVALID";
+    public static final int RESPONSE_CODE = 400 ;
     private long UPDATE_INTERVAL = 60000 * 3;  /* 60 secs  * 3 */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static String KEY_LOCATION = "location";
     private final static String KEY_POINTS_OF_INTEREST = "points_of_interest";
+
+    private SupportMapFragment mapFragment;
+    private GoogleMap map;
+    private LocationRequest mLocationRequest;
+    Location mCurrentLocation;
+    LatLng mCurrentLatLng;
+
     private String origin= "";
     private String destination = "";
 
-    private LatLng testLatLng = new LatLng(37.37, -122.03); // TODO: Get location from previous activity through intent
+    //private LatLng testLatLng = new LatLng(37.37, -122.03); // TODO: Get location from previous activity through intent
     private List<LatLng> directionPoints;
-    private LatLng destinationLatLng;
+    //private LatLng destinationLatLng;
 
     //This should contain a list of Points Of Interest;
     private Map<LatLng,YelpBusiness> mPointsOfInterest;
@@ -88,8 +91,14 @@ public class PlacesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
 
-        Bundle bundle = getIntent().getExtras();
-        destinationLatLng = new LatLng(bundle.getDouble(SearchActivity.KEY_TO_LAT), bundle.getDouble(SearchActivity.KEY_TO_LNG));
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        //destinationLatLng = new LatLng(bundle.getDouble(SearchActivity.KEY_TO_LAT), bundle.getDouble(SearchActivity.KEY_TO_LNG));
+        if (intent.hasExtra(SearchActivity.KEY_ORIGIN)) {
+            // Send this as input param to the api instead of the current location from GPS
+            origin = intent.getStringExtra(SearchActivity.KEY_ORIGIN);
+        }
+        destination = intent.getStringExtra(SearchActivity.KEY_DESTINATION);
 
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
@@ -103,6 +112,7 @@ public class PlacesActivity extends AppCompatActivity {
         }else{
             mPointsOfInterest = new HashMap<>();
         }
+        // Get location here and get directions:
 
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
@@ -154,9 +164,6 @@ public class PlacesActivity extends AppCompatActivity {
         if (map != null) {
             // Map is ready
             Log.d(this.getClass().toString(), "Map Fragment was loaded properly!");
-            BitmapDescriptor defaultMarker =
-                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-            Marker toMarker = MapUtil.addMarker(map, destinationLatLng, "", "", defaultMarker);
             PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         } else {
@@ -225,16 +232,21 @@ public class PlacesActivity extends AppCompatActivity {
         mCurrentLocation = location;
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         Marker fromMarker = MapUtil.addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
+        getDirections(location);
+    }
+
+    private void getDirections(Location location) {
         RequestParams params = new RequestParams();
 
-        params.add("origin", location.getLatitude() + "," + location.getLongitude());
-        params.add("destination", destinationLatLng.latitude + "," + destinationLatLng.longitude);
+        if (origin.isEmpty()) {
+            params.add("origin", location.getLatitude() + "," + location.getLongitude());
+        } else {
+            params.add("origin", origin);
+        }
+
+        params.add("destination", destination);
 
         final GoogleClient googleClient = GoogleClient.getInstance();
-
-
-        zoomToLocation();
-
         googleClient.getDirections(params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -242,66 +254,15 @@ public class PlacesActivity extends AppCompatActivity {
                 Log.d("PlacesActivity", "Response from Google for directions: " + response.toString());
                 try {
                     directionPoints = Direction.fromJson(response);
-                    drawDirections();
-
-
-                    //TESTME Jim
-                    List<LatLng> googlePoints = MapUtil.getLatLngFromOverView(response, 1609);
-                    //The following is an example how to use YelpApi.
-                    YelpClient client = YelpClient.getInstance();
-                    RequestParams params = new RequestParams();
-                    params.put("term", "food");
-                    params.put("radius", 1000);
-                    for (int i = 0; i < googlePoints.size(); i++) {
-
-                        params.put("latitude", googlePoints.get(i).latitude);
-                        params.put("longitude", googlePoints.get(i).longitude);
-                        client.getSearchResult(params, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-
-                                try {
-                                    JSONArray yelpBusinesses = response.getJSONArray("businesses");
-                                    BitmapDescriptor icon =
-                                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-                                    for (int i = 0; i < yelpBusinesses.length(); i++) {
-                                        YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
-                                        mPointsOfInterest.put(new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()),aYelpBusiness);
-                                        MapUtil.addMarker(map, new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()), aYelpBusiness.getName(), "No Description yet", icon);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                                super.onSuccess(statusCode, headers, response);
-                            }
-
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                                super.onSuccess(statusCode, headers, responseString);
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                                super.onFailure(statusCode, headers, responseString, throwable);
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                super.onFailure(statusCode, headers, throwable, errorResponse);
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                                super.onFailure(statusCode, headers, throwable, errorResponse);
-                            }
-                        });
-
+                    if (directionPoints == null) {
+                        // Report error
+                        handleInvalidAddress();
+                    } else {
+                        zoomToLocation();
+                        drawDirections();
+                        getYelpBusinesses(response);
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -324,7 +285,9 @@ public class PlacesActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
+                //super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. Closing MapActivity");
+                handleInvalidAddress();
             }
 
             @Override
@@ -332,6 +295,80 @@ public class PlacesActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
+
+    }
+
+    private void getYelpBusinesses(JSONObject response) {
+        //TESTME Jim
+        List<LatLng> googlePoints = null;
+        try {
+            googlePoints = MapUtil.getLatLngFromOverView(response, 1609);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //The following is an example how to use YelpApi.
+        YelpClient client = YelpClient.getInstance();
+        RequestParams params = new RequestParams();
+        params.put("term", "food");
+        params.put("radius", 1000);
+        for (int i = 0; i < googlePoints.size(); i++) {
+
+            params.put("latitude", googlePoints.get(i).latitude);
+            params.put("longitude", googlePoints.get(i).longitude);
+            client.getSearchResult(params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+
+                    try {
+                        JSONArray yelpBusinesses = response.getJSONArray("businesses");
+                        BitmapDescriptor icon =
+                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+                        for (int i = 0; i < yelpBusinesses.length(); i++) {
+                            YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
+                            mPointsOfInterest.put(new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()),aYelpBusiness);
+                            MapUtil.addMarker(map, new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude()), aYelpBusiness.getName(), "No Description yet", icon);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    super.onSuccess(statusCode, headers, responseString);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.e(this.getClass().toString(), "Error fetching Yelp businesses: " + errorResponse.toString());
+                    //super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+            });
+
+        }
+    }
+
+    private void handleInvalidAddress() {
+        Intent in = new Intent();
+        in.putExtra(KEY_ADDRESS_INVALID, true);
+        setResult(RESPONSE_CODE, in);
+        finish();
     }
 
     private void getPointsOfInterest() {
@@ -349,11 +386,18 @@ public class PlacesActivity extends AppCompatActivity {
     }
 
     private void drawDirections() {
+        Log.d("DEBUG", "Drawing directions");
         PolylineOptions lineOptions = new PolylineOptions();
         for (LatLng latLng : directionPoints) {
             lineOptions.add(latLng);
         }
         map.addPolyline(lineOptions);
+
+        // Add marker for destination
+        BitmapDescriptor defaultMarker =
+                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+        Marker toMarker = MapUtil.addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
+
     }
 
     /*

@@ -28,10 +28,12 @@ public class Direction {
     * Gives a list of LatLng values decoded from the Overview Polyline representing the route
     * */
     public static List<LatLng> fromJson(JSONObject jsonObject) throws JSONException {
-        JSONObject routesJSON = jsonObject.getJSONArray("routes").getJSONObject(0);
-        JSONObject overViewJson = routesJSON.getJSONObject("overview_polyline");
-        return MapUtil.decodePolyLine(overViewJson.getString("points"));
+        JSONObject routesJSON = jsonObject.getJSONArray("routes").optJSONObject(0);
+        if (routesJSON == null) {
+            return null;
+        } else {
+            JSONObject overViewJson = routesJSON.getJSONObject("overview_polyline");
+            return MapUtil.decodePolyLine(overViewJson.getString("points"));
+        }
     }
-
-
 }
