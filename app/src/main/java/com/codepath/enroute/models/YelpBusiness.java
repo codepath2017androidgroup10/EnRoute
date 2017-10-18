@@ -1,6 +1,5 @@
 package com.codepath.enroute.models;
 
-import com.codepath.enroute.util.MapUtil;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -8,10 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static android.R.attr.rating;
 
 /**
  * Created by qunli on 10/14/17.
@@ -35,6 +30,10 @@ public class YelpBusiness {
     String categories;
 
     //Mark: Do we really need distance here?
+    public YelpBusiness() {
+
+    }
+
     public double distance;
 
     public String getDescription() {

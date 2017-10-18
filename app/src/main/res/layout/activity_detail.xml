@@ -43,37 +43,37 @@
         android:layout_below="@+id/ratingBar"
         android:text="1 mile from route" />
 
-    <ImageView
-        android:id="@+id/ivPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDistance"
-        android:layout_alignStart="@+id/ratingBar"
-        app:srcCompat="@drawable/ic_phone_black_24dp" />
 
     <TextView
         android:id="@+id/tvPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="phone number"
-        android:layout_above="@+id/tvName"
-        android:layout_toEndOf="@+id/ivPhone" />
+        android:text="+15187279746"
+        android:autoLink="phone"
+        android:layout_below="@+id/tvDistance"
+        android:layout_alignLeft="@+id/tvDistance"
+        android:drawableLeft="@drawable/ic_phone_black_24dp" />
 
     <TextView
         android:id="@+id/tvName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivProfileImage"
         android:layout_alignParentStart="true"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:text="name" />
 
     <TextView
         android:id="@+id/tvAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/tvName"
+        android:autoLink="map"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_alignStart="@+id/tvName"
         android:layout_below="@+id/tvName"
-        android:text="address" />
+        android:text="1 Hacker Way, Menlo Park, CA 94025" />
 
     <TextView
         android:id="@+id/tvCategory"
@@ -83,14 +83,16 @@
         android:layout_below="@+id/tvAddress"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="TextView" />
+        android:text="seafood" />
 
     <TextView
         android:id="@+id/tvOpen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/tvAddress"
+        android:layout_alignStart="@+id/tvAddress"
         android:layout_below="@+id/tvCategory"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="Open until 11:00" />
 
     <ImageView

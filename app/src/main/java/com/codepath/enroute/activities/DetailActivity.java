@@ -35,7 +35,6 @@ public class DetailActivity extends AppCompatActivity {
     RatingBar ratingBar;
     TextView tvReviewCount;
     TextView tvDistance;
-    ImageView ivPhone;
     TextView tvPhone;
     TextView tvName;
     TextView tvAddress;
@@ -56,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         setContentView(R.layout.activity_detail);
-        yelpClient = YelpClient.getInstance();
+
         setupView();
         getData();
         updateView();
@@ -67,7 +66,6 @@ public class DetailActivity extends AppCompatActivity {
         ratingBar = mBinding.ratingBar;
         tvReviewCount = mBinding.tvReviewCount;
         tvDistance = mBinding.tvDistance;
-        ivPhone = mBinding.ivPhone;
         tvPhone = mBinding.tvPhone;
         tvName = mBinding.tvName;
         tvAddress = mBinding.tvAddress;
@@ -81,6 +79,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void getData() {
+        yelpClient = YelpClient.getInstance();
         RequestParams params = new RequestParams();
         params.put("term","restaurants");
         params.put("location","880 West Maude Avenue, Sunnyvale, CA");
@@ -100,18 +99,24 @@ public class DetailActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
         });
+//        yelpBusiness = list.get(0);
         reviews = new String[3];
         for (int i = 0; i < 3; i++) {
             reviews[i] = "";
         }
-        yelpClient.getReviews(yelpBusiness.getId(), new JsonHttpResponseHandler(){
+        yelpClient.getReviews("gary-danko-san-francisco", new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    JSONArray jsonArray = (response.getJSONArray("reviews"));
+                    JSONArray jsonArray = response.getJSONArray("reviews");
                     for (int i = 0; i < 3 && i < jsonArray.length(); i++) {
                         reviews[i] = "\"" + jsonArray.getJSONObject(i).getString("text") + "\"";
+ //                       reviews[i] = "what is going on?";
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -122,6 +127,12 @@ public class DetailActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
         });
     }
     public void updateView() {
@@ -134,7 +145,7 @@ public class DetailActivity extends AppCompatActivity {
             tvOpen.setText("open");
             tvOpen.setTextColor(Color.GREEN);
         }
-        tvDistance.setText(new DecimalFormat("##.#").format(yelpBusiness.distance) + " mi");
+        tvDistance.setText(new DecimalFormat("##.#").format(yelpBusiness.getDistance()) + " mi");
         tvReviewCount.setText(String.valueOf(yelpBusiness.getReview_count()) + " reviews");
         tvCategory.setText(yelpBusiness.getCategories());
         tvAddress.setText(yelpBusiness.getDisplay_address());
