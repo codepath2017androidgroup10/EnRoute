@@ -108,6 +108,30 @@ public class YelpClient extends AsyncHttpClient {
         instance.get(apiUrl,params,handler);
     }
 
+
+    public void getBusiness(String id, AsyncHttpResponseHandler handler){
+        String apiUrl = getApiUrl("businesses/") + id;
+//        RequestParams params = new RequestParams();
+//        params.put("term","food");
+//        params.put("location","880 West Maude Avenue, Sunnyvale, CA");
+//        params.put("radius",1000);
+        instance.addHeader("Authorization","Bearer "+token);
+        instance.get(apiUrl,handler);
+    }
+
+    public void getReviews(String id, AsyncHttpResponseHandler handler){
+        String apiUrl = getApiUrl("businesses/") + id + "/reviews";
+//        RequestParams params = new RequestParams();
+//        params.put("term","food");
+//        params.put("location","880 West Maude Avenue, Sunnyvale, CA");
+//        params.put("radius",1000);
+        instance.addHeader("Authorization","Bearer "+token);
+        instance.get(apiUrl,handler);
+    }
+
+
+
+
     /*
     * Method to give points of interest en route between origin and destination
     *

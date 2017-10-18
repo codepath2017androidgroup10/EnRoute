@@ -7,4 +7,13 @@
         android:title="My profile"
         app:showAsAction="ifRoom"
         android:onClick="onClickSwitchView"/>
+
+    <item android:id="@+id/action_search"
+        android:orderInCategory="6"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        />
+
 </menu>

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.codepath.enroute.activities.DetailActivity">
-
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -78,15 +76,25 @@
         android:text="address" />
 
     <TextView
+        android:id="@+id/tvCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvName"
+        android:layout_below="@+id/tvAddress"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="TextView" />
+
+    <TextView
         android:id="@+id/tvOpen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/tvAddress"
-        android:layout_below="@+id/tvAddress"
+        android:layout_below="@+id/tvCategory"
         android:text="Open until 11:00" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/ivDirection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -136,3 +144,4 @@
 
 
 </RelativeLayout>
+</layout>
