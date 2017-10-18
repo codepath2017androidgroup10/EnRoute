@@ -47,6 +47,7 @@ import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static android.media.CamcorderProfile.get;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 
@@ -319,11 +320,37 @@ public class PlacesActivity extends AppCompatActivity {
         }
         map.addPolyline(lineOptions);
 
+
+
         // Add marker for destination
         BitmapDescriptor defaultMarker =
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         Marker toMarker = MapUtil.addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
 
+
+
+
+
+    }
+
+    //The return value is distance in Miles.
+    private static double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        //dist = dist * 1.609344;
+
+        return (dist);
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
     }
 
     /*
@@ -337,7 +364,56 @@ public class PlacesActivity extends AppCompatActivity {
     }
 
     private void zoomToLocation() {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 15);
+
+        double distance = distance(directionPoints.get(0).latitude,
+                directionPoints.get(0).longitude,
+                directionPoints.get(directionPoints.size()-1).latitude,
+                directionPoints.get(directionPoints.size()-1).longitude);
+
+        int zoomLevel = 15;
+
+        //ZoomLevel
+        //1 world
+        //5 continent
+        //10 city
+        //15 street
+        //20 buildings
+
+        //1000,500,200,100,50,20,10,5,2,
+
+
+        if (distance<0.2){
+            zoomLevel = 15;
+        }else if (distance<0.5){
+            zoomLevel = 14;
+        }else if (distance<1){
+            zoomLevel = 13;
+        }else if (distance<2){
+            zoomLevel = 12;
+        }else if (distance<5){
+            zoomLevel = 11;
+        }else if (distance<10){
+            zoomLevel = 10;
+        }else if (distance<20){
+            zoomLevel = 9;
+        }else if (distance<50){
+            zoomLevel = 8;
+        }else if (distance<100){
+            zoomLevel = 7;
+        }else if (distance<200){
+            zoomLevel = 6;
+        }else if (distance< 500) {
+            zoomLevel = 5;
+        }else if (distance< 1000){
+            zoomLevel =  4;
+        }else if (distance< 2000){
+            zoomLevel = 3;
+        }else if (distance<5000){
+            zoomLevel = 2;  
+        }else if (distance<10000){
+            zoomLevel =1;
+        }
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, zoomLevel);
         map.animateCamera(cameraUpdate);
     }
 
