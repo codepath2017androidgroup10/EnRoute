@@ -1,24 +1,31 @@
 package com.codepath.enroute.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.adapters.RestaurantAdapter;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.models.YelpBusiness;
+import com.codepath.enroute.util.ItemClickSupport;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+
+import static android.view.View.Y;
+import static java.security.AccessController.getContext;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -36,6 +43,15 @@ public class ListActivity extends AppCompatActivity {
         restaurantAdapter = new RestaurantAdapter(this, restaurants);
         rvRestaurants.setAdapter(restaurantAdapter);
         rvRestaurants.setLayoutManager(new LinearLayoutManager(this));
+        ItemClickSupport.addTo(rvRestaurants).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                YelpBusiness yelpBusiness = restaurants.get(position);
+                Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+                i.putExtra("YELP_BUSINESS", Parcels.wrap(yelpBusiness));
+                startActivity(i);
+            }
+        });
         fetchData();
     }
     public void fetchData() {

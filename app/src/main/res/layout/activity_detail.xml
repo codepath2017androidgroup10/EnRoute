@@ -48,7 +48,7 @@
         android:id="@+id/tvPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+15187279746"
+        android:text="+11234567890"
         android:autoLink="phone"
         android:layout_below="@+id/tvDistance"
         android:layout_alignLeft="@+id/tvDistance"
