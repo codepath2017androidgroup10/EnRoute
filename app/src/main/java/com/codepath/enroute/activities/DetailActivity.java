@@ -19,12 +19,18 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
+import static com.codepath.enroute.R.id.tvReview1;
+import static com.codepath.enroute.R.id.tvReview2;
+import static com.codepath.enroute.R.id.tvReview3;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -41,9 +47,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvCategory;
     TextView tvOpen;
     ImageView ivDirection;
-    TextView tvReview1;
-    TextView tvReview2;
-    TextView tvReview3;
+    TextView tvReview[];
     ImageView ivWriteReview;
     ArrayList<YelpBusiness> list;
     YelpBusiness yelpBusiness;
@@ -54,8 +58,10 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
-        setContentView(R.layout.activity_detail);
-
+        yelpClient = YelpClient.getInstance();
+        tvReview = new TextView[3];
+        //setContentView(R.layout.activity_detail);
+        yelpBusiness = (YelpBusiness) Parcels.unwrap(getIntent().getParcelableExtra("YELP_BUSINESS"));
         setupView();
         getData();
         updateView();
@@ -71,45 +77,20 @@ public class DetailActivity extends AppCompatActivity {
         tvAddress = mBinding.tvAddress;
         tvOpen = mBinding.tvOpen;
         ivDirection = mBinding.ivDirection;
-        tvReview1 = mBinding.tvReview1;
-        tvReview2 = mBinding.tvReview2;
-        tvReview3 = mBinding.tvReview3;
+        tvReview[0] = mBinding.tvReview1;
+        tvReview[1] = mBinding.tvReview2;
+        tvReview[2] = mBinding.tvReview3;
         ivWriteReview = mBinding.ivWriteReview;
         tvCategory = mBinding.tvCategory;
     }
 
     public void getData() {
-        yelpClient = YelpClient.getInstance();
-        RequestParams params = new RequestParams();
-        params.put("term","restaurants");
-        params.put("location","880 West Maude Avenue, Sunnyvale, CA");
-        list = new ArrayList<>();
-        yelpBusiness = new YelpBusiness();
-        yelpClient.getSearchResult(params, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    list = YelpBusiness.fromJSONArray(response.getJSONArray("businesses"));
-                    yelpBusiness = list.get(0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
-//        yelpBusiness = list.get(0);
+
         reviews = new String[3];
         for (int i = 0; i < 3; i++) {
             reviews[i] = "";
         }
-        yelpClient.getReviews("gary-danko-san-francisco", new JsonHttpResponseHandler(){
+        yelpClient.getReviews(yelpBusiness.getId(), new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -117,6 +98,7 @@ public class DetailActivity extends AppCompatActivity {
                     for (int i = 0; i < 3 && i < jsonArray.length(); i++) {
                         reviews[i] = "\"" + jsonArray.getJSONObject(i).getString("text") + "\"";
  //                       reviews[i] = "what is going on?";
+                        tvReview[i].setText(reviews[i]);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -151,9 +133,7 @@ public class DetailActivity extends AppCompatActivity {
         tvAddress.setText(yelpBusiness.getDisplay_address());
         ratingBar.setRating((float)yelpBusiness.getRating());
         tvPhone.setText(yelpBusiness.getPhone_number());
-        tvReview1.setText(reviews[0]);
-        tvReview2.setText(reviews[1]);
-        tvReview3.setText(reviews[2]);
+    
         Picasso.with(this).load(yelpBusiness.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(ivProfileImage);
     }
 }

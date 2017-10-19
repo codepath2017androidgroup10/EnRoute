@@ -40,6 +40,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 import static android.media.CamcorderProfile.get;
+import static com.codepath.enroute.util.MapUtil.addMarker;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 
@@ -58,7 +60,7 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 *
 * */
 @RuntimePermissions
-public class PlacesActivity extends AppCompatActivity {
+public class PlacesActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener {
 
     public static final String KEY_ADDRESS_INVALID = "KEY_ADDRESS_INVALID";
     public static final int RESPONSE_CODE = 400 ;
@@ -189,6 +191,8 @@ public class PlacesActivity extends AppCompatActivity {
             onLocationChanged(mCurrentLocation);
             //PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+
+            map.setOnMarkerClickListener(this);
         } else {
             Log.e(this.getClass().toString(), "Error - Map was null!!");
         }
@@ -232,7 +236,7 @@ public class PlacesActivity extends AppCompatActivity {
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLocation = location;
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = MapUtil.addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
+        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         zoomToLocation();
         drawDirections();
         getYelpBusinesses(directionsJson);
@@ -273,7 +277,8 @@ public class PlacesActivity extends AppCompatActivity {
                             //Skip if there is a duplicate.
                             if (!mPointsOfInterest.containsKey(newLatLng)){
                                 mPointsOfInterest.put(newLatLng,aYelpBusiness);
-                                MapUtil.addMarker(map, newLatLng, aYelpBusiness.getName(), "No Description yet", icon);
+                                Marker markerAdded = MapUtil.addMarker(map, newLatLng, aYelpBusiness.getName(), "No Description yet", icon);
+                                markerAdded.setTag(aYelpBusiness);
                         }}
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -326,7 +331,8 @@ public class PlacesActivity extends AppCompatActivity {
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
         List<YelpBusiness> pointsOfInterestList = yelpClient.getPointsOfInterestEnRoute();
         for (YelpBusiness point : pointsOfInterestList) {
-            MapUtil.addMarker(map, point.getLatLng(), point.getName(), point.getDescription(), icon);
+            Marker markerAdded = addMarker(map, point.getLatLng(), point.getName(), point.getDescription(), icon);
+            markerAdded.setTag(point);
         }
 
     }
@@ -344,7 +350,7 @@ public class PlacesActivity extends AppCompatActivity {
         // Add marker for destination
         BitmapDescriptor defaultMarker =
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-        Marker toMarker = MapUtil.addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
+        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
 
 
 
@@ -436,6 +442,21 @@ public class PlacesActivity extends AppCompatActivity {
         map.animateCamera(cameraUpdate);
     }
 
-    //TODO
-    //Find out the right setting to show both source and destination.
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        YelpBusiness aYelpBusiness = (YelpBusiness) marker.getTag();
+        if (aYelpBusiness == null) {
+            return false;
+        }else{
+            //invoke detail ;
+
+
+            Intent detailActivity = new Intent(this, DetailActivity.class);
+            detailActivity.putExtra("YELP_BUSINESS",Parcels.wrap(aYelpBusiness));
+            startActivity(detailActivity);
+            return true;
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  * Created by qunli on 10/14/17.
  */
 
+@Parcel
 public class YelpBusiness {
     double latitude;
     double longitude;
@@ -173,7 +175,11 @@ public class YelpBusiness {
         {
             aYelpBusiness.price_level ="NA";
         }
-        aYelpBusiness.display_address = jsonObject.getJSONObject("location").getString("display_address");
+        aYelpBusiness.display_address = "";
+        JSONArray addressArray = jsonObject.getJSONObject("location").getJSONArray("display_address");
+        for (int i=0;i<addressArray.length();i++){
+            aYelpBusiness.display_address+=addressArray.getString(i)+" ";
+        }
         aYelpBusiness.phone_number = jsonObject.getString("phone");
 
         aYelpBusiness.openNow = !jsonObject.getBoolean("is_closed");
