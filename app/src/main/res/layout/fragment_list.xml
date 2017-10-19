@@ -1,13 +1,17 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.codepath.enroute.fragments.ListFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvRestaurants"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
+</RelativeLayout>
+

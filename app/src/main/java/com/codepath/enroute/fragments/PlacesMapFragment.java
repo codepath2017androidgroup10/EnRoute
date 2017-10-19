@@ -1,5 +1,7 @@
 package com.codepath.enroute.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
+import com.codepath.enroute.activities.DetailActivity;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
 import com.google.android.gms.location.LocationCallback;
@@ -35,7 +38,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +54,7 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
  */
 @RuntimePermissions
-public class PlacesMapFragment extends PointsOfInterestFragment {
+public class PlacesMapFragment extends PointsOfInterestFragment implements GoogleMap.OnMarkerClickListener{
 
     private SupportMapFragment mapFragment;
     private GoogleMap map;
@@ -59,8 +64,14 @@ public class PlacesMapFragment extends PointsOfInterestFragment {
     private JSONObject directionsJson;
     private List<LatLng> directionPoints;
     private MapView mapView;
+    OnSearchDoneListener listener;
+
     public PlacesMapFragment() {
         // Required empty public constructor
+    }
+
+    public interface OnSearchDoneListener {
+       public void notifyActivity(ArrayList<YelpBusiness> list);
     }
 
     public static PlacesMapFragment newInstance(String directionsJson, String encodedPolyLine) {
@@ -75,8 +86,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String encodedStr = getArguments().getString("directionsJson");
-        Log.d("vvv: onCreate" , encodedStr);
     }
 
     @Override
@@ -96,17 +105,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment {
     }
 
     private View setUpViews(View v, Bundle savedInstanceState) {
-//        mapFragment = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map));
-//        if (mapFragment != null) {
-//            mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                @Override
-//                public void onMapReady(GoogleMap map) {
-//                    loadMap(map);
-//                }
-//            });
-//        } else {
-//            Log.e(this.getClass().toString(), "Error - Map Fragment was null!!");
-//        }
         mapView = (MapView) v.findViewById(R.id.mapview);
         if (mapView != null) {
             mapView.onCreate(savedInstanceState);
@@ -210,15 +208,26 @@ public class PlacesMapFragment extends PointsOfInterestFragment {
         zoomToLocation();
         drawDirections();
         getYelpBusinesses(directionsJson);
+    }
+
+    @Override
+    public void postYelpSearch() {
         BitmapDescriptor marker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
         markBusinesses(marker);
+       listener.notifyActivity(yelpBusinessList);
     }
 
     private void markBusinesses(BitmapDescriptor marker) {
         for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
             MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), "No Description yet", marker);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnSearchDoneListener) context;
     }
 
     private void drawDirections() {
@@ -312,4 +321,20 @@ public class PlacesMapFragment extends PointsOfInterestFragment {
     }
 
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        YelpBusiness aYelpBusiness = (YelpBusiness) marker.getTag();
+        if (aYelpBusiness == null) {
+            return false;
+        }else{
+            //invoke detail ;
+
+
+            Intent detailActivity = new Intent(getContext(), DetailActivity.class);
+            detailActivity.putExtra("YELP_BUSINESS", Parcels.wrap(aYelpBusiness));
+            startActivity(detailActivity);
+            return true;
+        }
+    }
 }

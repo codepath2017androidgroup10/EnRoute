@@ -108,7 +108,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.toString().isEmpty()) {
-                    etToLocation.setError("Please enter a location");
+                    etToLocation.setError("Please enter yelpBusinessArrayList location");
                 }
             }
         });
@@ -135,8 +135,6 @@ public class SearchActivity extends AppCompatActivity {
     public void onButtonSearch(View view) {
         fromLocation = etFromLocation.getEditableText().toString();
         toLocation = etToLocation.getEditableText().toString();
-        Log.d("vvv: To location - " , toLocation);
-
         SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(this);
 
     }
@@ -261,7 +259,7 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify yelpBusinessArrayList parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

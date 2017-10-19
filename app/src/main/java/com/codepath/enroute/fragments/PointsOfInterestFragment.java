@@ -27,9 +27,9 @@ import cz.msebera.android.httpclient.Header;
  * Created by vidhya on 10/17/17.
  */
 
-public class PointsOfInterestFragment extends Fragment {
+public abstract class PointsOfInterestFragment extends Fragment {
     protected ArrayList<YelpBusiness> yelpBusinessList;
-    protected YelpClient yelpClient;
+    private YelpClient client;
     protected Map<LatLng,YelpBusiness> mPointsOfInterest;
 
     public PointsOfInterestFragment() {
@@ -39,6 +39,7 @@ public class PointsOfInterestFragment extends Fragment {
 
 
     protected void getYelpBusinesses(JSONObject response) {
+        Log.d("vvv:", "Calling Yelp");
         //TESTME Jim
         List<LatLng> googlePoints = null;
         try {
@@ -47,7 +48,7 @@ public class PointsOfInterestFragment extends Fragment {
             e.printStackTrace();
         }
         //The following is an example how to use YelpApi.
-        YelpClient client = YelpClient.getInstance();
+        client = YelpClient.getInstance();
         RequestParams params = new RequestParams();
         params.put("term", "food");
         params.put("radius", 1000);
@@ -68,25 +69,31 @@ public class PointsOfInterestFragment extends Fragment {
                             YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
 
                             LatLng newLatLng = new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude());
-
-                            //Skip if there is a duplicate.
+                                //Skip if there is a duplicate.
                             if (!mPointsOfInterest.containsKey(newLatLng)){
                                 mPointsOfInterest.put(newLatLng,aYelpBusiness);
                                 // Add data to arraylist
+                                yelpBusinessList.add(aYelpBusiness);
                             }}
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    postYelpSearch();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    try {
+                        Log.d(this.getClass().toString(), "Yelp businesses: " + response.getJSONObject(0).toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-                }
-
-                @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    super.onSuccess(statusCode, headers, responseString);
+                    Log.d(this.getClass().toString(), "Yelp businesses: " + responseString);
                 }
 
                 @Override
@@ -109,5 +116,6 @@ public class PointsOfInterestFragment extends Fragment {
         }
     }
 
+    public abstract void postYelpSearch();
 
 }

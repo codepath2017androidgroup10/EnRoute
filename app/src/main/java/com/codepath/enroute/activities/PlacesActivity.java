@@ -1,13 +1,11 @@
 package com.codepath.enroute.activities;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,46 +13,19 @@ import android.view.MenuItem;
 import com.codepath.enroute.R;
 import com.codepath.enroute.fragments.PlacesMapFragment;
 import com.codepath.enroute.models.YelpBusiness;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 
 /*
 * Activity with the map view showing route between current location and destination
 *
 * */
 
-public class PlacesActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener {
+public class PlacesActivity extends AppCompatActivity implements PlacesMapFragment.OnSearchDoneListener{
 
-    public static final String KEY_ADDRESS_INVALID = "KEY_ADDRESS_INVALID";
-    public static final int RESPONSE_CODE = 400 ;
-    private long UPDATE_INTERVAL = 60000 * 3;  /* 60 secs  * 3 */
-    private long FASTEST_INTERVAL = 5000; /* 5 secs */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private final static String KEY_LOCATION = "location";
-    private final static String KEY_POINTS_OF_INTEREST = "points_of_interest";
-
-    private SupportMapFragment mapFragment;
-    private GoogleMap map;
-    private LocationRequest mLocationRequest;
-    Location mCurrentLocation;
-    LatLng mCurrentLatLng;
-    private JSONObject directionsJson;
-
-    //private LatLng testLatLng = new LatLng(37.37, -122.03); // TODO: Get location from previous activity through intent
-    private List<LatLng> directionPoints;
-    //private LatLng destinationLatLng;
-
-    //This should contain a map of Points Of Interest;
-    private Map<LatLng,YelpBusiness> mPointsOfInterest;
+    ArrayList<YelpBusiness> yelpBusinessArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +34,6 @@ public class PlacesActivity extends AppCompatActivity implements GoogleMap.OnMar
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-
 
         PlacesMapFragment placesMapFragment = PlacesMapFragment.newInstance(bundle.getString(SearchActivity.KEY_RESPONSE_JSON), bundle.getString(SearchActivity.KEY_DIRECTIONS));
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -109,6 +79,7 @@ public class PlacesActivity extends AppCompatActivity implements GoogleMap.OnMar
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_places, menu);
+
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -135,8 +106,24 @@ public class PlacesActivity extends AppCompatActivity implements GoogleMap.OnMar
     *
     * */
     public void onClickSwitchView(MenuItem item) {
-        Log.d(this.getClass().toString(), "Switching to List view");
-        Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+//        Log.d(this.getClass().toString(), "Switching to List view");
+//        FrameLayout fragmentLayout = new FrameLayout(this);
+//        // set the layout params to fill the activity
+//        fragmentLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//        // set an id to the layout
+//        fragmentLayout.setId(1000); // some positive integer
+//        // set the layout as Activity content
+//        setContentView(fragmentLayout);
+//
+//        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.add(placesListFragment, "list_fragment");
+//        ft.addToBackStack(null);
+//        ft.commit();
+        Intent intent = new Intent(this, ListActivity.class);
+        ArrayList<YelpBusiness> list = new ArrayList<>();
+        list.addAll(yelpBusinessArrayList);
+        intent.putExtra("list", Parcels.wrap(list));
         startActivity(intent);
     }
 
@@ -163,277 +150,8 @@ public class PlacesActivity extends AppCompatActivity implements GoogleMap.OnMar
     }
 
 
-//    protected void loadMap(GoogleMap googleMap) {
-//        map = googleMap;
-//        if (map != null) {
-//            // Map is ready
-//            map.setMyLocationEnabled(true);
-//            mCurrentLatLng = directionPoints.get(0);
-//            Log.d(this.getClass().toString(), "Map Fragment was loaded properly!");
-//            mCurrentLocation = new Location("");
-//            mCurrentLocation.setLatitude(mCurrentLatLng.latitude);
-//            mCurrentLocation.setLongitude(mCurrentLatLng.longitude);
-//            onLocationChanged(mCurrentLocation);
-//            //PlacesActivityPermissionsDispatcher.getMyLocationWithCheck(this);
-//            PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
-//        } else {
-//            Log.e(this.getClass().toString(), "Error - Map was null!!");
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        PlacesActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-//    }
-//
-//
-//    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-//    protected void startLocationUpdates() {
-//        mLocationRequest = new LocationRequest();
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-//        //mLocationRequest.setInterval(UPDATE_INTERVAL);
-//        // mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-//        builder.addLocationRequest(mLocationRequest);
-//        LocationSettingsRequest locationSettingsRequest = builder.build();
-//
-//        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-//        settingsClient.checkLocationSettings(locationSettingsRequest);
-//        //noinspection MissingPermission
-//        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-//                    @Override
-//                    public void onLocationResult(LocationResult locationResult) {
-//                        onLocationChanged(locationResult.getLastLocation());
-//                    }
-//                },
-//                Looper.myLooper());
-//    }
-//
-//    public void onLocationChanged(Location location) {
-//        // GPS may be turned off
-//        if (location == null) {
-//            return;
-//        }
-//        BitmapDescriptor defaultMarker =
-//                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-//        mCurrentLocation = location;
-//        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//        Marker fromMarker = MapUtil.addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
-//        zoomToLocation();
-//        drawDirections();
-//        getYelpBusinesses(directionsJson);
-//    }
-//
-//
-//    private void getYelpBusinesses(JSONObject response) {
-//        //TESTME Jim
-//        List<LatLng> googlePoints = null;
-//        try {
-//            googlePoints = MapUtil.getLatLngFromOverView(response, 1609);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        //The following is an example how to use YelpApi.
-//        YelpClient client = YelpClient.getInstance();
-//        RequestParams params = new RequestParams();
-//        params.put("term", "food");
-//        params.put("radius", 1000);
-//        for (int i = 0; i < googlePoints.size(); i++) {
-//
-//            params.put("latitude", googlePoints.get(i).latitude);
-//            params.put("longitude", googlePoints.get(i).longitude);
-//            client.getSearchResult(params, new JsonHttpResponseHandler() {
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                    super.onSuccess(statusCode, headers, response);
-//
-//                    try {
-//                        JSONArray yelpBusinesses = response.getJSONArray("businesses");
-//                        BitmapDescriptor icon =
-//                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-//                        for (int i = 0; i < yelpBusinesses.length(); i++) {
-//                            YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
-//
-//                            LatLng newLatLng = new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude());
-//
-//                            //Skip if there is a duplicate.
-//                            if (!mPointsOfInterest.containsKey(newLatLng)){
-//                                mPointsOfInterest.put(newLatLng,aYelpBusiness);
-//                                MapUtil.addMarker(map, newLatLng, aYelpBusiness.getName(), "No Description yet", icon);
-//                        }}
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                    super.onSuccess(statusCode, headers, response);
-//                }
-//
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                    super.onSuccess(statusCode, headers, responseString);
-//                }
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                    super.onFailure(statusCode, headers, responseString, throwable);
-//                }
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                    Log.e(this.getClass().toString(), "Error fetching Yelp businesses: " + errorResponse.toString());
-//                    //super.onFailure(statusCode, headers, throwable, errorResponse);
-//                }
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-//                    super.onFailure(statusCode, headers, throwable, errorResponse);
-//                }
-//            });
-//
-//        }
-//    }
-//
-//    private void handleInvalidAddress() {
-//        Intent in = new Intent();
-//        in.putExtra(KEY_ADDRESS_INVALID, true);
-//        setResult(RESPONSE_CODE, in);
-//        finish();
-//    }
-//
-//    private void getPointsOfInterest() {
-//        YelpClient yelpClient = YelpClient.getInstance();
-////        RequestParams params = new RequestParams();
-////        params.put("latitude", mCurrentLocation.getLatitude());
-////        params.put("longitude", mCurrentLocation.getLongitude());
-//        BitmapDescriptor icon =
-//                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-//        List<YelpBusiness> pointsOfInterestList = yelpClient.getPointsOfInterestEnRoute();
-//        for (YelpBusiness point : pointsOfInterestList) {
-//            MapUtil.addMarker(map, point.getLatLng(), point.getName(), point.getDescription(), icon);
-//        }
-//
-//    }
-//
-//    private void drawDirections() {
-//        Log.d("DEBUG", "Drawing directions");
-//        PolylineOptions lineOptions = new PolylineOptions();
-//        for (LatLng latLng : directionPoints) {
-//            lineOptions.add(latLng);
-//        }
-//        map.addPolyline(lineOptions);
-//
-//
-//
-//        // Add marker for destination
-//        BitmapDescriptor defaultMarker =
-//                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-//        Marker toMarker = MapUtil.addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
-//    }
-//
-//    //The return value is distance in Miles.
-//    private static double distance(double lat1, double lon1, double lat2, double lon2) {
-//        double theta = lon1 - lon2;
-//        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-//        dist = Math.acos(dist);
-//        dist = rad2deg(dist);
-//        dist = dist * 60 * 1.1515;
-//        //dist = dist * 1.609344;
-//
-//        return (dist);
-//    }
-//
-//    private static double deg2rad(double deg) {
-//        return (deg * Math.PI / 180.0);
-//    }
-//
-//    private static double rad2deg(double rad) {
-//        return (rad * 180 / Math.PI);
-//    }
-//
-//    /*
-//    * Click listener for tool bar menu item to switch to list view
-//    *
-//    * */
-//    public void onClickSwitchView(MenuItem item) {
-//        Log.d(this.getClass().toString(), "Switching to List view");
-//        Intent intent = new Intent(getApplicationContext(), ListActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    private void zoomToLocation() {
-//
-//        double distance = distance(directionPoints.get(0).latitude,
-//                directionPoints.get(0).longitude,
-//                directionPoints.get(directionPoints.size()-1).latitude,
-//                directionPoints.get(directionPoints.size()-1).longitude);
-//
-//        int zoomLevel = 15;
-//
-//        //ZoomLevel
-//        //1 world
-//        //5 continent
-//        //10 city
-//        //15 street
-//        //20 buildings
-//
-//        //1000,500,200,100,50,20,10,5,2,
-//
-//
-//        if (distance<0.2){
-//            zoomLevel = 15;
-//        }else if (distance<0.5){
-//            zoomLevel = 14;
-//        }else if (distance<1){
-//            zoomLevel = 13;
-//        }else if (distance<2){
-//            zoomLevel = 12;
-//        }else if (distance<5){
-//            zoomLevel = 11;
-//        }else if (distance<10){
-//            zoomLevel = 10;
-//        }else if (distance<20){
-//            zoomLevel = 9;
-//        }else if (distance<50){
-//            zoomLevel = 8;
-//        }else if (distance<100){
-//            zoomLevel = 7;
-//        }else if (distance<200){
-//            zoomLevel = 6;
-//        }else if (distance< 500) {
-//            zoomLevel = 5;
-//        }else if (distance< 1000){
-//            zoomLevel =  4;
-//        }else if (distance< 2000){
-//            zoomLevel = 3;
-//        }else if (distance<5000){
-//            zoomLevel = 2;
-//        }else if (distance<10000){
-//            zoomLevel =1;
-//        }
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, zoomLevel);
-//        map.animateCamera(cameraUpdate);
-//    }
-
-
     @Override
-    public boolean onMarkerClick(Marker marker) {
-
-        YelpBusiness aYelpBusiness = (YelpBusiness) marker.getTag();
-        if (aYelpBusiness == null) {
-            return false;
-        }else{
-            //invoke detail ;
-
-
-            Intent detailActivity = new Intent(this, DetailActivity.class);
-            detailActivity.putExtra("YELP_BUSINESS",Parcels.wrap(aYelpBusiness));
-            startActivity(detailActivity);
-            return true;
-        }
+    public void notifyActivity(ArrayList<YelpBusiness> list) {
+        yelpBusinessArrayList = list;
     }
-
 }
