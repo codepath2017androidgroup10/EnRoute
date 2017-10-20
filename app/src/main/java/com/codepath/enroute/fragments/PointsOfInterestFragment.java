@@ -113,7 +113,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.e(this.getClass().toString(), "Error fetching Yelp businesses: " + errorResponse.toString());
+                    Log.e(this.getClass().toString(), "Error fetching Yelp businesses: " + throwable.toString());
                     //super.onFailure(statusCode, headers, throwable, errorResponse);
                 }
 

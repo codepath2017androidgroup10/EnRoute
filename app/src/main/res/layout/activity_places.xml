@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.enroute.activities.PlacesActivity">
+    tools:context="com.codepath.enroute.activities.PlacesActivity"
+    android:id="@+id/cLayout">
 
-    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:map="http://schemas.android.com/apk/res-auto"-->
-        <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
-        <!--android:id="@+id/map"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--/>-->
-
-
-    <!--<fragment-->
-        <!--android:id="@+id/map"-->
-        <!--class="com.google.android.gms.maps.SupportMapFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
     <FrameLayout
         android:id="@+id/placeHolder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
-</android.support.constraint.ConstraintLayout>
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/placeHolder"
+        android:layout_gravity="bottom|right"
+        app:layout_anchorGravity="bottom|end|right"
+        app:srcCompat="@drawable/ic_location_searching_black_24dp"
+        app:tint="@color/colorWhite"
+        app:backgroundTint="@color/colorPrimary"
+        android:onClick="onFABClick"/>
+
+    <include layout="@layout/fab_layout"/>
+</android.support.design.widget.CoordinatorLayout>

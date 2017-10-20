@@ -2,6 +2,7 @@ package com.codepath.enroute.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -11,24 +12,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.fragments.ListFragment;
 import com.codepath.enroute.fragments.PlacesMapFragment;
-
 import com.codepath.enroute.fragments.PointsOfInterestFragment;
-
 import com.codepath.enroute.fragments.SettingFragment;
-
 import com.codepath.enroute.models.YelpBusiness;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
-
-import static com.codepath.enroute.fragments.ListFragment.newInstance;
 
 /*
 * Activity with the map view showing route between current location and destination
@@ -182,6 +178,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         yelpBusinessArrayList = list;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -198,6 +195,63 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+    *  Click handler for FAB
+    * */
+
+    boolean areOptionsShown = false;
+
+    public void onFABClick(View view) {
+        Log.d("FAB", "CLicked");
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab_food);
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
+        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
+        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
+        fab1.setLayoutParams(layoutParams);
+
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab_gas);
+
+        FrameLayout.LayoutParams layoutParams1 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
+        //layoutParams1.rightMargin += (int) (fab2.getWidth() * 1.7);
+        layoutParams1.bottomMargin += (int) (fab2.getHeight() * 1.7);
+        fab2.setLayoutParams(layoutParams1);
+
+        if (!areOptionsShown) {
+            // Show menu items
+            Animation show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
+            fab1.startAnimation(show_fab_1);
+            fab1.setClickable(true);
+            Animation show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
+            fab2.startAnimation(show_fab_2);
+            fab2.setClickable(true);
+            areOptionsShown = true;
+        } else {
+            // hide menu items
+            Animation hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+            fab1.startAnimation(hide_fab_1);
+            fab1.setClickable(false);
+
+            Animation hide_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_hide);
+            fab2.startAnimation(hide_fab_2);
+            fab2.setClickable(false);
+
+            layoutParams.rightMargin = (int) (fab1.getWidth());
+            layoutParams.bottomMargin = (int) (fab1.getHeight());
+
+            layoutParams1.bottomMargin = (int) (fab2.getHeight());
+            areOptionsShown = false;
+        }
+    }
+
+    public void onFoodMenuClicked(View view) {
+        Log.d("DEBUG:", "Food Menu clicked");
+    }
+
+    public void onGasMenuClicked(View view) {
+        Log.d("DEBUG:", "Gas Menu clicked");
     }
 }
 
