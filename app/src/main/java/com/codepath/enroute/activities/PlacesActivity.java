@@ -127,14 +127,6 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     * */
     public void onClickSwitchView(MenuItem item) {
         Log.d(this.getClass().toString(), "Switching to List view");
-        //FrameLayout fragmentLayout = new FrameLayout(this);
-        // set the layout params to fill the activity
-        //fragmentLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        // set an id to the layout
-        //fragmentLayout.setId(1000); // some positive integer
-        // set the layout as Activity content
-        //setContentView(fragmentLayout);
-
 
         ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -142,12 +134,6 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         //ft.add(placesListFragment, "list_fragment");
         ft.addToBackStack(null);
         ft.commit();
-
-//        Intent intent = new Intent(this, ListActivity.class);
-//        ArrayList<YelpBusiness> list = new ArrayList<>();
-//        list.addAll(yelpBusinessArrayList);
-//        intent.putExtra("list", Parcels.wrap(list));
-//        startActivity(intent);
     }
 
     @Override
@@ -248,10 +234,16 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 
     public void onFoodMenuClicked(View view) {
         Log.d("DEBUG:", "Food Menu clicked");
+        PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
+        aFragment.setSearchTerm("food");
+        aFragment.getYelpBusinesses();
     }
 
     public void onGasMenuClicked(View view) {
         Log.d("DEBUG:", "Gas Menu clicked");
+        PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
+        aFragment.setSearchTerm("gas");
+        aFragment.getYelpBusinesses();
     }
 }
 

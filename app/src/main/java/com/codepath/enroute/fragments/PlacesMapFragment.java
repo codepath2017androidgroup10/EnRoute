@@ -210,7 +210,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         zoomToLocation();
         drawDirections(mCurrentLocation);
         //getYelpBusinesses(directionsJson);
-        getYelpBusinesses();
+        //getYelpBusinesses();
     }
 
     @Override

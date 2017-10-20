@@ -45,7 +45,6 @@ public abstract class PointsOfInterestFragment extends Fragment {
 
     //protected void getYelpBusinesses(JSONObject response) {
     public void getYelpBusinesses() {
-        Log.d("vvv:", "Calling Yelp");
         //TESTME Jim
         List<LatLng> googlePoints = null;
         try {
