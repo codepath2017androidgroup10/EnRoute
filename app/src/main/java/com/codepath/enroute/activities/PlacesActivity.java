@@ -2,6 +2,7 @@ package com.codepath.enroute.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,11 @@ import android.widget.FrameLayout;
 import com.codepath.enroute.R;
 import com.codepath.enroute.fragments.ListFragment;
 import com.codepath.enroute.fragments.PlacesMapFragment;
+
 import com.codepath.enroute.fragments.PointsOfInterestFragment;
+
+import com.codepath.enroute.fragments.SettingFragment;
+
 import com.codepath.enroute.models.YelpBusiness;
 
 import org.parceler.Parcels;
@@ -33,7 +38,11 @@ import static com.codepath.enroute.fragments.ListFragment.newInstance;
 public class PlacesActivity extends AppCompatActivity implements PlacesMapFragment.OnSearchDoneListener{
 
     ArrayList<YelpBusiness> yelpBusinessArrayList;
+
     final String[] searchTerm=new String[1];
+
+
+//    PlacesMapFragment placesMapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +103,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // perform query here
+
 
 
                 searchTerm[0] = query;
@@ -171,4 +181,23 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     public void notifyActivity(ArrayList<YelpBusiness> list) {
         yelpBusinessArrayList = list;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify yelpBusinessArrayList parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            SettingFragment settingFragment = SettingFragment.newInstance();
+            FragmentManager fm = getSupportFragmentManager();
+            settingFragment.show(fm, "fragment_setting");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
+

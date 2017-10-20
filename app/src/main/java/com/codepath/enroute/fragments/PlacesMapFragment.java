@@ -99,7 +99,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
             e.printStackTrace();
         }
         directionPoints = MapUtil.decodePolyLine(getArguments().getString("points"));
-
         setUpViews(v, savedInstanceState);
         // Inflate the layout for this fragment
         return v;
