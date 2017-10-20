@@ -6,17 +6,23 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.codepath.enroute.R;
+import com.codepath.enroute.fragments.ListFragment;
 import com.codepath.enroute.fragments.PlacesMapFragment;
 import com.codepath.enroute.models.YelpBusiness;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+
+import static com.codepath.enroute.fragments.ListFragment.newInstance;
 
 /*
 * Activity with the map view showing route between current location and destination
@@ -106,25 +112,28 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     *
     * */
     public void onClickSwitchView(MenuItem item) {
-//        Log.d(this.getClass().toString(), "Switching to List view");
-//        FrameLayout fragmentLayout = new FrameLayout(this);
-//        // set the layout params to fill the activity
-//        fragmentLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//        // set an id to the layout
-//        fragmentLayout.setId(1000); // some positive integer
-//        // set the layout as Activity content
-//        setContentView(fragmentLayout);
-//
-//        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(placesListFragment, "list_fragment");
-//        ft.addToBackStack(null);
-//        ft.commit();
-        Intent intent = new Intent(this, ListActivity.class);
-        ArrayList<YelpBusiness> list = new ArrayList<>();
-        list.addAll(yelpBusinessArrayList);
-        intent.putExtra("list", Parcels.wrap(list));
-        startActivity(intent);
+        Log.d(this.getClass().toString(), "Switching to List view");
+        //FrameLayout fragmentLayout = new FrameLayout(this);
+        // set the layout params to fill the activity
+        //fragmentLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        // set an id to the layout
+        //fragmentLayout.setId(1000); // some positive integer
+        // set the layout as Activity content
+        //setContentView(fragmentLayout);
+
+
+        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeHolder, placesListFragment);
+        //ft.add(placesListFragment, "list_fragment");
+        ft.addToBackStack(null);
+        ft.commit();
+
+//        Intent intent = new Intent(this, ListActivity.class);
+//        ArrayList<YelpBusiness> list = new ArrayList<>();
+//        list.addAll(yelpBusinessArrayList);
+//        intent.putExtra("list", Parcels.wrap(list));
+//        startActivity(intent);
     }
 
     @Override

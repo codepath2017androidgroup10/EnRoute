@@ -52,6 +52,7 @@ public class ListFragment extends PointsOfInterestFragment {
         Bundle args = new Bundle();
         args.putParcelable("list", Parcels.wrap(list));
         fragment.setArguments(args);
+        fragment.yelpBusinessArrayListist=list;
         return fragment;
     }
 
