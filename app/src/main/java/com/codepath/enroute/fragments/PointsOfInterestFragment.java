@@ -53,6 +53,10 @@ public abstract class PointsOfInterestFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if (yelpBusinessList.size() > 0) {
+            yelpBusinessList.clear();
+            mPointsOfInterest.clear();
+        }
         //The following is an example how to use YelpApi.
         client = YelpClient.getInstance();
         RequestParams params = new RequestParams();

@@ -202,13 +202,13 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         if (location == null) {
             return;
         }
-        BitmapDescriptor defaultMarker =
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+//        BitmapDescriptor defaultMarker =
+ //               BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLocation = location;
-        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
+ //       mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         zoomToLocation();
-        drawDirections();
+        drawDirections(mCurrentLocation);
         //getYelpBusinesses(directionsJson);
         getYelpBusinesses();
     }
@@ -222,6 +222,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     }
 
     private void markBusinesses(BitmapDescriptor marker) {
+        map.clear();
+        drawDirections(mCurrentLocation);
         for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
             Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
             aMarker.setTag(poi.getValue());
@@ -234,7 +236,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         listener = (OnSearchDoneListener) context;
     }
 
-    private void drawDirections() {
+    private void drawDirections(Location location) {
         Log.d("DEBUG", "Drawing directions");
         PolylineOptions lineOptions = new PolylineOptions();
         for (LatLng latLng : directionPoints) {
@@ -242,11 +244,10 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         }
         map.addPolyline(lineOptions);
 
-
-
-        // Add marker for destination
         BitmapDescriptor defaultMarker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
     }
 
