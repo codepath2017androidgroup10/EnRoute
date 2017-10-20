@@ -82,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                etFromLocation.setError(null);
             }
 
             @Override
@@ -102,13 +102,13 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                etToLocation.setError(null);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.toString().isEmpty()) {
-                    etToLocation.setError("Please enter yelpBusinessArrayList location");
+                    etToLocation.setError("Please enter location");
                 }
             }
         });
