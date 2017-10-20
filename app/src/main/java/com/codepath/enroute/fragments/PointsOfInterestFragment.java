@@ -28,7 +28,7 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public abstract class PointsOfInterestFragment extends Fragment {
-    protected ArrayList<YelpBusiness> yelpBusinessList;
+    public ArrayList<YelpBusiness> yelpBusinessList;
     private YelpClient client;
     protected Map<LatLng,YelpBusiness> mPointsOfInterest;
 
