@@ -47,6 +47,7 @@ import java.util.Map;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static com.codepath.enroute.util.MapUtil.addMarker;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 /**
@@ -115,6 +116,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                     map.getUiSettings().setMyLocationButtonEnabled(false);
 
                     loadMap(map);
+
                 }
             });
         } else {
@@ -125,6 +127,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     protected void loadMap(GoogleMap googleMap) {
         map = googleMap;
+        map.setOnMarkerClickListener(this);
         if (map != null) {
             // Map is ready
             map.setMyLocationEnabled(true);
@@ -204,7 +207,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLocation = location;
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = MapUtil.addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
+        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         zoomToLocation();
         drawDirections();
         getYelpBusinesses(directionsJson);
@@ -220,7 +223,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     private void markBusinesses(BitmapDescriptor marker) {
         for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
-            MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), "No Description yet", marker);
+            Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
+            aMarker.setTag(poi.getValue());
         }
     }
 
@@ -243,7 +247,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         // Add marker for destination
         BitmapDescriptor defaultMarker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-        Marker toMarker = MapUtil.addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
+        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
     }
 
     private void zoomToLocation() {
@@ -328,9 +332,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         if (aYelpBusiness == null) {
             return false;
         }else{
-            //invoke detail ;
-
-
             Intent detailActivity = new Intent(getContext(), DetailActivity.class);
             detailActivity.putExtra("YELP_BUSINESS", Parcels.wrap(aYelpBusiness));
             startActivity(detailActivity);

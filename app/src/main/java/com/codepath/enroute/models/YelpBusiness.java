@@ -193,6 +193,7 @@ public class YelpBusiness {
                 aYelpBusiness.categories += ", ";
             }
         }
+        aYelpBusiness.setDescription(aYelpBusiness.getCategories());
         aYelpBusiness.latLng = new LatLng(jsonObject.getJSONObject("coordinates").getDouble("latitude"),jsonObject.getJSONObject("coordinates").getDouble("longitude"));
         return aYelpBusiness;
     }

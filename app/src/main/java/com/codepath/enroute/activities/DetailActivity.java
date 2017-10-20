@@ -133,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
         tvAddress.setText(yelpBusiness.getDisplay_address());
         ratingBar.setRating((float)yelpBusiness.getRating());
         tvPhone.setText(yelpBusiness.getPhone_number());
-    
+
         Picasso.with(this).load(yelpBusiness.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(ivProfileImage);
     }
 }

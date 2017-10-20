@@ -3,6 +3,7 @@ package com.codepath.enroute.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,8 +92,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         holder.tvCategory.setText(restaurant.getCategories());
         holder.tvAddress.setText(restaurant.getDisplay_address());
         holder.ratingBar.setRating((float)restaurant.getRating());
-        Picasso.with(mContext).load(restaurant.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(holder.ivProfileImage);
 
+        if (restaurant.getImage_url()!=null && restaurant.getImage_url().length()>10) {
+            Picasso.with(mContext).load(restaurant.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(holder.ivProfileImage);
+        }
     }
 
     @Override
