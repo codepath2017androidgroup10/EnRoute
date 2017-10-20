@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import com.codepath.enroute.R;
 import com.codepath.enroute.fragments.ListFragment;
 import com.codepath.enroute.fragments.PlacesMapFragment;
+import com.codepath.enroute.fragments.PointsOfInterestFragment;
 import com.codepath.enroute.models.YelpBusiness;
 
 import org.parceler.Parcels;
@@ -32,6 +33,7 @@ import static com.codepath.enroute.fragments.ListFragment.newInstance;
 public class PlacesActivity extends AppCompatActivity implements PlacesMapFragment.OnSearchDoneListener{
 
     ArrayList<YelpBusiness> yelpBusinessArrayList;
+    final String[] searchTerm=new String[1];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +94,16 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // perform query here
+
+
+                searchTerm[0] = query;
                 searchView.clearFocus();
-                Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+                //Intent i = new Intent(getApplicationContext(), DetailActivity.class);
  //               i.putExtra("q", query);
-                startActivity(i);
+                PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
+                aFragment.setSearchTerm(query);
+                aFragment.getYelpBusinesses();
+                //startActivity(i);
                 return true;
             }
 

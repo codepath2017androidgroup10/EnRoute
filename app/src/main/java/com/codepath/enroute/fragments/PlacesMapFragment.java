@@ -62,7 +62,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
     LatLng mCurrentLatLng;
-    private JSONObject directionsJson;
+
     private List<LatLng> directionPoints;
     private MapView mapView;
     OnSearchDoneListener listener;
@@ -210,7 +210,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         zoomToLocation();
         drawDirections();
-        getYelpBusinesses(directionsJson);
+        //getYelpBusinesses(directionsJson);
+        getYelpBusinesses();
     }
 
     @Override

@@ -31,26 +31,32 @@ public abstract class PointsOfInterestFragment extends Fragment {
     protected ArrayList<YelpBusiness> yelpBusinessList;
     private YelpClient client;
     protected Map<LatLng,YelpBusiness> mPointsOfInterest;
+    String searchTerm;
+    protected JSONObject directionsJson;
 
     public PointsOfInterestFragment() {
         mPointsOfInterest = new HashMap<>();
         yelpBusinessList = new ArrayList<>();
     }
 
+    public void setSearchTerm(String aSearchTerm){
+        searchTerm=aSearchTerm;
+    }
 
-    protected void getYelpBusinesses(JSONObject response) {
+    //protected void getYelpBusinesses(JSONObject response) {
+    public void getYelpBusinesses() {
         Log.d("vvv:", "Calling Yelp");
         //TESTME Jim
         List<LatLng> googlePoints = null;
         try {
-            googlePoints = MapUtil.getLatLngFromOverView(response, 1609);
+            googlePoints = MapUtil.getLatLngFromOverView(directionsJson, 1609);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         //The following is an example how to use YelpApi.
         client = YelpClient.getInstance();
         RequestParams params = new RequestParams();
-        params.put("term", "food");
+        params.put("term", searchTerm);
         params.put("radius", 1000);
         for (int i = 0; i < googlePoints.size(); i++) {
 
