@@ -36,7 +36,8 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     ArrayList<YelpBusiness> yelpBusinessArrayList;
 
     final String[] searchTerm=new String[1];
-
+    String keyReponseJSON;
+    String keyDirection;
 
 //    PlacesMapFragment placesMapFragment;
 
@@ -47,6 +48,9 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+
+        keyReponseJSON = bundle.getString(SearchActivity.KEY_RESPONSE_JSON);
+        keyDirection = bundle.getString(SearchActivity.KEY_DIRECTIONS);
 
         PlacesMapFragment placesMapFragment = PlacesMapFragment.newInstance(bundle.getString(SearchActivity.KEY_RESPONSE_JSON), bundle.getString(SearchActivity.KEY_DIRECTIONS));
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -128,7 +132,9 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     public void onClickSwitchView(MenuItem item) {
         Log.d(this.getClass().toString(), "Switching to List view");
 
-        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
+//        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
+//        ListFragment placesListFragment = ListFragment.newInstance(keyReponseJSON,keyDirection);
+        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeHolder, placesListFragment);
         //ft.add(placesListFragment, "list_fragment");

@@ -3,6 +3,7 @@ package com.codepath.enroute.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,8 @@ public class ListActivity extends AppCompatActivity {
         rvRestaurants = findViewById(R.id.rvRestaurants);
         Parcelable parcelable = (Parcelable) getIntent().getExtras().get("list");
         restaurants = (ArrayList<YelpBusiness>) Parcels.unwrap(parcelable);
-        restaurantAdapter = new RestaurantAdapter(this, restaurants);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        restaurantAdapter = new RestaurantAdapter(this, restaurants, fragmentManager);
         rvRestaurants.setAdapter(restaurantAdapter);
         rvRestaurants.setLayoutManager(new LinearLayoutManager(this));
         ItemClickSupport.addTo(rvRestaurants).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {

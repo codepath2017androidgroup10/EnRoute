@@ -2,6 +2,7 @@ package com.codepath.enroute.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.models.YelpBusiness;
@@ -28,13 +30,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     private List<YelpBusiness> mRestaurants;
     private Context mContext;
+    FragmentManager mFragmentManager;
 
-    public RestaurantAdapter(Context context, List<YelpBusiness> restaurants) {
+    public RestaurantAdapter(Context context, List<YelpBusiness> restaurants, FragmentManager fragmentManager) {
         this.mRestaurants = restaurants;
         mContext = context;
+        this.mFragmentManager = fragmentManager;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivProfileImage;
         TextView tvName;
@@ -60,7 +64,16 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             tvAddress = itemView.findViewById(R.id.tvAddress);
 
         }
-
+/*        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition(); // gets item position
+            if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
+//                User user = users.get(position);
+                // We can access the data within the views
+                Toast.makeText(mContext, "hello", Toast.LENGTH_SHORT).show();
+            }
+        }
+*/
     }
 
     @Override
