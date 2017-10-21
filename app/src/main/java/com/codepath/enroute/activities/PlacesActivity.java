@@ -187,6 +187,10 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         FrameLayout.LayoutParams layoutParams1 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
 
 
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab_coffee);
+
+        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab3.getLayoutParams();
+
         if (!areOptionsShown) {
             // Show menu items
 
@@ -198,13 +202,22 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             fab1.startAnimation(show_fab_1);
             fab1.setClickable(true);
 
-            //layoutParams1.rightMargin += (int) (fab2.getWidth() * 1.7);
+            layoutParams1.rightMargin += (int) (fab2.getWidth() * 0.25);
             layoutParams1.bottomMargin += (int) (fab2.getHeight() * 1.7);
             fab2.setLayoutParams(layoutParams1);
 
             Animation show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
             fab2.startAnimation(show_fab_2);
             fab2.setClickable(true);
+
+            layoutParams2.rightMargin += (int) (fab3.getWidth() * 1.5);
+            layoutParams2.bottomMargin += (int) (fab3.getHeight() * 1.5);
+            fab3.setLayoutParams(layoutParams2);
+
+            Animation show_fab3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab3_show);
+            fab3.startAnimation(show_fab3);
+            fab3.setClickable(true);
+
             areOptionsShown = true;
         } else {
             // hide menu items
@@ -216,10 +229,19 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             fab2.startAnimation(hide_fab_2);
             fab2.setClickable(false);
 
+            Animation hide_fab_3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fav3_hide);
+            fab2.startAnimation(hide_fab_3);
+            fab2.setClickable(false);
+
             layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
             layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
 
+            layoutParams2.rightMargin -= (int) (fab3.getWidth() * 0.25);
             layoutParams1.bottomMargin -= (int) (fab2.getHeight() * 1.7);
+
+            layoutParams2.rightMargin -= (int) (fab3.getWidth() * 1.5);
+            layoutParams2.bottomMargin -= (int) (fab3.getHeight() * 1.5);
+
             areOptionsShown = false;
         }
     }
@@ -235,6 +257,13 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         Log.d("DEBUG:", "Gas Menu clicked");
         PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
         aFragment.setSearchTerm("gas");
+        aFragment.getYelpBusinesses();
+    }
+
+    public void onCafeMenuClicked(View view) {
+        Log.d("DEBUG:", "Coffee Menu clicked");
+        PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
+        aFragment.setSearchTerm("coffee");
         aFragment.getYelpBusinesses();
     }
 }

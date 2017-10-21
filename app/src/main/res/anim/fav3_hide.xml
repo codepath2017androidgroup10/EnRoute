@@ -4,12 +4,12 @@
 
     <!--Move-->
     <!--<translate-->
-        <!--android:duration="1000"-->
-        <!--android:fromXDelta="-170%"-->
-        <!--android:fromYDelta="-25%"-->
-        <!--android:interpolator="@android:anim/linear_interpolator"-->
-        <!--android:toXDelta="0%"-->
-        <!--android:toYDelta="0%"></translate>-->
+    <!--android:duration="1000"-->
+    <!--android:fromXDelta="-170%"-->
+    <!--android:fromYDelta="-25%"-->
+    <!--android:interpolator="@android:anim/linear_interpolator"-->
+    <!--android:toXDelta="0%"-->
+    <!--android:toYDelta="0%"></translate>-->
 
     <!--Fade Out-->
     <alpha
@@ -17,5 +17,6 @@
         android:fromAlpha="1.0"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:toAlpha="0.0"></alpha>
+
 
 </set>
