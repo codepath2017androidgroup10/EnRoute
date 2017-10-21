@@ -57,13 +57,6 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         ft.replace(R.id.placeHolder, placesMapFragment);
         ft.commit();
 
-//        try {
-//            directionsJson = new JSONObject(bundle.getString(SearchActivity.KEY_RESPONSE_JSON));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        directionPoints = MapUtil.decodePolyLine(bundle.getString(SearchActivity.KEY_DIRECTIONS));
-
 //        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
 //            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
 //            // is not null.
@@ -75,19 +68,6 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 //            mPointsOfInterest = savedInstanceState.getParcelable(KEY_POINTS_OF_INTEREST);
 //        }else{
 //            mPointsOfInterest = new HashMap<>();
-//        }
-//        // Get location here and get directions:
-//
-//        mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
-//        if (mapFragment != null) {
-//            mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                @Override
-//                public void onMapReady(GoogleMap map) {
-//                    loadMap(map);
-//                }
-//            });
-//        } else {
-//            Log.e(this.getClass().toString(), "Error - Map Fragment was null!!");
 //        }
     }
 
@@ -200,22 +180,28 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab_food);
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
+
 
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab_gas);
 
         FrameLayout.LayoutParams layoutParams1 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        //layoutParams1.rightMargin += (int) (fab2.getWidth() * 1.7);
-        layoutParams1.bottomMargin += (int) (fab2.getHeight() * 1.7);
-        fab2.setLayoutParams(layoutParams1);
+
 
         if (!areOptionsShown) {
             // Show menu items
+
+            layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
+            layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
+            fab1.setLayoutParams(layoutParams);
+
             Animation show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
             fab1.startAnimation(show_fab_1);
             fab1.setClickable(true);
+
+            //layoutParams1.rightMargin += (int) (fab2.getWidth() * 1.7);
+            layoutParams1.bottomMargin += (int) (fab2.getHeight() * 1.7);
+            fab2.setLayoutParams(layoutParams1);
+
             Animation show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
             fab2.startAnimation(show_fab_2);
             fab2.setClickable(true);
@@ -230,10 +216,10 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             fab2.startAnimation(hide_fab_2);
             fab2.setClickable(false);
 
-            layoutParams.rightMargin = (int) (fab1.getWidth());
-            layoutParams.bottomMargin = (int) (fab1.getHeight());
+            layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
+            layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
 
-            layoutParams1.bottomMargin = (int) (fab2.getHeight());
+            layoutParams1.bottomMargin -= (int) (fab2.getHeight() * 1.7);
             areOptionsShown = false;
         }
     }

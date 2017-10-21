@@ -202,15 +202,9 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         if (location == null) {
             return;
         }
-//        BitmapDescriptor defaultMarker =
- //               BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLocation = location;
- //       mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
         zoomToLocation();
         drawDirections(mCurrentLocation);
-        //getYelpBusinesses(directionsJson);
-        //getYelpBusinesses();
     }
 
     @Override
@@ -224,6 +218,18 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     private void markBusinesses(BitmapDescriptor marker) {
         map.clear();
         drawDirections(mCurrentLocation);
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                YelpBusiness aYelpBusiness = (YelpBusiness) marker.getTag();
+                if (aYelpBusiness != null) {
+                    Intent detailActivity = new Intent(getContext(), DetailActivity.class);
+                     detailActivity.putExtra("YELP_BUSINESS", Parcels.wrap(aYelpBusiness));
+                    startActivity(detailActivity);
+                }
+            }
+        });
         for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
             Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
             aMarker.setTag(poi.getValue());
@@ -248,7 +254,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
-        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "", "", defaultMarker);
+        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", defaultMarker);
     }
 
     private void zoomToLocation() {
@@ -326,17 +332,11 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     }
 
 
+
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        YelpBusiness aYelpBusiness = (YelpBusiness) marker.getTag();
-        if (aYelpBusiness == null) {
-            return false;
-        }else{
-            Intent detailActivity = new Intent(getContext(), DetailActivity.class);
-            detailActivity.putExtra("YELP_BUSINESS", Parcels.wrap(aYelpBusiness));
-            startActivity(detailActivity);
-            return true;
-        }
+        marker.showInfoWindow();
+        return true;
     }
 }

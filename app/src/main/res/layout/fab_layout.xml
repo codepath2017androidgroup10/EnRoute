@@ -14,6 +14,7 @@
         app:tint="@color/colorWhite"
         android:visibility="invisible"
         app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini"
         android:onClick="onFoodMenuClicked"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -25,6 +26,7 @@
         app:tint="@color/colorWhite"
         android:visibility="invisible"
         app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini"
         android:onClick="onGasMenuClicked"/>
 
 </FrameLayout>

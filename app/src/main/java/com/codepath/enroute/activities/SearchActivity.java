@@ -136,7 +136,6 @@ public class SearchActivity extends AppCompatActivity {
         fromLocation = etFromLocation.getEditableText().toString();
         toLocation = etToLocation.getEditableText().toString();
         SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(this);
-
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
