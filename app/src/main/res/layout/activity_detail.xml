@@ -135,6 +135,18 @@
         android:layout_below="@+id/tvReview2"
         android:text="review3" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tvReview3"
+        android:layout_above="@+id/ivWriteReview"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ivYelpPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
     <ImageView
         android:id="@+id/ivWriteReview"
         android:layout_width="wrap_content"

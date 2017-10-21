@@ -41,28 +41,28 @@ public class GoogleClient extends AsyncHttpClient {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("ERROR", "HTTP Call failed");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
-                }
-
-                JSONObject obj = null;
-                try {
-                    obj = new JSONObject(response.body().string());
-                    Log.d("GoogleClient", obj.toString());
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        okHttpClient.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.e("ERROR", "HTTP Call failed");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                if (!response.isSuccessful()) {
+//                    throw new IOException("Unexpected code " + response);
+//                }
+//
+//                JSONObject obj = null;
+//                try {
+//                    obj = new JSONObject(response.body().string());
+//                    Log.d("GoogleClient", obj.toString());
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     public void getDirections(RequestParams params, AsyncHttpResponseHandler handler) {
