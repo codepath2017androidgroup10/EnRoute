@@ -22,20 +22,20 @@ public class SettingFragment extends DialogFragment{
 
     SharedPreferences settingPreference;
     ImageView ivBack;
-    RadioButton radio_detour_miles;
-    RadioButton radio_detour_time;
+//    RadioButton radio_detour_miles;
+//    RadioButton radio_detour_time;
     Button btnAdvanced;
     LinearLayout llAdvanced;
     RadioButton radio_realtime_yes;
     RadioButton radio_realtime_no;
     RadioButton radio_range_5;
     RadioButton radio_range_10;
-    RadioButton radio_range_15;
+    RadioButton radio_range_1;
     RadioButton radio_min_rating_1;
     RadioButton radio_min_rating_2;
     RadioButton radio_min_rating_3;
-    RadioButton radio_max_detour_5miles;
-    RadioButton radio_max_detour_10miles;
+//    RadioButton radio_max_detour_5miles;
+//    RadioButton radio_max_detour_10miles;
     RadioButton radio_choice_car;
     RadioButton radio_choice_bike;
     RadioButton radio_choice_foot;
@@ -76,20 +76,20 @@ public class SettingFragment extends DialogFragment{
     }
     public void initiateView(View view) {
         ivBack = view.findViewById(R.id.ivBack);
-        radio_detour_miles = view.findViewById(R.id.radio_detour_miles);
-        radio_detour_time = view.findViewById(R.id.radio_detour_time);
+//        radio_detour_miles = view.findViewById(R.id.radio_detour_miles);
+//        radio_detour_time = view.findViewById(R.id.radio_detour_time);
         btnAdvanced = view.findViewById(R.id.btnAdvanced);
         llAdvanced = view.findViewById(R.id.llAdvanced);
         radio_realtime_yes = view.findViewById(R.id.radio_realtime_yes);
         radio_realtime_no = view.findViewById(R.id.radio_realtime_no);
         radio_range_5 = view.findViewById(R.id.radio_range_5);
         radio_range_10 = view.findViewById(R.id.radio_range_10);
-        radio_range_15 = view.findViewById(R.id.radio_range_15);
+        radio_range_1 = view.findViewById(R.id.radio_range_1);
         radio_min_rating_1 = view.findViewById(R.id.radio_min_rating_1);
         radio_min_rating_2 = view.findViewById(R.id.radio_min_rating_2);
         radio_min_rating_3 = view.findViewById(R.id.radio_min_rating_3);
-        radio_max_detour_5miles = view.findViewById(R.id.radio_max_detour_5miles);
-        radio_max_detour_10miles = view.findViewById(R.id.radio_max_detour_10miles);
+//        radio_max_detour_5miles = view.findViewById(R.id.radio_max_detour_5miles);
+ //       radio_max_detour_10miles = view.findViewById(R.id.radio_max_detour_10miles);
         radio_choice_car = view.findViewById(R.id.radio_choice_car);
         radio_choice_bike = view.findViewById(R.id.radio_choice_bike);
         radio_choice_foot = view.findViewById(R.id.radio_choice_foot);
@@ -98,19 +98,19 @@ public class SettingFragment extends DialogFragment{
         btnHistory = view.findViewById(R.id.btnHistory);
 
         settingPreference = getContext().getSharedPreferences(String.valueOf(R.string.setting_preference), MODE_PRIVATE);
-        detourChoices = settingPreference.getString("detourChoices", "time");
+//        detourChoices = settingPreference.getString("detourChoices", "time");
         realtime = settingPreference.getString("realtime", "no");
-        range = settingPreference.getInt("range", 5);
+        range = settingPreference.getInt("range", 1);
         rating = settingPreference.getInt("rating", 1);
-        maxDetourMiles = settingPreference.getInt("maxDetourMiles", 10);
+//        maxDetourMiles = settingPreference.getInt("maxDetourMiles", 10);
         transporationChoices = settingPreference.getString("transporationChoices", "car");
 
-        if (detourChoices.equals("miles")) {
-            radio_detour_miles.setChecked(true);
-        }
-        else {
-            radio_detour_time.setChecked(true);
-        }
+//        if (detourChoices.equals("miles")) {
+ //           radio_detour_miles.setChecked(true);
+//        }
+ //       else {
+ //           radio_detour_time.setChecked(true);
+ //       }
         if (realtime.equals("yes")) {
             radio_realtime_yes.setChecked(true);
         }
@@ -124,7 +124,7 @@ public class SettingFragment extends DialogFragment{
             radio_range_10.setChecked(true);
         }
         else {
-            radio_range_15.setChecked(true);
+            radio_range_1.setChecked(true);
         }
         if (rating == 1) {
             radio_min_rating_1.setChecked(true);
@@ -135,12 +135,12 @@ public class SettingFragment extends DialogFragment{
         else {
             radio_min_rating_3.setChecked(true);
         }
-        if (maxDetourMiles == 5) {
+/*        if (maxDetourMiles == 5) {
             radio_max_detour_5miles.setChecked(true);
         }
         else {
             radio_max_detour_10miles.setChecked(true);
-        }
+        }*/
         if (transporationChoices.equals("car")) {
             radio_choice_car.setChecked(true);
         }
@@ -157,14 +157,14 @@ public class SettingFragment extends DialogFragment{
             @Override
             public void onClick(View view) {
 
-                if (radio_detour_miles.isChecked()) {
+/*                if (radio_detour_miles.isChecked()) {
                     detourChoices = "miles";
                 }
                 else {
                     detourChoices = "time";
                 }
                 settingPreference.edit().putString("detourChoices",detourChoices).commit();
-
+*/
                 if (radio_realtime_yes.isChecked()) {
                     realtime = "yes";
                 }
@@ -180,7 +180,7 @@ public class SettingFragment extends DialogFragment{
                     range = 10;
                 }
                 else {
-                    range = 15;
+                    range = 1;
                 }
                 settingPreference.edit().putInt("range",range).commit();
 
@@ -193,14 +193,14 @@ public class SettingFragment extends DialogFragment{
                 else {rating = 3;}
                 settingPreference.edit().putInt("rating",rating).commit();
 
-                if (radio_max_detour_5miles.isChecked()) {
+ /*               if (radio_max_detour_5miles.isChecked()) {
                     maxDetourMiles = 5;
                 }
                 else {
                     maxDetourMiles = 10;
                 }
                 settingPreference.edit().putInt("maxDetourMiles",maxDetourMiles).commit();
-
+*/
                 if (radio_choice_car.isChecked()) {
                     transporationChoices = "car";
                 }
@@ -236,11 +236,11 @@ public class SettingFragment extends DialogFragment{
             @Override
             public void onClick(View view) {
                 settingPreference.edit().clear().commit();
-                radio_detour_time.setChecked(true);
+//                radio_detour_time.setChecked(true);
                 radio_realtime_no.setChecked(true);
-                radio_range_5.setChecked(true);
+                radio_range_1.setChecked(true);
                 radio_min_rating_1.setChecked(true);
-                radio_max_detour_10miles.setChecked(true);
+ //               radio_max_detour_10miles.setChecked(true);
                 radio_choice_car.setChecked(true);
 
             }

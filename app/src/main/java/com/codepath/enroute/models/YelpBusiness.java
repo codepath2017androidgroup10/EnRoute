@@ -178,7 +178,11 @@ public class YelpBusiness {
         aYelpBusiness.display_address = "";
         JSONArray addressArray = jsonObject.getJSONObject("location").getJSONArray("display_address");
         for (int i=0;i<addressArray.length();i++){
-            aYelpBusiness.display_address+=addressArray.getString(i)+" ";
+            aYelpBusiness.display_address+=addressArray.getString(i);
+            if (i == 0) {
+                aYelpBusiness.display_address += ",";
+            }
+            aYelpBusiness.display_address += " ";
         }
         aYelpBusiness.phone_number = jsonObject.getString("phone");
 
