@@ -1,8 +1,10 @@
 package com.codepath.enroute.fragments;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.codepath.enroute.R;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
@@ -23,6 +25,8 @@ import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by vidhya on 10/17/17.
  */
@@ -33,6 +37,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
     protected Map<LatLng,YelpBusiness> mPointsOfInterest;
     String searchTerm;
     protected JSONObject directionsJson;
+    SharedPreferences settingPreference;
 
     public PointsOfInterestFragment() {
         mPointsOfInterest = new HashMap<>();
@@ -46,6 +51,9 @@ public abstract class PointsOfInterestFragment extends Fragment {
     //protected void getYelpBusinesses(JSONObject response) {
     public void getYelpBusinesses() {
         //TESTME Jim
+        settingPreference = getContext().getSharedPreferences(String.valueOf(R.string.setting_preference), MODE_PRIVATE);
+        int range = settingPreference.getInt("range", 1);
+        final int rating = settingPreference.getInt("rating", 1);
         List<LatLng> googlePoints = null;
         try {
             googlePoints = MapUtil.getLatLngFromOverView(directionsJson, 1609);
@@ -60,7 +68,8 @@ public abstract class PointsOfInterestFragment extends Fragment {
         client = YelpClient.getInstance();
         RequestParams params = new RequestParams();
         params.put("term", searchTerm);
-        params.put("radius", 1000);
+        params.put("radius", 1609 * range);
+//       params.put("radius", 1000);
         for (int i = 0; i < googlePoints.size(); i++) {
 
             params.put("latitude", googlePoints.get(i).latitude);
@@ -79,7 +88,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
 
                             LatLng newLatLng = new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude());
                                 //Skip if there is a duplicate.
-                            if (!mPointsOfInterest.containsKey(newLatLng)){
+                            if (!mPointsOfInterest.containsKey(newLatLng) && aYelpBusiness.getRating() >= rating){
                                 mPointsOfInterest.put(newLatLng,aYelpBusiness);
                                 // Add data to arraylist
                                 yelpBusinessList.add(aYelpBusiness);
