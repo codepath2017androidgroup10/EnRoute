@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <RelativeLayout
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
     <ImageView
@@ -136,14 +136,20 @@
         android:text="review3" />
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_below="@+id/tvReview3"
         android:layout_above="@+id/ivWriteReview"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/ivYelpPhoto"
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvYelpPhoto"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+
 
     </ScrollView>
 

@@ -8,18 +8,25 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codepath.enroute.R;
+import com.codepath.enroute.adapters.YelpReviewAdapter;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivityDetailBinding;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.models.YelpReview;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,10 +44,12 @@ import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
+import static android.R.attr.width;
 import static com.codepath.enroute.R.id.tvReview1;
 import static com.codepath.enroute.R.id.tvReview2;
 import static com.codepath.enroute.R.id.tvReview3;
@@ -66,6 +75,8 @@ public class DetailActivity extends AppCompatActivity {
     ArrayList<YelpBusiness> list;
     YelpBusiness yelpBusiness;
     String[] reviews;
+    RecyclerView rvYelpReview;
+    List<YelpReview> mYelpReviews;
 
 
     public static final int RC_PHOTO_PICKER = 2;
@@ -74,6 +85,8 @@ public class DetailActivity extends AppCompatActivity {
     private FirebaseStorage mFirebaseStorage;
     private DatabaseReference mYelpReviewDatabaseReference;
     private StorageReference mYelpPhotoStorageReference;
+    private ChildEventListener mChildEventListener;
+    private YelpReviewAdapter mYelpReviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +94,37 @@ public class DetailActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         yelpClient = YelpClient.getInstance();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseStorage = FirebaseStorage.getInstance();
-        mYelpReviewDatabaseReference = mFirebaseDatabase.getReference().child("YelpReview");
-        mYelpPhotoStorageReference = mFirebaseStorage.getReference().child("YelpPhotos");
+
+
+        rvYelpReview=(RecyclerView)findViewById(R.id.rvYelpPhoto);
 
         tvReview = new TextView[3];
         //setContentView(R.layout.activity_detail);
         yelpBusiness = (YelpBusiness) Parcels.unwrap(getIntent().getParcelableExtra("YELP_BUSINESS"));
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        String yelpBusinessID = yelpBusiness.getId();
+        mYelpReviewDatabaseReference = mFirebaseDatabase.getReference().child("YelpReview").child(yelpBusinessID);
+        mYelpPhotoStorageReference = mFirebaseStorage.getReference().child("YelpPhotos");
+
+
         setupView();
+        rvYelpReview =mBinding.rvYelpPhoto;
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        llm.setMeasurementCacheEnabled(false);
+
+
+        rvYelpReview.setLayoutManager(llm);
+
+
+
+
+
+        mYelpReviews = new ArrayList<>();
+        mYelpReviewAdapter = new YelpReviewAdapter(this,mYelpReviews);
+        rvYelpReview.setAdapter(mYelpReviewAdapter);
 
         ivWriteReview.setOnClickListener(new View.OnClickListener() {
 
@@ -103,6 +138,40 @@ public class DetailActivity extends AppCompatActivity {
         });
         getData();
         updateView();
+
+
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                YelpReview aReview = dataSnapshot.getValue(YelpReview.class);
+                //
+                //YelpReviewAdapter.add(aReview);
+                mYelpReviews.add(aReview);
+                mYelpReviewAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        mYelpReviewDatabaseReference.addChildEventListener(mChildEventListener);
     }
 
     public void setupView() {
@@ -120,7 +189,9 @@ public class DetailActivity extends AppCompatActivity {
         tvReview[2] = mBinding.tvReview3;
         ivWriteReview = mBinding.ivWriteReview;
         tvCategory = mBinding.tvCategory;
-        ivYelpPhoto =mBinding.ivYelpPhoto;
+
+
+
     }
 
     public void getData() {
@@ -199,9 +270,13 @@ public class DetailActivity extends AppCompatActivity {
 
                     YelpReview yelpReview = new YelpReview(yelpBusiness.getId(), downloadUrl.toString());
                     mYelpReviewDatabaseReference.push().setValue(yelpReview);
-                    Picasso.with(DetailActivity.this).load(downloadUrl.toString()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(ivYelpPhoto);
+                    //Picasso.with(DetailActivity.this).load(downloadUrl.toString()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(ivYelpPhoto);
+
                 }
             });
         }
     }
+
+
+
 }
