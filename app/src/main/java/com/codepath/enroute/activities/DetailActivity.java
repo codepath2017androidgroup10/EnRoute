@@ -323,6 +323,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 }
             });
+            bottomSheetDialog.dismiss();
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {

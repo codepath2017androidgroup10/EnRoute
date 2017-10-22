@@ -7,16 +7,24 @@
     <TextView
         android:id="@+id/tvTakePhoto"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:clickable="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:onClick="onTakePhotoClick"
-        android:text="@string/tvTakePhoto"/>
+        android:text="@string/tvTakePhoto"
+        android:gravity="center_vertical"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvGalleryUpload"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:clickable="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="16sp"
         android:onClick="onUploadFromGalleryClick"
+        android:gravity="center_vertical"
         android:text="@string/tvGalleryUpload"/>
 </LinearLayout>
