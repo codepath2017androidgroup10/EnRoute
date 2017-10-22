@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp">
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/etFrom"
                 android:hint="@string/strHintFrom"
                 android:text="@string/originDefaultValue"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tILayoutFrom"
             android:layout_margin="5dp">
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/etTo"
                 android:hint="@string/strHintTo"
                 android:layout_width="match_parent"
