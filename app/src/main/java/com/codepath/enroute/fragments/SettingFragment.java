@@ -248,13 +248,15 @@ public class SettingFragment extends DialogFragment{
         btnAccess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "please grant access", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Current location access revoked", Toast.LENGTH_LONG).show();
             }
         });
         btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "your history is erased", Toast.LENGTH_LONG).show();
+                settingPreference.edit().remove("toHistory").commit();
+                settingPreference.edit().remove("fromHistory").commit();
             }
         });
     }
