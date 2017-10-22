@@ -2,24 +2,31 @@ package com.codepath.enroute.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.adapters.YelpReviewAdapter;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivityDetailBinding;
+import com.codepath.enroute.fragments.ReviewBottomSheetDialog;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.models.YelpReview;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,26 +40,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
-
-import static android.R.attr.width;
-import static com.codepath.enroute.R.id.tvReview1;
-import static com.codepath.enroute.R.id.tvReview2;
-import static com.codepath.enroute.R.id.tvReview3;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -77,7 +79,7 @@ public class DetailActivity extends AppCompatActivity {
     String[] reviews;
     RecyclerView rvYelpReview;
     List<YelpReview> mYelpReviews;
-
+    ReviewBottomSheetDialog bottomSheetDialog;
 
     public static final int RC_PHOTO_PICKER = 2;
 
@@ -87,6 +89,11 @@ public class DetailActivity extends AppCompatActivity {
     private StorageReference mYelpPhotoStorageReference;
     private ChildEventListener mChildEventListener;
     private YelpReviewAdapter mYelpReviewAdapter;
+
+    public final String APP_TAG = "EnRoute";
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public String photoFileName = "photo.jpg";
+    File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,17 +117,13 @@ public class DetailActivity extends AppCompatActivity {
 
 
         setupView();
-        rvYelpReview =mBinding.rvYelpPhoto;
+        rvYelpReview = mBinding.rvYelpPhoto;
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         llm.setMeasurementCacheEnabled(false);
 
 
         rvYelpReview.setLayoutManager(llm);
-
-
-
-
 
         mYelpReviews = new ArrayList<>();
         mYelpReviewAdapter = new YelpReviewAdapter(this,mYelpReviews);
@@ -130,10 +133,11 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+                // Open the bottom sheet modal dialog
+
+                bottomSheetDialog = new ReviewBottomSheetDialog();
+                FragmentManager fm = getSupportFragmentManager();
+                bottomSheetDialog.show(fm, "Choose an option");
             }
         });
         getData();
@@ -189,9 +193,6 @@ public class DetailActivity extends AppCompatActivity {
         tvReview[2] = mBinding.tvReview3;
         ivWriteReview = mBinding.ivWriteReview;
         tvCategory = mBinding.tvCategory;
-
-
-
     }
 
     public void getData() {
@@ -247,20 +248,68 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this).load(yelpBusiness.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(ivProfileImage);
     }
 
+    public void onUploadFromGalleryClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/jpeg");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+    }
+
+    public void onTakePhotoClick(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Create a File reference to access to future access
+        photoFile = getPhotoFileUri(photoFileName);
+
+        if (photoFile != null) {
+            Uri fileProvider = FileProvider.getUriForFile(DetailActivity.this, "com.codepath.fileprovider", photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+            // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+            // So as long as the result is not null, it's safe to use the intent.
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                // Start the image capture intent to take photo
+                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            }
+        }
+    }
+
+    // Returns the File for a photo stored on disk given the fileName
+    public File getPhotoFileUri(String fileName) {
+        // Only continue if the SD Card is mounted
+        if (isExternalStorageAvailable()) {
+            File mediaStorageDir = new File(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+                Log.d(APP_TAG, "failed to create directory");
+            }
+            // Return the file target for the photo based on filename
+            File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+
+            return file;
+        }
+        return null;
+    }
+
+    // Returns true if external storage for photos is available
+    private boolean isExternalStorageAvailable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
+    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
+            Uri selectedImageUri = intent.getData();
             StorageReference photoRef = mYelpPhotoStorageReference.child(selectedImageUri.getLastPathSegment());
             UploadTask uploadTask = photoRef.putFile(selectedImageUri);
 
             uploadTask.addOnFailureListener(this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
+                    Toast.makeText(getApplicationContext(), "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -274,6 +323,36 @@ public class DetailActivity extends AppCompatActivity {
 
                 }
             });
+        }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // by this point we have the camera photo on disk
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getPath());
+                takenImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] bArray = baos.toByteArray();
+                StorageReference photoRef = mYelpPhotoStorageReference.child(photoFile.getPath());
+
+                UploadTask uploadTask = photoRef.putBytes(bArray);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        YelpReview yelpReview = new YelpReview(yelpBusiness.getId(), downloadUrl.toString());
+                        mYelpReviewDatabaseReference.push().setValue(yelpReview);
+                    }
+                });
+
+                bottomSheetDialog.dismiss();
+            } else {
+                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

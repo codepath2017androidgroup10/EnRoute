@@ -230,13 +230,13 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             fab2.setClickable(false);
 
             Animation hide_fab_3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fav3_hide);
-            fab2.startAnimation(hide_fab_3);
-            fab2.setClickable(false);
+            fab3.startAnimation(hide_fab_3);
+            fab3.setClickable(false);
 
             layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
             layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
 
-            layoutParams2.rightMargin -= (int) (fab3.getWidth() * 0.25);
+            layoutParams1.rightMargin -= (int) (fab2.getWidth() * 0.25);
             layoutParams1.bottomMargin -= (int) (fab2.getHeight() * 1.7);
 
             layoutParams2.rightMargin -= (int) (fab3.getWidth() * 1.5);

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <RelativeLayout
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -161,6 +162,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="13dp"
         app:srcCompat="@drawable/ic_rate_review_black_24dp" />
+
+    <ImageView
+        android:id="@+id/ivCameraPreview"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp" />
 
 
 </RelativeLayout>

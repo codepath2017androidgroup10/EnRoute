@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codepath.enroute.fragments.ReviewBottomSheetDialog">
+    <TextView
+        android:id="@+id/tvTakePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:clickable="true"
+        android:onClick="onTakePhotoClick"
+        android:text="@string/tvTakePhoto"/>
+
+    <TextView
+        android:id="@+id/tvGalleryUpload"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:clickable="true"
+        android:onClick="onUploadFromGalleryClick"
+        android:text="@string/tvGalleryUpload"/>
+</LinearLayout>

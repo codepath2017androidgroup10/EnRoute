@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,8 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 @RuntimePermissions
 public class PlacesMapFragment extends PointsOfInterestFragment implements GoogleMap.OnMarkerClickListener{
 
+    private static final String KEY_LOCATION = "location";
+    private static final String KEY_POINTS_OF_INTEREST = "poi";
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
@@ -87,7 +90,21 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
+            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
+            // is not null.
+            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        }
+
+        if(savedInstanceState!= null && savedInstanceState.keySet().contains(KEY_POINTS_OF_INTEREST)){
+            mPointsOfInterest = savedInstanceState.getParcelable(KEY_POINTS_OF_INTEREST);
+        }else{
+            mPointsOfInterest = new HashMap<>();
+        }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,6 +119,12 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         setUpViews(v, savedInstanceState);
         // Inflate the layout for this fragment
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_LOCATION, mCurrentLocation);
+        super.onSaveInstanceState(outState);
     }
 
     private View setUpViews(View v, Bundle savedInstanceState) {
@@ -147,7 +170,18 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     public void onResume() {
         super.onResume();
         mapView.onResume();
-
+        if (mCurrentLocation != null) {
+            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            onLocationChanged(mCurrentLocation);
+            PlacesMapFragmentPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+        }
+//            Log.d(this.getClass().toString(), "GPS location was found!");
+//            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+//            zoomToLocation();
+//        } else {
+//            Log.e(this.getClass().toString(), "Current location was null, enable GPS on emulator!");
+//        }
+//        PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
 
     }
 
