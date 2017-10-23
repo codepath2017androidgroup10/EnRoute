@@ -1,6 +1,7 @@
 package com.codepath.enroute.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 
 import com.codepath.enroute.R;
@@ -25,6 +27,8 @@ import com.codepath.enroute.fragments.SettingFragment;
 import com.codepath.enroute.models.YelpBusiness;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.codepath.enroute.R.id.fab;
 
@@ -40,6 +44,9 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     final String[] searchTerm=new String[1];
     String keyReponseJSON;
     String keyDirection;
+    SharedPreferences settingPreference;
+    private Set<String> searchHistory;
+    SearchView searchView;
 
 //    PlacesMapFragment placesMapFragment;
 
@@ -80,7 +87,10 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         inflater.inflate(R.menu.menu_places, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        settingPreference = getSharedPreferences(String.valueOf(R.string.setting_preference), MODE_PRIVATE);
+        searchHistory = settingPreference.getStringSet("searchHistory", new HashSet());
+        setAutoCompleteSource();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -106,7 +116,11 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         });
         return true;
     }
+    private void setAutoCompleteSource() {
+//        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.etInput);
+        ArrayAdapter<String> searchAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, searchHistory.toArray(new String[searchHistory.size()]));
 
+    }
     /*
     * Click listener for tool bar menu item to switch to list view
     *
