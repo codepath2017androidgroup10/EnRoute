@@ -1,30 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.codepath.enroute.fragments.ReviewBottomSheetDialog">
-    <TextView
-        android:id="@+id/tvTakePhoto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:onClick="onTakePhotoClick"
-        android:text="@string/tvTakePhoto"
-        android:gravity="center_vertical"
-        android:textSize="16sp" />
+        android:layout_height="48dp">
 
-    <TextView
-        android:id="@+id/tvGalleryUpload"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivCameraIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            android:onClick="onTakePhotoClick"
+            app:srcCompat="@drawable/ic_photo_camera_black_24dp"/>
+
+        <TextView
+            android:id="@+id/tvTakePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivCameraIcon"
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:onClick="onTakePhotoClick"
+            android:text="@string/tvTakePhoto"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:clickable="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textSize="16sp"
-        android:onClick="onUploadFromGalleryClick"
-        android:gravity="center_vertical"
-        android:text="@string/tvGalleryUpload"/>
+        android:layout_height="48dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivCloudIcon"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:clickable="true"
+            android:onClick="onUploadFromGalleryClick"
+            app:srcCompat="@drawable/ic_cloud_upload_24dp"/>
+
+        <TextView
+            android:id="@+id/tvGalleryUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivCloudIcon"
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textSize="16sp"
+            android:onClick="onUploadFromGalleryClick"
+            android:text="@string/tvGalleryUpload"/>
+    </RelativeLayout>
+
 </LinearLayout>
