@@ -30,17 +30,17 @@ The following required functionality is completed:
 The following bonus features are completed:
 * [X] User can choose from autocompelete location history when user enter from and to destination.
 * [X] Once clicked, floating action button can show or hide three button choices with animation
-* [] User can choose from autocompelete search history when user enter search creteria.
-* [] marker can show more information about open or not, rating etc.
-* [] User can write reviw and save it with firebase.
-* [] night mode
-* [] robust internet handling
-* [] businness open until
+* [ ] User can choose from autocompelete search history when user enter search creteria.
+* [ ] marker can show more information about open or not, rating etc.
+* [ ] User can write reviw and save it with firebase.
+* [ ] night mode
+* [ ] robust internet handling
+* [ ] businness open until
 * [ ] User can choose from advanced features.
-  * [] User can upgrade to advanced features to get real time data, as he moves along the route. 
-  * [] User can choose from advanced features to choose different transportation choices(bike or on foot).
-  * [] User can choose minimum/maximum price level.
-  * [] User can revoke current location access.
+  * [ ] User can upgrade to advanced features to get real time data, as he moves along the route. 
+  * [ ] User can choose from advanced features to choose different transportation choices(bike or on foot).
+  * [ ] User can choose minimum/maximum price level.
+  * [ ] User can revoke current location access.
 
   
 
@@ -48,8 +48,11 @@ The following bonus features are completed:
 
 Here's a walkthrough of implemented user stories:
 
-[Video Walkthrough](https://i.imgur.com/5FIhX6b.mp4)
+[Video Walkthrough](https://i.imgur.com/BAAtBUp.gif)
 
+<img src='https://i.imgur.com/BAAtBUp.gif' title='Video Walkthrough' width='568' alt='Video Walkthrough' />
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 
