@@ -26,6 +26,8 @@ import com.codepath.enroute.models.YelpBusiness;
 
 import java.util.ArrayList;
 
+import static com.codepath.enroute.R.id.fab;
+
 /*
 * Activity with the map view showing route between current location and destination
 *
@@ -177,6 +179,11 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 
     public void onFABClick(View view) {
         Log.d("FAB", "CLicked");
+
+        FloatingActionButton fab0 = (FloatingActionButton) findViewById(R.id.fab_base);
+
+        FrameLayout.LayoutParams layoutParams0 = (FrameLayout.LayoutParams) fab0.getLayoutParams();
+
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab_food);
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
@@ -194,24 +201,24 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         if (!areOptionsShown) {
             // Show menu items
 
-            layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
-            layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
+            layoutParams.rightMargin = (int) (layoutParams0.rightMargin)+ (int) (fab1.getWidth() * 1.7);
+            layoutParams.bottomMargin = (int) layoutParams0.bottomMargin + (int) (fab1.getHeight() * 0.25);
             fab1.setLayoutParams(layoutParams);
 
             Animation show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
             fab1.startAnimation(show_fab_1);
             fab1.setClickable(true);
 
-            layoutParams1.rightMargin += (int) (fab2.getWidth() * 0.25);
-            layoutParams1.bottomMargin += (int) (fab2.getHeight() * 1.7);
+            layoutParams1.rightMargin = (int) (layoutParams0.rightMargin)+ (int) (fab2.getWidth() * 0.25);
+            layoutParams1.bottomMargin = (int) layoutParams0.bottomMargin + (int) (fab2.getHeight() * 1.7);
             fab2.setLayoutParams(layoutParams1);
 
             Animation show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
             fab2.startAnimation(show_fab_2);
             fab2.setClickable(true);
 
-            layoutParams2.rightMargin += (int) (fab3.getWidth() * 1.5);
-            layoutParams2.bottomMargin += (int) (fab3.getHeight() * 1.5);
+            layoutParams2.rightMargin = (int) (layoutParams0.rightMargin)+ (int) (fab3.getWidth() * 1.5);
+            layoutParams2.bottomMargin = (int) layoutParams0.bottomMargin+ (int) (fab3.getHeight() * 1.5);
             fab3.setLayoutParams(layoutParams2);
 
             Animation show_fab3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab3_show);

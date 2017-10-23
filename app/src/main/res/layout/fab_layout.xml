@@ -6,6 +6,19 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_base"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_restaurant_black_24dp"
+        app:tint="@color/colorWhite"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="mini"
+        android:layout_margin="5dp"
+        android:onClick="onFoodMenuClicked"/>
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
