@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.models.YelpReview;
@@ -46,8 +47,9 @@ public class YelpReviewAdapter extends RecyclerView.Adapter<YelpReviewAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         YelpReview aYelpReview = mYelpReviews.get(position);
+
 
         holder.ivYelpReview.measure(
 //                View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED),
@@ -60,12 +62,26 @@ public class YelpReviewAdapter extends RecyclerView.Adapter<YelpReviewAdapter.Vi
         int width = holder.ivYelpReview.getMeasuredWidth();
         height=500;
         width=500;
+        holder.pbYelpPhoto.setVisibility(View.VISIBLE);
         Picasso.with(mContext)
                 .load(aYelpReview.getPhotoUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .resize(width,height)
                 .transform(new RoundedCornersTransformation(10, 10))
-                .into(holder.ivYelpReview);
+                .into(holder.ivYelpReview, new com.squareup.picasso.Callback(){
+
+                    @Override
+                    public void onSuccess() {
+                        if (holder.pbYelpPhoto!=null){
+                            holder.pbYelpPhoto.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
     }
 
     @Override
@@ -75,10 +91,12 @@ public class YelpReviewAdapter extends RecyclerView.Adapter<YelpReviewAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView ivYelpReview;
+        ProgressBar pbYelpPhoto;
 
         ViewHolder(View itemView){
             super(itemView);
             ivYelpReview = (ImageView)itemView.findViewById(R.id.ivYelpPhoto);
+            pbYelpPhoto = (ProgressBar) itemView.findViewById(R.id.pbYelpPhoto);
         }
     }
 }
