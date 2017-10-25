@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
 import com.codepath.enroute.activities.DetailActivity;
+import com.codepath.enroute.adapters.CustomInfoWindowAdapter;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
 import com.google.android.gms.location.LocationCallback;
@@ -260,6 +261,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
         map.clear();
         placeMarkersWithZoomLevel(getZoomLevel());
+        CustomInfoWindowAdapter infoWindowAdapter = new CustomInfoWindowAdapter(getContext());
+        map.setInfoWindowAdapter(infoWindowAdapter);
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {

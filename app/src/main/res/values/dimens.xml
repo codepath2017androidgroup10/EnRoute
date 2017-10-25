@@ -3,4 +3,5 @@
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
     <dimen name="custom_marker_size">0.1dp</dimen>
+    <dimen name="map_marker_info_window_text_size">12dp</dimen>
 </resources>
