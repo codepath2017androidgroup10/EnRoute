@@ -173,7 +173,7 @@ public class YelpBusiness {
             aYelpBusiness.price_level = jsonObject.getString("price");
         }else
         {
-            aYelpBusiness.price_level ="NA";
+            aYelpBusiness.price_level ="";
         }
         aYelpBusiness.display_address = "";
         JSONArray addressArray = jsonObject.getJSONObject("location").getJSONArray("display_address");
