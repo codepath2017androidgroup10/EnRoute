@@ -65,6 +65,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
     LatLng mCurrentLatLng;
+    final float[] zoomLevel = new float[1];
 
     private List<LatLng> directionPoints;
     private MapView mapView;
@@ -149,10 +150,18 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     protected void loadMap(GoogleMap googleMap) {
         map = googleMap;
-        map.setOnMarkerClickListener(this);
         if (map != null) {
             // Map is ready
+            map.setOnMarkerClickListener(this);
             map.setMyLocationEnabled(true);
+            map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                @Override
+                public void onCameraIdle() {
+                    zoomLevel[0] = map.getCameraPosition().zoom;
+                    Log.d("oncam idle : Zoom Level", ""+ zoomLevel[0]);
+                    placeMarkersWithZoomLevel(zoomLevel[0]);
+                }
+            });
             MapsInitializer.initialize(getContext());
             mCurrentLatLng = directionPoints.get(0);
             Log.d(this.getClass().toString(), "Map Fragment was loaded properly!");
@@ -243,16 +252,14 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     @Override
     public void postYelpSearch() {
-        BitmapDescriptor marker =
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-        markBusinesses(marker);
+        markBusinesses();
        listener.notifyActivity(yelpBusinessList);
     }
 
-    private void markBusinesses(BitmapDescriptor marker) {
-        map.clear();
-        drawDirections(mCurrentLocation);
+    private void markBusinesses() {
 
+        map.clear();
+        placeMarkersWithZoomLevel(getZoomLevel());
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -264,10 +271,36 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                 }
             }
         });
-        for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
-            Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
-            aMarker.setTag(poi.getValue());
+    }
+
+    private void placeMarkersWithZoomLevel(float zoom) {
+        map.clear();
+        drawDirections(mCurrentLocation);
+        BitmapDescriptor marker =
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+
+        if(!mPointsOfInterest.isEmpty()) {
+            for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
+                if (zoom < 12) {
+                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
+                    aMarker.setTag(poi.getValue());
+                } else if (zoom >= 12) {
+                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
+                    aMarker.setTag(poi.getValue());
+                }
+//                else if (zoom >= 10 && zoom < 13){
+//                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker2);
+//                    aMarker.setTag(poi.getValue());
+//                } else if (zoom >= 13){
+//                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
+//                    aMarker.setTag(poi.getValue());
+//                }
+            }
         }
+    }
+
+    private float getZoomLevel() {
+        return map.getCameraPosition().zoom;
     }
 
     @Override
@@ -277,7 +310,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     }
 
     private void drawDirections(Location location) {
-        Log.d("DEBUG", "Drawing directions");
+        //Log.d("DEBUG", "Drawing directions");
         PolylineOptions lineOptions = new PolylineOptions();
         for (LatLng latLng : directionPoints) {
             lineOptions.add(latLng);

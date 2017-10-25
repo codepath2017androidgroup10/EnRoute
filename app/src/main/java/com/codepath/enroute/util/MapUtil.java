@@ -1,10 +1,19 @@
 package com.codepath.enroute.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.codepath.enroute.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -184,5 +193,26 @@ public class MapUtil {
         Marker marker = map.addMarker(options);
         marker.setDraggable(true);
         return marker;
+    }
+
+    public static Bitmap getCustomMarker(Context context) {
+        IconGenerator iconGen = new IconGenerator(context);
+
+        // Define the size you want from dimensions file
+        int shapeSize = context.getResources().getDimensionPixelSize(R.dimen.custom_marker_size);
+
+        Drawable shapeDrawable = ResourcesCompat.getDrawable(context.getResources(),
+                R.drawable.ic_vector_circle, null);
+        iconGen.setBackground(shapeDrawable);
+
+        // Create a view container to set the size
+        View view = new View(context);
+        view.setLayoutParams(new ViewGroup.LayoutParams(shapeSize, shapeSize));
+        iconGen.setContentView(view);
+
+        // Create the bitmap
+        Bitmap bitmap = iconGen.makeIcon();
+
+        return bitmap;
     }
 }
