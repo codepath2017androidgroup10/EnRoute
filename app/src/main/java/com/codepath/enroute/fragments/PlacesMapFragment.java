@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -280,7 +281,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         map.clear();
         drawDirections(mCurrentLocation);
         BitmapDescriptor marker =
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
 
         if(!mPointsOfInterest.isEmpty()) {
             for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
@@ -318,6 +319,9 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         for (LatLng latLng : directionPoints) {
             lineOptions.add(latLng);
         }
+
+        lineOptions = lineOptions.color(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
         map.addPolyline(lineOptions);
 
         BitmapDescriptor defaultMarker =

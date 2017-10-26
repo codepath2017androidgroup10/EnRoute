@@ -36,17 +36,19 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.marker_info_contents, null);
         TextView tvName = (TextView) view.findViewById(R.id.tvPlaceName);
-        tvName.setText(mYelpBusiness.getName());
+        if (mYelpBusiness != null) {
+            tvName.setText(mYelpBusiness.getName());
 
-        RatingBar rbReviews = (RatingBar) view.findViewById(R.id.rbPlaceRating);
-        rbReviews.setRating((float) mYelpBusiness.getRating());
+            RatingBar rbReviews = (RatingBar) view.findViewById(R.id.rbPlaceRating);
+            rbReviews.setRating((float) mYelpBusiness.getRating());
 
-        TextView tvClosedNow = (TextView) view.findViewById(R.id.tvClosedNow);
-        tvClosedNow.setText(mYelpBusiness.isOpenNow() ? "Open" : "Closed Now");
+            TextView tvClosedNow = (TextView) view.findViewById(R.id.tvClosedNow);
+            tvClosedNow.setText(mYelpBusiness.isOpenNow() ? "Open" : "Closed Now");
 
-        TextView tvDetourTime = (TextView) view.findViewById(R.id.tvDetourTime);
-        String detourStr = "+" + mYelpBusiness.getDistance();
-        tvDetourTime.setText(detourStr);
+            TextView tvDetourTime = (TextView) view.findViewById(R.id.tvDetourTime);
+            String detourStr = "+" + mYelpBusiness.getDistance();
+            tvDetourTime.setText(detourStr);
+        }
         return view;
     }
 }
