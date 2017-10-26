@@ -95,7 +95,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         }
         else {
             holder.tvOpen.setText("open");
-            holder.tvOpen.setTextColor(Color.GREEN);
+            holder.tvOpen.setTextColor(Color.parseColor("#8BC34A"));
         }
 //        holder.tvOpen.setText(restaurant.isOpenNow()? "open" : "closed");
 //        holder.tvDistance.setText(String.valueOf(restaurant.distance) + " mi");

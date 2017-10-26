@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static android.R.attr.fragment;
 
@@ -109,6 +112,10 @@ public class ListFragment extends PointsOfInterestFragment {
         restaurantAdapter = new RestaurantAdapter(getContext(), yelpBusinessList, fragmentManager);
         rvRestaurants.setAdapter(restaurantAdapter);
         rvRestaurants.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        rvRestaurants.addItemDecoration(itemDecoration);
+        rvRestaurants.setItemAnimator(new SlideInUpAnimator());
         ItemClickSupport.addTo(rvRestaurants).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -119,6 +126,7 @@ public class ListFragment extends PointsOfInterestFragment {
                 startActivity(i);
             }
         });
+
         try {
             directionsJson = new JSONObject(getArguments().getString("directionsJson"));
         } catch (JSONException e) {

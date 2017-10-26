@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="5dp"
+    android:layout_margin="2dp"
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="fitXY"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -18,10 +19,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="-5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
+        android:layout_toLeftOf="@+id/tvOpen"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="TextView"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <RatingBar
@@ -41,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:textSize="12sp"
         android:text="TextView" />
 
     <TextView
@@ -48,6 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:textSize="12sp"
         android:layout_below="@+id/tvOpen"
         android:text="TextView" />
 
@@ -57,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ratingBar"
         android:layout_marginLeft="5dp"
+        android:textSize="12sp"
         android:layout_toEndOf="@+id/ratingBar"
         android:text="TextView" />
 
@@ -65,8 +72,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvName"
+        android:layout_toLeftOf="@+id/tvPrice"
         android:layout_below="@+id/ratingBar"
         android:ellipsize="end"
+        android:textSize="12sp"
         android:maxLines="1"
         android:text="TextView" />
 
@@ -78,6 +87,8 @@
         android:layout_below="@+id/tvCategory"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textSize="12sp"
+        android:textColor="#9E9E9E"
         android:text="TextView" />
 
     <TextView
@@ -86,6 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDistance"
         android:layout_alignParentEnd="true"
+        android:textSize="12sp"
         android:text="TextView" />
 
 
