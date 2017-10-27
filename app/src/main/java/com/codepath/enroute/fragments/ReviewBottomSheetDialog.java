@@ -18,6 +18,7 @@ public class ReviewBottomSheetDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.getDialog().setCanceledOnTouchOutside(true);
         return inflater.inflate(R.layout.fragment_bottom_sheet, container);
     }
 

@@ -85,7 +85,7 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView rvYelpReview;
     RecyclerView mReviewRecyclerView; //this is for yelp Review text;
     List<YelpReview> mYelpReviews;
-    ReviewBottomSheetDialog bottomSheetDialog;
+    public ReviewBottomSheetDialog bottomSheetDialog;
 
     public static final int RC_PHOTO_PICKER = 2;
 
@@ -134,19 +134,20 @@ public class DetailActivity extends AppCompatActivity {
 
         mYelpReviews = new ArrayList<>();
         mYelpReviewAdapter = new YelpReviewPhotoAdapter(this,mYelpReviews);
+        mYelpReviews.add(0,new YelpReview("camera","https://maxcdn.icons8.com/Share/icon/Photo_Video//camera1600.png"));
         rvYelpReview.setAdapter(mYelpReviewAdapter);
 
-        ivWriteReview.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Open the bottom sheet modal dialog
-
-                bottomSheetDialog = new ReviewBottomSheetDialog();
-                FragmentManager fm = getSupportFragmentManager();
-                bottomSheetDialog.show(fm, "Choose an option");
-            }
-        });
+//        ivWriteReview.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // Open the bottom sheet modal dialog
+//
+//                bottomSheetDialog = new ReviewBottomSheetDialog();
+//                FragmentManager fm = getSupportFragmentManager();
+//                bottomSheetDialog.show(fm, "Choose an option");
+//            }
+//        });
         getData();
         updateView();
 
@@ -157,7 +158,7 @@ public class DetailActivity extends AppCompatActivity {
                 YelpReview aReview = dataSnapshot.getValue(YelpReview.class);
                 //
                 //YelpReviewPhotoAdapter.add(aReview);
-                mYelpReviews.add(aReview);
+                mYelpReviews.add(0,aReview);
                 mYelpReviewAdapter.notifyDataSetChanged();
             }
 

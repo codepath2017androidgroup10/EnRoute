@@ -1,20 +1,27 @@
 package com.codepath.enroute.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.codepath.enroute.R;
+import com.codepath.enroute.activities.DetailActivity;
+import com.codepath.enroute.fragments.ReviewBottomSheetDialog;
 import com.codepath.enroute.models.YelpReview;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
+import static android.R.attr.y;
+import static com.codepath.enroute.R.id.ivWriteReview;
 
 /**
  * Created by qunli on 10/21/17.
@@ -34,11 +41,31 @@ public class YelpReviewPhotoAdapter extends RecyclerView.Adapter<YelpReviewPhoto
 
     }
 
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            YelpReview aYelpReview = (YelpReview) v.getTag();
+            if (aYelpReview.getText().equals("camera")) {
+                Toast.makeText(v.getContext(),aYelpReview.getText(),Toast.LENGTH_LONG).show();
+                ((DetailActivity)mContext).bottomSheetDialog= new ReviewBottomSheetDialog();
+
+                FragmentManager fm = ((DetailActivity)mContext).getSupportFragmentManager();
+                ((DetailActivity)mContext).bottomSheetDialog.show(fm, "Choose an option");
+            }
+
+        }
+    };
+
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View YelpReviewView = inflater.inflate(R.layout.item_yelp_photo_review,parent,false);
+
+        //YelpReviewView.setOnClickListener(mOnClickListener);
         ViewHolder viewHolder = new ViewHolder(YelpReviewView);
         return viewHolder;
     }
@@ -47,7 +74,10 @@ public class YelpReviewPhotoAdapter extends RecyclerView.Adapter<YelpReviewPhoto
     public void onBindViewHolder(final ViewHolder holder, int position) {
         YelpReview aYelpReview = mYelpReviews.get(position);
 
-
+        holder.itemView.setTag(aYelpReview);
+        if (aYelpReview.getText().equals("camera")) {
+            holder.itemView.setOnClickListener(mOnClickListener);
+        }
         holder.ivYelpReview.measure(
 //                View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED),
 //                View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED)
