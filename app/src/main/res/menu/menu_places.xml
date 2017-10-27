@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/miSwitchView"
-        android:icon="@drawable/ic_view_list"
+        android:icon="@drawable/ic_view_list_black_24dp"
         android:orderInCategory="100"
         android:title="My profile"
         app:showAsAction="ifRoom"
