@@ -335,7 +335,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         BitmapDescriptor defaultMarker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = addMarker(map, mCurrentLatLng, "Current Location", "", defaultMarker);
+        Marker fromMarker = addMarker(map, directionPoints.get(0), "From", "", defaultMarker);
         Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", defaultMarker);
     }
 
