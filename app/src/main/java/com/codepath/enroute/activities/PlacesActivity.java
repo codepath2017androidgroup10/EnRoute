@@ -3,6 +3,7 @@ package com.codepath.enroute.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -45,6 +46,9 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     SharedPreferences settingPreference;
     private Set<String> searchHistory;
     SearchView searchView;
+    Boolean isMapFragment;
+    ListFragment placesListFragment;
+    PlacesMapFragment placesMapFragment;
 
 //    PlacesMapFragment placesMapFragment;
 
@@ -59,11 +63,11 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         keyReponseJSON = bundle.getString(SearchActivity.KEY_RESPONSE_JSON);
         keyDirection = bundle.getString(SearchActivity.KEY_DIRECTIONS);
 
-        PlacesMapFragment placesMapFragment = PlacesMapFragment.newInstance(bundle.getString(SearchActivity.KEY_RESPONSE_JSON), bundle.getString(SearchActivity.KEY_DIRECTIONS));
+        placesMapFragment = PlacesMapFragment.newInstance(bundle.getString(SearchActivity.KEY_RESPONSE_JSON), bundle.getString(SearchActivity.KEY_DIRECTIONS));
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeHolder, placesMapFragment);
         ft.commit();
-
+        isMapFragment = true;
 //        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
 //            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
 //            // is not null.
@@ -77,6 +81,13 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 //            mPointsOfInterest = new HashMap<>();
 //        }
     }
+/*
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        searchView.setQuery("", false);
+        searchView.setIconified(true);
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,6 +114,8 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
                 PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
                 aFragment.setSearchTerm(query);
                 aFragment.getYelpBusinesses();
+//                searchView.setQuery("", false);
+//                searchView.clearFocus();
                 //startActivity(i);
                 return true;
             }
@@ -128,12 +141,27 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 
 //        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
 //        ListFragment placesListFragment = ListFragment.newInstance(keyReponseJSON,keyDirection);
-        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeHolder, placesListFragment);
+        if (isMapFragment) {
+            if (placesListFragment == null) {
+                if (yelpBusinessArrayList == null) {
+                    yelpBusinessArrayList = new ArrayList<>();
+                }
+                placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);}
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.placeHolder, placesListFragment);
         //ft.add(placesListFragment, "list_fragment");
-        ft.addToBackStack(null);
-        ft.commit();
+            ft.addToBackStack(null);
+            ft.commit();
+            item.setIcon(R.drawable.ic_map_black_24dp);
+            isMapFragment = false;
+        }
+        else {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.placeHolder, placesMapFragment);
+            ft.commit();
+            isMapFragment = true;
+            item.setIcon(R.drawable.ic_view_list_black_24dp);
+        }
     }
 
     @Override
