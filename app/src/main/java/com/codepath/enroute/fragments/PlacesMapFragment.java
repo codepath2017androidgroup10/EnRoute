@@ -289,8 +289,16 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                     Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
                     aMarker.setTag(poi.getValue());
                 } else if (zoom >= 12) {
-                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
-                    aMarker.setTag(poi.getValue());
+                    if (searchTerm.equals("gas")) {
+                        Marker aMarker = MapUtil.addGasMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
+                        aMarker.setTag(poi.getValue());
+                    } else if (searchTerm.equals("coffee")) {
+                        Marker aMarker = MapUtil.addCoffeeMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
+                        aMarker.setTag(poi.getValue());
+                    } else {
+                        Marker aMarker = MapUtil.addRestaurantMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
+                        aMarker.setTag(poi.getValue());
+                    }
                 }
 //                else if (zoom >= 10 && zoom < 13){
 //                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker2);

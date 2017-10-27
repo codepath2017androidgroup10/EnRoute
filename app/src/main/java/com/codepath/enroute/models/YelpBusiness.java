@@ -1,5 +1,6 @@
 package com.codepath.enroute.models;
 
+import com.codepath.enroute.R;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -8,6 +9,9 @@ import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by qunli on 10/14/17.
@@ -30,10 +34,10 @@ public class YelpBusiness {
     LatLng latLng;
     String description;
     String categories;
+    List<String> categoriesList = new ArrayList<>();
 
     //Mark: Do we really need distance here?
     public YelpBusiness() {
-
     }
 
     public double distance;
@@ -48,6 +52,14 @@ public class YelpBusiness {
 
     public String getCategories() {
         return categories;
+    }
+
+    public List<String> getCategoriesList() {
+        return categoriesList;
+    }
+
+    public void setCategoriesList(List<String> categoriesList) {
+        this.categoriesList = categoriesList;
     }
 
     public double getDistance() {
@@ -193,6 +205,7 @@ public class YelpBusiness {
         aYelpBusiness.categories = "";
         for (int i = 0; i < jsonArray.length(); i++) {
             aYelpBusiness.categories += jsonArray.getJSONObject(i).getString("title");
+            aYelpBusiness.categoriesList.add(jsonArray.getJSONObject(i).getString("title"));
             if (i < jsonArray.length() - 1) {
                 aYelpBusiness.categories += ", ";
             }
@@ -214,4 +227,33 @@ public class YelpBusiness {
         }
         return YelpBusinesses;
     }
+
+    public static Map<String, Integer> loadCategoryIcons() {
+        Map<String, Integer> mCategoryIconMap = new HashMap<>();
+        mCategoryIconMap.put("placeholder_food", R.drawable.ic_food_placeholder);
+        mCategoryIconMap.put("american", R.drawable.ic_category_american);
+        mCategoryIconMap.put("american (new)", R.drawable.ic_category_american);
+        mCategoryIconMap.put("american (traditional)", R.drawable.ic_category_american);
+        mCategoryIconMap.put("japanese", R.drawable.ic_catgory_japanese);
+        mCategoryIconMap.put("asianfusion", R.drawable.ic_category_asian);
+        mCategoryIconMap.put("thai", R.drawable.ic_category_asian);
+        mCategoryIconMap.put("filipino", R.drawable.ic_category_asian);
+        mCategoryIconMap.put("breakfast & brunch", R.drawable.ic_category_breakfast);
+        mCategoryIconMap.put("breakfast", R.drawable.ic_category_breakfast);
+        mCategoryIconMap.put("sandwiches", R.drawable.ic_category_sandwich);
+        mCategoryIconMap.put("vegetarian", R.drawable.ic_category_veg);
+        mCategoryIconMap.put("vegan", R.drawable.ic_category_veg);
+        mCategoryIconMap.put("pizza", R.drawable.ic_category_pizza);
+        mCategoryIconMap.put("seafood", R.drawable.ic_category_seafood);
+        mCategoryIconMap.put("bakeries", R.drawable.ic_category_bakery);
+        mCategoryIconMap.put("donuts", R.drawable.ic_category_donut);
+        mCategoryIconMap.put("chinese", R.drawable.ic_category_chinese);
+        mCategoryIconMap.put("italian", R.drawable.ic_category_italian);
+        mCategoryIconMap.put("vietnamese", R.drawable.ic_category_vietnamese);
+        mCategoryIconMap.put("gas", R.drawable.ic_placeholder_gas);
+        mCategoryIconMap.put("coffee", R.drawable.ic_coffee_placeholder);
+        mCategoryIconMap.put("coffee & tea", R.drawable.ic_coffee_placeholder);
+        return mCategoryIconMap;
+    }
+
 }

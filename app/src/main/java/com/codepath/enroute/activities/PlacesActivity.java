@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.codepath.enroute.R.id.fab;
-
 /*
 * Activity with the map view showing route between current location and destination
 *
@@ -270,7 +268,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
     public void onFoodMenuClicked(View view) {
         Log.d("DEBUG:", "Food Menu clicked");
         PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
-        aFragment.setSearchTerm("food");
+        aFragment.setSearchTerm("restaurant");
         aFragment.getYelpBusinesses();
     }
 

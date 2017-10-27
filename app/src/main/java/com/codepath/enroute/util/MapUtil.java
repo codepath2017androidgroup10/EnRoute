@@ -2,7 +2,10 @@ package com.codepath.enroute.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import com.codepath.enroute.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -195,6 +199,48 @@ public class MapUtil {
         return marker;
     }
 
+    public static Marker addRestaurantMarker(GoogleMap map, LatLng point, String title,
+                                             String snippet, Context context) {
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_map_restaurant_vector_20dp, context);
+       // BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_restaurant_vector_20dp);
+        MarkerOptions options = new MarkerOptions()
+                .position(point)
+                .title(title)
+                .snippet(snippet)
+                .icon(icon);
+        Marker marker = map.addMarker(options);
+        marker.setDraggable(true);
+        return marker;
+    }
+
+    public static Marker addGasMarker(GoogleMap map, LatLng point, String title,
+                                             String snippet, Context context) {
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_map_gas_vector_20dp, context);
+        //BitmapDescriptorFactory.fromResource(R.drawable.ic_map_gas_vector_20dp);
+        MarkerOptions options = new MarkerOptions()
+                .position(point)
+                .title(title)
+                .snippet(snippet)
+                .icon(icon);
+        Marker marker = map.addMarker(options);
+        marker.setDraggable(true);
+        return marker;
+    }
+
+    public static Marker addCoffeeMarker(GoogleMap map, LatLng point, String title,
+                                             String snippet, Context context) {
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_map_cafe_vector_20dp, context);
+                //BitmapDescriptorFactory.fromResource(R.drawable.ic_map_cafe_vector_20dp);
+        MarkerOptions options = new MarkerOptions()
+                .position(point)
+                .title(title)
+                .snippet(snippet)
+                .icon(icon);
+        Marker marker = map.addMarker(options);
+        marker.setDraggable(true);
+        return marker;
+    }
+
     public static Bitmap getCustomMarker(Context context) {
         IconGenerator iconGen = new IconGenerator(context);
 
@@ -214,5 +260,25 @@ public class MapUtil {
         Bitmap bitmap = iconGen.makeIcon();
 
         return bitmap;
+    }
+
+    private static  BitmapDescriptor getBitmapDescriptor(int id, Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            VectorDrawable vectorDrawable = (VectorDrawable) context.getDrawable(id);
+
+            int h = vectorDrawable.getIntrinsicHeight();
+            int w = vectorDrawable.getIntrinsicWidth();
+
+            vectorDrawable.setBounds(0, 0, w, h);
+
+            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bm);
+            vectorDrawable.draw(canvas);
+
+            return BitmapDescriptorFactory.fromBitmap(bm);
+
+        } else {
+            return BitmapDescriptorFactory.fromResource(id);
+        }
     }
 }
