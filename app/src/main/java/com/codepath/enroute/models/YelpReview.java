@@ -2,6 +2,7 @@ package com.codepath.enroute.models;
 
 /**
  * Created by qunli on 10/20/17.
+ * Thsi comes from Firebase
  */
 
 public class YelpReview {

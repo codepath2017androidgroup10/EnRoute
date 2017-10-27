@@ -1,7 +1,6 @@
 package com.codepath.enroute.adapters;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +16,18 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-import static android.R.attr.width;
-
 /**
  * Created by qunli on 10/21/17.
  */
 
-public class YelpReviewAdapter extends RecyclerView.Adapter<YelpReviewAdapter.ViewHolder>{
+public class YelpReviewPhotoAdapter extends RecyclerView.Adapter<YelpReviewPhotoAdapter.ViewHolder>{
 
     private List<YelpReview> mYelpReviews;
     private Context mContext;
 
 
 
-    public YelpReviewAdapter(Context mContext, List<YelpReview> mYelpReviews) {
+    public YelpReviewPhotoAdapter(Context mContext, List<YelpReview> mYelpReviews) {
         this.mYelpReviews = mYelpReviews;
         this.mContext = mContext;
 
@@ -41,7 +38,7 @@ public class YelpReviewAdapter extends RecyclerView.Adapter<YelpReviewAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View YelpReviewView = inflater.inflate(R.layout.item_yelp_review,parent,false);
+        View YelpReviewView = inflater.inflate(R.layout.item_yelp_photo_review,parent,false);
         ViewHolder viewHolder = new ViewHolder(YelpReviewView);
         return viewHolder;
     }

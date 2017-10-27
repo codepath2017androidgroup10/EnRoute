@@ -4,4 +4,16 @@
     <dimen name="list_item_spacing_half">8dp</dimen>
     <dimen name="custom_marker_size">0.1dp</dimen>
     <dimen name="map_marker_info_window_text_size">12dp</dimen>
+
+    <dimen name="margin_normal">8dp</dimen>
+    <dimen name="margin_left">8dp</dimen>
+    <dimen name="margin_right">8dp</dimen>
+    <dimen name="margin_top">8dp</dimen>
+    <dimen name="margin_bottom">8dp</dimen>
+
+    <dimen name="margin_normal_half">4dp</dimen>
+    <dimen name="margin_left_half">4dp</dimen>
+    <dimen name="margin_right_half">4dp</dimen>
+    <dimen name="margin_top_half">4dp</dimen>
+    <dimen name="margin_bottom_half">4dp</dimen>
 </resources>

@@ -23,12 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.enroute.R;
-import com.codepath.enroute.adapters.YelpReviewAdapter;
+import com.codepath.enroute.adapters.YelpReviewAdaptor;
+import com.codepath.enroute.adapters.YelpReviewPhotoAdapter;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivityDetailBinding;
 import com.codepath.enroute.fragments.ReviewBottomSheetDialog;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.models.YelpReview;
+import com.codepath.enroute.models.YelpTextReview;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -51,7 +53,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
@@ -76,8 +81,9 @@ public class DetailActivity extends AppCompatActivity {
     ImageView ivYelpPhoto;
     ArrayList<YelpBusiness> list;
     YelpBusiness yelpBusiness;
-    String[] reviews;
+    List<YelpTextReview> mYelpTextReviews;
     RecyclerView rvYelpReview;
+    RecyclerView mReviewRecyclerView; //this is for yelp Review text;
     List<YelpReview> mYelpReviews;
     ReviewBottomSheetDialog bottomSheetDialog;
 
@@ -88,12 +94,13 @@ public class DetailActivity extends AppCompatActivity {
     private DatabaseReference mYelpReviewDatabaseReference;
     private StorageReference mYelpPhotoStorageReference;
     private ChildEventListener mChildEventListener;
-    private YelpReviewAdapter mYelpReviewAdapter;
+    private YelpReviewPhotoAdapter mYelpReviewAdapter;
 
     public final String APP_TAG = "EnRoute";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
     File photoFile;
+    YelpReviewAdaptor mYelpReviewAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
         rvYelpReview.setLayoutManager(llm);
 
         mYelpReviews = new ArrayList<>();
-        mYelpReviewAdapter = new YelpReviewAdapter(this,mYelpReviews);
+        mYelpReviewAdapter = new YelpReviewPhotoAdapter(this,mYelpReviews);
         rvYelpReview.setAdapter(mYelpReviewAdapter);
 
         ivWriteReview.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +156,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 YelpReview aReview = dataSnapshot.getValue(YelpReview.class);
                 //
-                //YelpReviewAdapter.add(aReview);
+                //YelpReviewPhotoAdapter.add(aReview);
                 mYelpReviews.add(aReview);
                 mYelpReviewAdapter.notifyDataSetChanged();
             }
@@ -176,6 +183,11 @@ public class DetailActivity extends AppCompatActivity {
         };
 
         mYelpReviewDatabaseReference.addChildEventListener(mChildEventListener);
+        mYelpTextReviews = new ArrayList<YelpTextReview>() ;
+        mReviewRecyclerView=(RecyclerView)findViewById(R.id.rvReviews);
+        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mYelpReviewAdaptor = new YelpReviewAdaptor(this,mYelpTextReviews);
+        mReviewRecyclerView.setAdapter(mYelpReviewAdaptor);
     }
 
     public void setupView() {
@@ -188,28 +200,26 @@ public class DetailActivity extends AppCompatActivity {
         tvAddress = mBinding.tvAddress;
         tvOpen = mBinding.tvOpen;
         ivDirection = mBinding.ivDirection;
-        tvReview[0] = mBinding.tvReview1;
-        tvReview[1] = mBinding.tvReview2;
-        tvReview[2] = mBinding.tvReview3;
+
         ivWriteReview = mBinding.ivWriteReview;
         tvCategory = mBinding.tvCategory;
     }
 
     public void getData() {
 
-        reviews = new String[3];
-        for (int i = 0; i < 3; i++) {
-            reviews[i] = "";
-        }
+
+
         yelpClient.getReviews(yelpBusiness.getId(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     JSONArray jsonArray = response.getJSONArray("reviews");
-                    for (int i = 0; i < 3 && i < jsonArray.length(); i++) {
-                        reviews[i] = "\"" + jsonArray.getJSONObject(i).getString("text") + "\"";
-                        //                       reviews[i] = "what is going on?";
-                        tvReview[i].setText(reviews[i]);
+                    for (int i = 0; i < 10 && i < jsonArray.length(); i++) {
+
+                        mYelpTextReviews.add(new YelpTextReview(jsonArray.getJSONObject(i).getString("text")));
+
+                        mYelpReviewAdaptor.notifyDataSetChanged();
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -245,7 +255,12 @@ public class DetailActivity extends AppCompatActivity {
         ratingBar.setRating((float) yelpBusiness.getRating());
         tvPhone.setText(yelpBusiness.getPhone_number());
 
-        Picasso.with(this).load(yelpBusiness.getImage_url()).placeholder(R.mipmap.ic_launcher).transform(new RoundedCornersTransformation(10, 10)).into(ivProfileImage);
+        Picasso.with(this)
+                .load(yelpBusiness.getImage_url())
+                .placeholder(R.mipmap.ic_launcher)
+                .transform(new RoundedCornersTransformation(10, 10))
+                .fit()
+                .into(ivProfileImage);
     }
 
     public void onUploadFromGalleryClick(View view) {

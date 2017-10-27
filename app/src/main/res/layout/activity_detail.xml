@@ -4,12 +4,12 @@
 <RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_margin="5dp">
+    android:layout_margin="@dimen/margin_normal">
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="@dimen/margin_left"
         android:numStars="5"
         android:rating="3"
         android:stepSize="0.5" />
@@ -32,15 +32,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ratingBar"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="@dimen/margin_left"
         android:layout_toEndOf="@+id/ratingBar"
         android:text="100 reviews" />
+
+    <TextView
+        android:id="@+id/tvOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvReviewCount"
+        android:layout_alignParentEnd="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Open until 11:00" />
 
     <TextView
         android:id="@+id/tvDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ratingBar"
+        android:layout_marginTop="@dimen/margin_top_half"
         android:layout_below="@+id/ratingBar"
         android:text="1 mile from route" />
 
@@ -48,11 +59,13 @@
     <TextView
         android:id="@+id/tvPhone"
         android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_half"
         android:layout_height="wrap_content"
         android:text="+11234567890"
         android:autoLink="phone"
         android:layout_below="@+id/tvDistance"
         android:layout_alignLeft="@+id/tvDistance"
+        android:drawablePadding="@dimen/margin_normal"
         android:drawableLeft="@drawable/ic_phone_black_24dp" />
 
     <TextView
@@ -86,15 +99,7 @@
         android:maxLines="1"
         android:text="seafood" />
 
-    <TextView
-        android:id="@+id/tvOpen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvAddress"
-        android:layout_below="@+id/tvCategory"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Open until 11:00" />
+
 
     <ImageView
         android:id="@+id/ivDirection"
@@ -104,55 +109,45 @@
         android:layout_below="@+id/tvName"
         app:srcCompat="@drawable/ic_directions_black_24dp" />
 
-    <TextView
-        android:id="@+id/tvReviews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvOpen"
-        android:text="Reviews" />
-
-    <TextView
-        android:id="@+id/tvReview1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvReviews"
-        android:text="review1" />
-
-    <TextView
-        android:id="@+id/tvReview2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvReview1"
-        android:text="review2" />
-
-    <TextView
-        android:id="@+id/tvReview3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvReview2"
-        android:text="review3" />
-
     <ScrollView
+        android:id="@+id/svPhoto"
         android:layout_width="wrap_content"
-        android:layout_below="@+id/tvReview3"
-        android:layout_above="@+id/ivWriteReview"
-        android:layout_height="wrap_content">
+        android:layout_below="@+id/tvCategory"
 
+        android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvYelpPhoto"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
-
         </android.support.v7.widget.RecyclerView>
 
 
 
 
     </ScrollView>
+
+
+
+
+
+
+    <TextView
+        android:id="@+id/tvReviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/svPhoto"
+        android:text="Reviews" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/tvReviews"
+        android:id="@+id/rvReviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
 
     <ImageView
         android:id="@+id/ivWriteReview"
