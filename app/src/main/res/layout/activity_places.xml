@@ -21,7 +21,7 @@
         app:layout_anchor="@id/placeHolder"
         android:layout_gravity="bottom|right"
         app:layout_anchorGravity="bottom|end|right"
-        app:srcCompat="@drawable/ic_location_searching_black_24dp"
+        app:srcCompat="@drawable/ic_search_black_24dp"
         app:tint="@color/colorWhite"
         app:backgroundTint="@color/colorPrimary"
         android:onClick="onFABClick"/>

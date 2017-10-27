@@ -262,7 +262,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
         map.clear();
         placeMarkersWithZoomLevel(getZoomLevel());
-        CustomInfoWindowAdapter infoWindowAdapter = new CustomInfoWindowAdapter(getContext());
+        CustomInfoWindowAdapter infoWindowAdapter = new CustomInfoWindowAdapter(getContext(), searchTerm);
         map.setInfoWindowAdapter(infoWindowAdapter);
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -417,8 +417,9 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
-        marker.showInfoWindow();
+        if (marker.getTag() != null) {
+            marker.showInfoWindow();
+        }
         return true;
     }
 }

@@ -8,11 +8,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.enroute.R;
 import com.codepath.enroute.models.YelpBusiness;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -27,10 +27,12 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private Context mContext;
     YelpBusiness mYelpBusiness;
     private Map<String, Integer> mCategoryIconMap;
+    String mCategory;
 
-    public CustomInfoWindowAdapter(Context context) {
+    public CustomInfoWindowAdapter(Context context, String category) {
         mContext = context;
         mCategoryIconMap =  YelpBusiness.loadCategoryIcons();
+        mCategory = category;
     }
 
 
@@ -63,7 +65,14 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
             String detourStr = "+ " + df.format(mYelpBusiness.getDistance()) + " miles";
             tvDetourTime.setText(detourStr);
-            Picasso.with(mContext).load(getImageForCateory(mYelpBusiness)).into(ivCategory);
+            if (mCategory.equals("gas")) {
+                Glide.with(mContext).load(R.drawable.ic_placeholder_gas).placeholder(R.drawable.ic_placeholder_gas).override(50, 50).into(ivCategory);
+            } else if (mCategory.equals("coffee")) {
+                Glide.with(mContext).load(R.drawable.ic_coffee_placeholder).placeholder(R.drawable.ic_coffee_placeholder).override(50, 50).into(ivCategory);
+            } else {
+                Glide.with(mContext).load(getImageForCateory(mYelpBusiness)).placeholder(R.drawable.ic_food_placeholder).override(50, 50).into(ivCategory);
+            }
+
         }
         return view;
     }
