@@ -21,7 +21,7 @@ import java.util.List;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 import static android.R.attr.y;
-import static com.codepath.enroute.R.id.ivWriteReview;
+
 
 /**
  * Created by qunli on 10/21/17.

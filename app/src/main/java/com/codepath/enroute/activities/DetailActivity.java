@@ -202,7 +202,7 @@ public class DetailActivity extends AppCompatActivity {
         tvOpen = mBinding.tvOpen;
         ivDirection = mBinding.ivDirection;
 
-        ivWriteReview = mBinding.ivWriteReview;
+        //ivWriteReview = mBinding.ivWriteReview;
         tvCategory = mBinding.tvCategory;
     }
 
