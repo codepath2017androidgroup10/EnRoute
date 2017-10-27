@@ -47,7 +47,7 @@ public class YelpReviewPhotoAdapter extends RecyclerView.Adapter<YelpReviewPhoto
 
             YelpReview aYelpReview = (YelpReview) v.getTag();
             if (aYelpReview.getText().equals("camera")) {
-                Toast.makeText(v.getContext(),aYelpReview.getText(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(v.getContext(),aYelpReview.getText(),Toast.LENGTH_LONG).show();
                 ((DetailActivity)mContext).bottomSheetDialog= new ReviewBottomSheetDialog();
 
                 FragmentManager fm = ((DetailActivity)mContext).getSupportFragmentManager();
