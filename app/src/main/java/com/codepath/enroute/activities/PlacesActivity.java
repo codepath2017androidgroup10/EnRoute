@@ -3,9 +3,7 @@ package com.codepath.enroute.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +22,6 @@ import com.codepath.enroute.R;
 import com.codepath.enroute.fragments.ListFragment;
 import com.codepath.enroute.fragments.PlacesMapFragment;
 import com.codepath.enroute.fragments.PointsOfInterestFragment;
-import com.codepath.enroute.fragments.SettingFragment;
 import com.codepath.enroute.models.YelpBusiness;
 
 import java.util.ArrayList;
@@ -68,18 +65,6 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         ft.replace(R.id.placeHolder, placesMapFragment);
         ft.commit();
         isMapFragment = true;
-//        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
-//            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
-//            // is not null.
-//            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-//            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-//        }
-//
-//        if(savedInstanceState!= null && savedInstanceState.keySet().contains(KEY_POINTS_OF_INTEREST)){
-//            mPointsOfInterest = savedInstanceState.getParcelable(KEY_POINTS_OF_INTEREST);
-//        }else{
-//            mPointsOfInterest = new HashMap<>();
-//        }
     }
 /*
     @Override

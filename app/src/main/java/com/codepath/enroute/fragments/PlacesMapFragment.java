@@ -186,14 +186,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
             onLocationChanged(mCurrentLocation);
             PlacesMapFragmentPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         }
-//            Log.d(this.getClass().toString(), "GPS location was found!");
-//            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-//            zoomToLocation();
-//        } else {
-//            Log.e(this.getClass().toString(), "Current location was null, enable GPS on emulator!");
-//        }
-//        PlacesActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
-
     }
 
     @Override
@@ -250,11 +242,14 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         mCurrentLocation = location;
         zoomToLocation();
         drawDirections(mCurrentLocation);
+        // Load some location on load of the fragment.
+        setSearchTerm("");
+        getYelpBusinesses();
     }
 
     @Override
     public void postYelpSearch() {
-        markBusinesses();
+       markBusinesses();
        listener.notifyActivity(yelpBusinessList);
     }
 
