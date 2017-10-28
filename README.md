@@ -62,6 +62,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 - [Glide](https://github.com/bumptech/glide) - Image loading and caching library for Android
 - [DBFlow] (https://github.com/Raizlabs/DBFlow)
 - [Parceler]https://github.com/johncarl81/parceler
+- [AwesomeSplash] https://github.com/ViksaaSkool/AwesomeSplash - Splash screen
 
 ## License
 
