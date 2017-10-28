@@ -87,8 +87,8 @@ public class YelpReviewPhotoAdapter extends RecyclerView.Adapter<YelpReviewPhoto
         );
         int height = holder.ivYelpReview.getMeasuredHeight();
         int width = holder.ivYelpReview.getMeasuredWidth();
-        height=500;
-        width=500;
+        height=400;
+        width=400;
         holder.pbYelpPhoto.setVisibility(View.VISIBLE);
         Picasso.with(mContext)
                 .load(aYelpReview.getPhotoUrl())

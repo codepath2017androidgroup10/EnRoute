@@ -2,6 +2,8 @@ package com.codepath.enroute.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -367,9 +369,18 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
         BitmapDescriptor defaultMarker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+
+        BitmapDescriptor destinationMarker =
+                BitmapDescriptorFactory.fromBitmap(resizeMapIcons("flag",120,120));
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         Marker fromMarker = addMarker(map, directionPoints.get(0), "From", "", defaultMarker);
-        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", defaultMarker);
+        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", destinationMarker);
+    }
+
+    public Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getContext().getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
     private void zoomToLocation() {
