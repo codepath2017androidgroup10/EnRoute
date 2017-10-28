@@ -1,5 +1,6 @@
 package com.codepath.enroute.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -45,14 +46,29 @@ public class ListFragment extends PointsOfInterestFragment {
     ArrayList<String> categories = new ArrayList<>(Arrays.asList("asian", "italian", "american", "veg", "chinese", "seafood", "sandwich", "breakfast"));
     RecyclerView rvCategory;
     CategoryAdapter categoryAdapter;
+    OnSearchDoneListener listener;
 
     public ListFragment() {
         // Required empty public constructor
+    }
+    public interface OnSearchDoneListener {
+        public void notifyActivity(ArrayList<YelpBusiness> list);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnSearchDoneListener) context;
+    }
+
+    public void setBusinessList(ArrayList<YelpBusiness> list) {
+        yelpBusinessList = list;
     }
 
     @Override
     public void postYelpSearch() {
        restaurantAdapter.notifyDataSetChanged();
+        listener.notifyActivity(yelpBusinessList);
 /*        ItemClickSupport.addTo(rvRestaurants).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -63,6 +79,10 @@ public class ListFragment extends PointsOfInterestFragment {
                 startActivity(i);
             }
         });*/
+    }
+
+    public void updateList() {
+        restaurantAdapter.notifyDataSetChanged();
     }
 
     public static ListFragment newInstance(ArrayList<YelpBusiness> list) {
@@ -126,7 +146,7 @@ public class ListFragment extends PointsOfInterestFragment {
         RecyclerView.ItemDecoration itemDecoration2 = new
                 DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
         RecyclerView.ItemDecoration itemDecoration3 = new
-                DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+                DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rvCategory.addItemDecoration(itemDecoration2);
         rvCategory.addItemDecoration(itemDecoration3);
         rvCategory.setItemAnimator(new SlideInUpAnimator());

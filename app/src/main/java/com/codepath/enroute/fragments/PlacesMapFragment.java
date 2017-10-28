@@ -70,7 +70,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     Location mCurrentLocation;
     LatLng mCurrentLatLng;
     final float[] zoomLevel = new float[1];
-    private List<YelpBusiness> mList;
+//    private List<YelpBusiness> mList;
 
     private List<LatLng> directionPoints;
     private MapView mapView;
@@ -84,6 +84,10 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
        public void notifyActivity(ArrayList<YelpBusiness> list);
     }
 
+    public void setBusinessList(ArrayList<YelpBusiness> list) {
+        yelpBusinessList = list;
+    }
+
     public static PlacesMapFragment newInstance(String directionsJson, String encodedPolyLine) {
         PlacesMapFragment placesMapFragment = new PlacesMapFragment();
         Bundle args = new Bundle();
@@ -92,18 +96,18 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         placesMapFragment.setArguments(args);
         return placesMapFragment;
     }
-/*
-    public static PlacesMapFragment newInstance(List<YelpBusiness> list, String directionsJson, String encodedPolyLine) {
+
+    public static PlacesMapFragment newInstance(ArrayList<YelpBusiness> list, String directionsJson, String encodedPolyLine) {
         PlacesMapFragment placesMapFragment = new PlacesMapFragment();
         Bundle args = new Bundle();
         args.putString("directionsJson", directionsJson);
         args.putString("points", encodedPolyLine);
         placesMapFragment.setArguments(args);
-        placesMapFragment.mList = list;
+        placesMapFragment.yelpBusinessList = list;
         return placesMapFragment;
     }
 
-*/
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -258,8 +262,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         zoomToLocation();
         drawDirections(mCurrentLocation);
         // Load some location on load of the fragment.
-        setSearchTerm("");
-        getYelpBusinesses();
+//        setSearchTerm("");
+//        getYelpBusinesses();
     }
 
     @Override
@@ -268,7 +272,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
        listener.notifyActivity(yelpBusinessList);
     }
 
-    private void markBusinesses() {
+    public void markBusinesses() {
 
         map.clear();
         placeMarkersWithZoomLevel(getZoomLevel());
@@ -293,7 +297,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         BitmapDescriptor marker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
 
-        if(!mPointsOfInterest.isEmpty()) {
+/*        if(!mPointsOfInterest.isEmpty()) {
             for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
 
                 if (zoom < 12) {
@@ -329,13 +333,13 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 //                    aMarker.setTag(poi.getValue());
 //                }
             }
-        }
+        }*/
 
 
 
-/*        if (mList.size() > 0) {
-            for (int i = 0; i < mList.size(); i++) {
-                YelpBusiness yB = mList.get(i);
+        if (yelpBusinessList != null && yelpBusinessList.size() > 0) {
+            for (int i = 0; i < yelpBusinessList.size(); i++) {
+                YelpBusiness yB = yelpBusinessList.get(i);
             if (zoom < 12) {
                 Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
                 aMarker.setTag(yB);
@@ -354,7 +358,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
             }
         }
 
-        */
+
     }
 
     private float getZoomLevel() {

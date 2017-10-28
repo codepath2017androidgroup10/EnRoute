@@ -33,7 +33,7 @@ import java.util.Set;
 *
 * */
 
-public class PlacesActivity extends AppCompatActivity implements PlacesMapFragment.OnSearchDoneListener{
+public class PlacesActivity extends AppCompatActivity implements PlacesMapFragment.OnSearchDoneListener, ListFragment.OnSearchDoneListener{
 
     ArrayList<YelpBusiness> yelpBusinessArrayList;
 
@@ -61,6 +61,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         keyDirection = bundle.getString(SearchActivity.KEY_DIRECTIONS);
 
         placesMapFragment = PlacesMapFragment.newInstance(bundle.getString(SearchActivity.KEY_RESPONSE_JSON), bundle.getString(SearchActivity.KEY_DIRECTIONS));
+//        placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeHolder, placesMapFragment);
         ft.commit();
@@ -99,8 +100,8 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
                 PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
                 aFragment.setSearchTerm(query);
                 aFragment.getYelpBusinesses();
-//                searchView.setQuery("", false);
-//                searchView.clearFocus();
+                searchView.setQuery("", false);
+                searchView.clearFocus();
                 //startActivity(i);
                 return true;
             }
@@ -131,20 +132,27 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
                 if (yelpBusinessArrayList == null) {
                     yelpBusinessArrayList = new ArrayList<>();
                 }
-                placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
+//                if (placesListFragment == null) {placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);}
+
 //            }
+            placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.placeHolder, placesListFragment);
         //ft.add(placesListFragment, "list_fragment");
             ft.addToBackStack(null);
             ft.commit();
+//            placesListFragment.setBusinessList(yelpBusinessArrayList);
+//            placesListFragment.updateList();
             item.setIcon(R.drawable.ic_map_black_24dp);
             isMapFragment = false;
         }
         else {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+ //           placesMapFragment = PlacesMapFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
             ft.replace(R.id.placeHolder, placesMapFragment);
             ft.commit();
+ //           placesMapFragment.setBusinessList(yelpBusinessArrayList);
+//            placesMapFragment.markBusinesses();
             isMapFragment = true;
             item.setIcon(R.drawable.ic_view_list_black_24dp);
         }
