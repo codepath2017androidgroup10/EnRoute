@@ -262,8 +262,10 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         zoomToLocation();
         drawDirections(mCurrentLocation);
         // Load some location on load of the fragment.
-//        setSearchTerm("");
-//        getYelpBusinesses();
+        if (yelpBusinessList.size() == 0) {
+            setSearchTerm("");
+            getYelpBusinesses();
+        }
     }
 
     @Override
