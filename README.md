@@ -31,8 +31,8 @@ The following bonus features are completed:
 * [X] User can choose from autocompelete location history when user enter from and to destination.
 * [X] Once clicked, floating action button can show or hide three button choices with animation
 * [ ] User can choose from autocompelete search history when user enter search creteria.
-* [ ] marker can show more information about open or not, rating etc.
-* [ ] User can write reviw and save it with firebase.
+* [x] marker can show more information about open or not, rating etc.
+* [x] User can write review and save it with firebase.
 * [ ] night mode
 * [ ] robust internet handling
 * [ ] businness open until
