@@ -201,7 +201,7 @@ public class MapUtil {
 
     public static Marker addRestaurantMarker(GoogleMap map, LatLng point, String title,
                                              String snippet, Context context) {
-        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_map_restaurant_vector_20dp, context);
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_themed_marker_food, context);
        // BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_restaurant_vector_20dp);
         MarkerOptions options = new MarkerOptions()
                 .position(point)
@@ -215,7 +215,7 @@ public class MapUtil {
 
     public static Marker addGasMarker(GoogleMap map, LatLng point, String title,
                                              String snippet, Context context) {
-        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_map_gas_vector_20dp, context);
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_themed_marker_gas, context);
         //BitmapDescriptorFactory.fromResource(R.drawable.ic_map_gas_vector_20dp);
         MarkerOptions options = new MarkerOptions()
                 .position(point)
@@ -229,7 +229,7 @@ public class MapUtil {
 
     public static Marker addCoffeeMarker(GoogleMap map, LatLng point, String title,
                                              String snippet, Context context) {
-        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_map_cafe_vector_20dp, context);
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_themed_marker_cafe, context);
                 //BitmapDescriptorFactory.fromResource(R.drawable.ic_map_cafe_vector_20dp);
         MarkerOptions options = new MarkerOptions()
                 .position(point)
