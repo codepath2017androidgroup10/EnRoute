@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.activities.DetailActivity;
+import com.codepath.enroute.adapters.CategoryAdapter;
 import com.codepath.enroute.adapters.RestaurantAdapter;
 import com.codepath.enroute.databinding.FragmentListBinding;
 import com.codepath.enroute.models.YelpBusiness;
@@ -25,6 +28,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
@@ -38,6 +42,9 @@ public class ListFragment extends PointsOfInterestFragment {
     private FragmentListBinding mBinding;
     ArrayList<YelpBusiness> yelpBusinessArrayListist;
     FragmentManager fragmentManager;
+    ArrayList<String> categories = new ArrayList<>(Arrays.asList("asian", "italian", "american", "veg", "chinese", "seafood", "sandwich", "breakfast"));
+    RecyclerView rvCategory;
+    CategoryAdapter categoryAdapter;
 
     public ListFragment() {
         // Required empty public constructor
@@ -109,6 +116,33 @@ public class ListFragment extends PointsOfInterestFragment {
         //rvRestaurants = mBinding.rvRestaurants;
         fragmentManager = getActivity().getSupportFragmentManager();
         rvRestaurants = (RecyclerView) getView().findViewById(R.id.rvRestaurants);
+        rvCategory = getView().findViewById(R.id.rvCategory);
+        categoryAdapter = new CategoryAdapter(getContext(), categories, fragmentManager);
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(rvCategory);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvCategory.setAdapter(categoryAdapter);
+        rvCategory.setLayoutManager(layoutManager);
+        RecyclerView.ItemDecoration itemDecoration2 = new
+                DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+        RecyclerView.ItemDecoration itemDecoration3 = new
+                DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+        rvCategory.addItemDecoration(itemDecoration2);
+        rvCategory.addItemDecoration(itemDecoration3);
+        rvCategory.setItemAnimator(new SlideInUpAnimator());
+        ItemClickSupport.addTo(rvCategory).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                //               Toast.makeText(getContext(), "got it", Toast.LENGTH_LONG).show();
+                String term = categories.get(position);
+                setSearchTerm(term);
+                getYelpBusinesses();
+            }
+        });
+
+
+
+
         restaurantAdapter = new RestaurantAdapter(getContext(), yelpBusinessList, fragmentManager);
         rvRestaurants.setAdapter(restaurantAdapter);
         rvRestaurants.setLayoutManager(new LinearLayoutManager(getContext()));

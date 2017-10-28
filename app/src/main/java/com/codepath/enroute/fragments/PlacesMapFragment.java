@@ -68,6 +68,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     Location mCurrentLocation;
     LatLng mCurrentLatLng;
     final float[] zoomLevel = new float[1];
+    private List<YelpBusiness> mList;
 
     private List<LatLng> directionPoints;
     private MapView mapView;
@@ -89,6 +90,18 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         placesMapFragment.setArguments(args);
         return placesMapFragment;
     }
+
+    public static PlacesMapFragment newInstance(List<YelpBusiness> list, String directionsJson, String encodedPolyLine) {
+        PlacesMapFragment placesMapFragment = new PlacesMapFragment();
+        Bundle args = new Bundle();
+        args.putString("directionsJson", directionsJson);
+        args.putString("points", encodedPolyLine);
+        placesMapFragment.setArguments(args);
+        placesMapFragment.mList = list;
+        return placesMapFragment;
+    }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -304,6 +317,29 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 //                }
             }
         }
+
+/*        if (mList.size() > 0) {
+            for (int i = 0; i < mList.size(); i++) {
+                YelpBusiness yB = mList.get(i);
+            if (zoom < 12) {
+                Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
+                aMarker.setTag(yB);
+            } else if (zoom >= 12) {
+                if (searchTerm.equals("gas")) {
+                    Marker aMarker = MapUtil.addGasMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                    aMarker.setTag(yB);
+                } else if (searchTerm.equals("coffee")) {
+                    Marker aMarker = MapUtil.addCoffeeMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                    aMarker.setTag(yB);
+                } else {
+                    Marker aMarker = MapUtil.addRestaurantMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                    aMarker.setTag(yB);
+                }
+            }
+            }
+        }
+
+        */
     }
 
     private float getZoomLevel() {

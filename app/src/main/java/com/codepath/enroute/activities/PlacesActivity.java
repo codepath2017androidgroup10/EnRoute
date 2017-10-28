@@ -127,11 +127,12 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 //        ListFragment placesListFragment = ListFragment.newInstance(yelpBusinessArrayList);
 //        ListFragment placesListFragment = ListFragment.newInstance(keyReponseJSON,keyDirection);
         if (isMapFragment) {
-            if (placesListFragment == null) {
+//            if (placesListFragment == null) {
                 if (yelpBusinessArrayList == null) {
                     yelpBusinessArrayList = new ArrayList<>();
                 }
-                placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);}
+                placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
+//            }
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.placeHolder, placesListFragment);
         //ft.add(placesListFragment, "list_fragment");
