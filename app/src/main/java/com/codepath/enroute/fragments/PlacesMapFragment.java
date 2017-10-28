@@ -90,7 +90,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         placesMapFragment.setArguments(args);
         return placesMapFragment;
     }
-
+/*
     public static PlacesMapFragment newInstance(List<YelpBusiness> list, String directionsJson, String encodedPolyLine) {
         PlacesMapFragment placesMapFragment = new PlacesMapFragment();
         Bundle args = new Bundle();
@@ -101,7 +101,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         return placesMapFragment;
     }
 
-
+*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -317,6 +317,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 //                }
             }
         }
+
+
 
 /*        if (mList.size() > 0) {
             for (int i = 0; i < mList.size(); i++) {
