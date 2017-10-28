@@ -47,7 +47,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -352,8 +351,11 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                 } else if (searchTerm.equals("coffee")) {
                     Marker aMarker = MapUtil.addCoffeeMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
                     aMarker.setTag(yB);
-                } else {
+                } else if (searchTerm.equals("restaurant")){
                     Marker aMarker = MapUtil.addRestaurantMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                    aMarker.setTag(yB);
+                } else {
+                    Marker aMarker = MapUtil.addDefaultMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
                     aMarker.setTag(yB);
                 }
             }
