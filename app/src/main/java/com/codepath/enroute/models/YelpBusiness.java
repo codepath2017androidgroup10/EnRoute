@@ -253,6 +253,8 @@ public class YelpBusiness {
         mCategoryIconMap.put("gas", R.drawable.ic_placeholder_gas);
         mCategoryIconMap.put("coffee", R.drawable.ic_coffee_placeholder);
         mCategoryIconMap.put("coffee & tea", R.drawable.ic_coffee_placeholder);
+        mCategoryIconMap.put("tea", R.drawable.ic_category_tea);
+        mCategoryIconMap.put("mexican", R.drawable.ic_category_mexican);
         return mCategoryIconMap;
     }
 

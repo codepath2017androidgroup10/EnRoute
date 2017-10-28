@@ -295,9 +295,20 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
         if(!mPointsOfInterest.isEmpty()) {
             for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
+
                 if (zoom < 12) {
-                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
-                    aMarker.setTag(poi.getValue());
+                    if (searchTerm.equals("gas")) {
+                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
+                        aMarker.setTag(poi.getValue());
+                    } else if (searchTerm.equals("coffee")) {
+                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
+                        aMarker.setTag(poi.getValue());
+                    } else {
+                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
+                        aMarker.setTag(poi.getValue());
+                    }
+//                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
+//                    aMarker.setTag(poi.getValue());
                 } else if (zoom >= 12) {
                     if (searchTerm.equals("gas")) {
                         Marker aMarker = MapUtil.addGasMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
@@ -363,7 +374,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
             lineOptions.add(latLng);
         }
 
-        lineOptions = lineOptions.color(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        lineOptions = lineOptions.color(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
 
         map.addPolyline(lineOptions);
 
