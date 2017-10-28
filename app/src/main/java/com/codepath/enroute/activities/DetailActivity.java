@@ -136,7 +136,7 @@ public class DetailActivity extends AppCompatActivity {
         mYelpReviewAdapter = new YelpReviewPhotoAdapter(this,mYelpReviews);
         //mYelpReviews.add(0,new YelpReview("camera","https://maxcdn.icons8.com/Share/icon/Photo_Video//camera1600.png"));
         //mYelpReviews.add(0,new YelpReview("camera","https://lh3.googleusercontent.com/DPKR9wd6oDY6dbsJum0AwEq1Od7wHH1AuccSg7qI_E643rgCgH7CPotucBEh_qLO40kx=w300-rw"));
-        mYelpReviews.add(0,new YelpReview("camera","http://images.clipartpanda.com/camera-icon-png-iPhoto.png"));
+        mYelpReviews.add(0,new YelpReview("camera","https://cdn0.iconfinder.com/data/icons/summer-set-2/64/Camera-128.png"));
 
         rvYelpReview.setAdapter(mYelpReviewAdapter);
 
