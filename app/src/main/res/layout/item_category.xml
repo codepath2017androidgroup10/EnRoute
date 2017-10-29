@@ -4,12 +4,14 @@
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:paddingRight="10dp"
+    android:layout_marginTop="5dp">
 
     <ImageView
         android:id="@+id/ivCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_food_placeholder"
         />
 
@@ -18,5 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textSize="12sp"
         android:gravity="center_horizontal"/>
 </LinearLayout>

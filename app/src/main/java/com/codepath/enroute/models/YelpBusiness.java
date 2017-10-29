@@ -198,7 +198,7 @@ public class YelpBusiness {
         }
         aYelpBusiness.phone_number = jsonObject.getString("phone");
 
-        aYelpBusiness.openNow = !jsonObject.getBoolean("is_closed");
+//        aYelpBusiness.openNow = !jsonObject.getBoolean("is_closed");
         //Mark, why we divide this by 3.3?
         aYelpBusiness.distance = jsonObject.getDouble("distance") / 1609;
         JSONArray jsonArray = jsonObject.getJSONArray("categories");

@@ -43,7 +43,7 @@ public class ListFragment extends PointsOfInterestFragment {
     private FragmentListBinding mBinding;
     ArrayList<YelpBusiness> yelpBusinessArrayListist;
     FragmentManager fragmentManager;
-    ArrayList<String> categories = new ArrayList<>(Arrays.asList("asian", "italian", "american", "veg", "chinese", "seafood", "sandwich", "breakfast"));
+    ArrayList<String> categories = new ArrayList<>(Arrays.asList("asian", "italian", "american", "veg", "chinese", "seafood", "sandwich", "breakfast", "mexican"));
     RecyclerView rvCategory;
     CategoryAdapter categoryAdapter;
     OnSearchDoneListener listener;
