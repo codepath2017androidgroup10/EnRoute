@@ -68,10 +68,11 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 ivCategory.setImageResource(R.drawable.ic_placeholder_gas);
             } else if (mCategory.equals("coffee")) {
                 ivCategory.setImageResource(R.drawable.ic_coffee_placeholder);
-            } else {
+            } else if (mCategory.equals("restaurant")){
                 ivCategory.setImageResource(getImageForCateory(mYelpBusiness));
+            } else {
+                ivCategory.setImageResource(R.drawable.ic_default_place);
             }
-
         }
         return view;
     }
