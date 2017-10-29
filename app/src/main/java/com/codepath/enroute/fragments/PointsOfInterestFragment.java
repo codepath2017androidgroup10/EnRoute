@@ -100,7 +100,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    postYelpSearch();
+                    postYelpSearch();
                 }
 
                 @Override
@@ -152,8 +152,8 @@ public abstract class PointsOfInterestFragment extends Fragment {
                         super.onFailure(statusCode, headers, responseString, throwable);
                     }
                 });
-        }*/
-        postYelpSearch();
+        }
+        postYelpSearch();*/
     }
 
     public abstract void postYelpSearch();
