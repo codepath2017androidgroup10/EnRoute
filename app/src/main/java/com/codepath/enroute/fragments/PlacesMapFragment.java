@@ -74,6 +74,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     private List<LatLng> directionPoints;
     private MapView mapView;
     OnSearchDoneListener listener;
+    Context mContext;
 
     public PlacesMapFragment() {
         // Required empty public constructor
@@ -382,6 +383,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     public void onAttach(Context context) {
         super.onAttach(context);
         listener = (OnSearchDoneListener) context;
+        mContext = context;
     }
 
     private void drawDirections(Location location) {
@@ -391,7 +393,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
             lineOptions.add(latLng);
         }
 
-        lineOptions = lineOptions.color(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
+        lineOptions = lineOptions.color(ContextCompat.getColor(mContext, R.color.colorPrimary));
 
         map.addPolyline(lineOptions);
 
