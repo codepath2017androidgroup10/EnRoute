@@ -4,7 +4,7 @@
 
 **EnRoute** is an android app that allows a user find places along his route.
 
-Time spent: **72** hours spent in total
+Time spent: **108** hours spent in total
 
 ## User Stories
 
@@ -30,12 +30,12 @@ The following required functionality is completed:
 The following bonus features are completed:
 * [X] User can choose from autocompelete location history when user enter from and to destination.
 * [X] Once clicked, floating action button can show or hide three button choices with animation
-* [ ] User can choose from autocompelete search history when user enter search creteria.
+* [ ] User can choose from autocomplete search history when user enter search creteria.
 * [x] marker can show more information about open or not, rating etc.
 * [x] User can write review and save it with firebase.
 * [ ] night mode
 * [ ] robust internet handling
-* [ ] businness open until
+* [ ] business open until
 * [ ] User can choose from advanced features.
   * [ ] User can upgrade to advanced features to get real time data, as he moves along the route. 
   * [ ] User can choose from advanced features to choose different transportation choices(bike or on foot).
