@@ -85,7 +85,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
                         BitmapDescriptor icon =
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
                         for (int i = 0; i < yelpBusinesses.length(); i++) {
-                            YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
+                            final YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
 
                             LatLng newLatLng = new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude());
                                 //Skip if there is a duplicate.
@@ -93,6 +93,22 @@ public abstract class PointsOfInterestFragment extends Fragment {
                                 mPointsOfInterest.put(newLatLng,aYelpBusiness);
                                 // Add data to arraylist
                                 yelpBusinessList.add(aYelpBusiness);
+                                client.getBusiness(aYelpBusiness.getId(), new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Log.e("at least i am here", response.toString());
+                                        try {
+                                            aYelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        super.onFailure(statusCode, headers, responseString, throwable);
+                                    }
+                                });
                             }
                         }
 
@@ -141,7 +157,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.e("at least i am here", response.toString());
                         try {
-                            yelpBusiness.setOpenNow(response.getJSONObject("hours").getBoolean("is_open_now"));
+                            yelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

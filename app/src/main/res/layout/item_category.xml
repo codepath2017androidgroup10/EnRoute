@@ -20,6 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:gravity="center_horizontal"/>
 </LinearLayout>
