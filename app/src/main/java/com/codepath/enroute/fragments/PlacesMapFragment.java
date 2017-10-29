@@ -341,24 +341,33 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         if (yelpBusinessList != null && yelpBusinessList.size() > 0) {
             for (int i = 0; i < yelpBusinessList.size(); i++) {
                 YelpBusiness yB = yelpBusinessList.get(i);
-            if (zoom < 12) {
-                Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
-                aMarker.setTag(yB);
-            } else if (zoom >= 12) {
-                if (searchTerm.equals("gas")) {
-                    Marker aMarker = MapUtil.addGasMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
-                    aMarker.setTag(yB);
-                } else if (searchTerm.equals("coffee")) {
-                    Marker aMarker = MapUtil.addCoffeeMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
-                    aMarker.setTag(yB);
-                } else if (searchTerm.equals("restaurant")){
-                    Marker aMarker = MapUtil.addRestaurantMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
-                    aMarker.setTag(yB);
-                } else {
-                    Marker aMarker = MapUtil.addDefaultMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
-                    aMarker.setTag(yB);
+                if (zoom < 12) {
+
+                    if (searchTerm.equals("gas")) {
+                        Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
+                        aMarker.setTag(yB);
+                    } else if (searchTerm.equals("coffee") || searchTerm.equals("restaurant") ) {
+                        Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
+                        aMarker.setTag(yB);
+                    } else {
+                        Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
+                        aMarker.setTag(yB);
+                    }
+                } else if (zoom >= 12) {
+                    if (searchTerm.equals("gas")) {
+                        Marker aMarker = MapUtil.addGasMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                        aMarker.setTag(yB);
+                    } else if (searchTerm.equals("coffee")) {
+                        Marker aMarker = MapUtil.addCoffeeMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                        aMarker.setTag(yB);
+                    } else if (searchTerm.equals("restaurant")){
+                        Marker aMarker = MapUtil.addRestaurantMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                        aMarker.setTag(yB);
+                    } else {
+                        Marker aMarker = MapUtil.addDefaultMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
+                        aMarker.setTag(yB);
+                    }
                 }
-            }
             }
         }
 

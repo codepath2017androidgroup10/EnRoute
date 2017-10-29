@@ -31,7 +31,7 @@ public class SplashScreenActivity extends AwesomeSplash {
 
         //Customize Circular Reveal
         configSplash.setBackgroundColor(R.color.colorGrey); //any color you want form colors.xml
-        configSplash.setAnimCircularRevealDuration(1000); //int ms
+        configSplash.setAnimCircularRevealDuration(500); //int ms
         configSplash.setRevealFlagX(Flags.REVEAL_RIGHT);  //or Flags.REVEAL_LEFT
         configSplash.setRevealFlagY(Flags.REVEAL_BOTTOM); //or Flags.REVEAL_TOP
 
@@ -39,7 +39,7 @@ public class SplashScreenActivity extends AwesomeSplash {
 
         //Customize Logo
         configSplash.setLogoSplash(R.drawable.launcher_128); //or any other drawable
-        configSplash.setAnimLogoSplashDuration(1000); //int ms
+        configSplash.setAnimLogoSplashDuration(500); //int ms
         configSplash.setAnimLogoSplashTechnique(Techniques.Bounce); //choose one form Techniques (ref: https://github.com/daimajia/AndroidViewAnimations)
 
 
@@ -71,11 +71,17 @@ public class SplashScreenActivity extends AwesomeSplash {
             public void run() {
                 startApp();
             }
-        }, 500);
+        }, 250);
     }
 
     private void startApp() {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startApp();
     }
 }
