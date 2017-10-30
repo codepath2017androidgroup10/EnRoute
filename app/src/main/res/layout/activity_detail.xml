@@ -36,6 +36,7 @@
         android:layout_alignBottom="@+id/ratingBar"
         android:layout_marginLeft="@dimen/margin_left"
         android:layout_toEndOf="@+id/ratingBar"
+        android:textSize="15sp"
         android:text="100 reviews" />
 
     <TextView
@@ -45,6 +46,7 @@
         android:layout_alignTop="@+id/tvReviewCount"
         android:layout_alignParentEnd="true"
         android:ellipsize="end"
+        android:textSize="15sp"
         android:maxLines="1"
         android:text="Open until 11:00" />
 
@@ -54,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ratingBar"
         android:layout_marginTop="@dimen/margin_top_half"
+        android:textSize="12sp"
         android:layout_below="@+id/ratingBar"
         android:text="1 mile from route" />
 
@@ -65,10 +68,13 @@
         android:layout_height="wrap_content"
         android:text="+11234567890"
         android:autoLink="phone"
+        android:textColorLink="#2196F3"
+        android:textSize="15sp"
         android:layout_below="@+id/tvDistance"
         android:layout_alignLeft="@+id/tvDistance"
+        android:gravity="center"
         android:drawablePadding="@dimen/margin_normal"
-        android:drawableLeft="@drawable/ic_phone_black_24dp" />
+        android:drawableLeft="@drawable/ic_phone_black_15dp" />
 
     <TextView
         android:id="@+id/tvName"
@@ -78,6 +84,8 @@
         android:layout_alignParentStart="true"
         android:maxLines="1"
         android:ellipsize="end"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:text="name" />
 
     <TextView
@@ -89,6 +97,8 @@
         android:maxLines="1"
         android:layout_alignStart="@+id/tvName"
         android:layout_below="@+id/tvName"
+        android:textSize="12sp"
+        android:textColorLink="#757575"
         android:text="1 Hacker Way, Menlo Park, CA 94025" />
 
     <TextView
@@ -99,22 +109,17 @@
         android:layout_below="@+id/tvAddress"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textSize="12sp"
+        android:textColor="#9E9E9E"
         android:text="seafood" />
 
-
-
-    <ImageView
-        android:id="@+id/ivDirection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tvName"
-        app:srcCompat="@drawable/ic_directions_black_24dp" />
 
     <ScrollView
         android:id="@+id/svPhoto"
         android:layout_width="wrap_content"
         android:layout_below="@+id/tvCategory"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="-5dp"
 
         android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
@@ -122,8 +127,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
-
-
 
 
     </ScrollView>
@@ -139,7 +142,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/svPhoto"
-        android:text="Reviews" />
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Recommended Reviews" />
 
 
     <android.support.v7.widget.RecyclerView
