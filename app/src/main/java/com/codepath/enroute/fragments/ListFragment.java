@@ -16,7 +16,6 @@ import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.activities.DetailActivity;
@@ -34,9 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
-
-import static android.R.attr.fragment;
-import static com.codepath.enroute.R.id.ivProfileImage;
 
 
 public class ListFragment extends PointsOfInterestFragment {
@@ -182,8 +178,9 @@ public class ListFragment extends PointsOfInterestFragment {
                 i.putExtra("YELP_BUSINESS", Parcels.wrap(yelpBusiness));
                 Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivProfileImage), "profile");
                 Pair<View, String> p2 = Pair.create(v.findViewById(R.id.ratingBar), "rBar");
+                Pair<View, String> p3 = Pair.create(v.findViewById(R.id.tvName), "name");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(getActivity(), p1, p2);
+                        makeSceneTransitionAnimation(getActivity(), p1, p2, p3);
                 startActivity(i, options.toBundle());
             }
         });
