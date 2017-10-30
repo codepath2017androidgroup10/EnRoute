@@ -137,6 +137,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
 //            }
             placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
             ft.replace(R.id.placeHolder, placesListFragment);
         //ft.add(placesListFragment, "list_fragment");
             ft.addToBackStack(null);
@@ -149,6 +150,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         else {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
  //           placesMapFragment = PlacesMapFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
+            ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
             ft.replace(R.id.placeHolder, placesMapFragment);
             ft.commit();
  //           placesMapFragment.setBusinessList(yelpBusinessArrayList);
@@ -306,6 +308,12 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
         aFragment.setSearchTerm("coffee");
         aFragment.getYelpBusinesses();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }
 

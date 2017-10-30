@@ -280,6 +280,7 @@ public class SearchActivity extends AppCompatActivity {
         intent.putExtra(KEY_DIRECTIONS, encodedPolyLine);
         intent.putExtra(KEY_RESPONSE_JSON, jsonResponse.toString());
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void setError(String error) {

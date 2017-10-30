@@ -10,6 +10,7 @@
         android:id="@+id/ivProfileImage"
         android:layout_width="72dp"
         android:layout_height="72dp"
+        android:transitionName="profile"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -20,6 +21,7 @@
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:transitionName="rBar"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/margin_left"

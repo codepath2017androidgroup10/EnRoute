@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -34,6 +36,7 @@ import java.util.Arrays;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static android.R.attr.fragment;
+import static com.codepath.enroute.R.id.ivProfileImage;
 
 
 public class ListFragment extends PointsOfInterestFragment {
@@ -177,7 +180,11 @@ public class ListFragment extends PointsOfInterestFragment {
                 YelpBusiness yelpBusiness = yelpBusinessList.get(position);
                 Intent i = new Intent(getContext(), DetailActivity.class);
                 i.putExtra("YELP_BUSINESS", Parcels.wrap(yelpBusiness));
-                startActivity(i);
+                Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivProfileImage), "profile");
+                Pair<View, String> p2 = Pair.create(v.findViewById(R.id.ratingBar), "rBar");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(getActivity(), p1, p2);
+                startActivity(i, options.toBundle());
             }
         });
 
