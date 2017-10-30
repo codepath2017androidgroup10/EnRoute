@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EnRoute</string>
+    <string name="app_name">En Route</string>
     <string name="strHintFrom">From</string>
     <string name="strHintTo">To</string>
     <string name="strSearch">Search en route</string>
