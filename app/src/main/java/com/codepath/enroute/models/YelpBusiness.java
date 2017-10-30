@@ -198,7 +198,7 @@ public class YelpBusiness {
         }
         aYelpBusiness.phone_number = jsonObject.getString("phone");
 
-        aYelpBusiness.openNow = !jsonObject.getBoolean("is_closed");
+//        aYelpBusiness.openNow = !jsonObject.getBoolean("is_closed");
         //Mark, why we divide this by 3.3?
         aYelpBusiness.distance = jsonObject.getDouble("distance") / 1609;
         JSONArray jsonArray = jsonObject.getJSONArray("categories");
@@ -253,6 +253,8 @@ public class YelpBusiness {
         mCategoryIconMap.put("gas", R.drawable.ic_placeholder_gas);
         mCategoryIconMap.put("coffee", R.drawable.ic_coffee_placeholder);
         mCategoryIconMap.put("coffee & tea", R.drawable.ic_coffee_placeholder);
+        mCategoryIconMap.put("tea", R.drawable.ic_category_tea);
+        mCategoryIconMap.put("mexican", R.drawable.ic_category_mexican);
         return mCategoryIconMap;
     }
 

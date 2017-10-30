@@ -6,6 +6,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_vertical"
+
         android:layout_margin="10dp">
 
         <android.support.design.widget.TextInputLayout
@@ -28,6 +29,7 @@
                 android:id="@+id/autocomplte_from_place"
                 android:layout_width="match_parent"
                 android:layout_gravity="center_horizontal"
+                android:selectAllOnFocus="true"
                 android:maxLines="2"
                 android:minLines="2"
                 android:hint="Enter from address:"
@@ -54,6 +56,7 @@
                 android:maxLines="2"
                 android:minLines="2"
                 android:layout_width="match_parent"
+                android:selectAllOnFocus="true"
                 android:layout_gravity="center_horizontal"
                 android:hint="Enter to address:"
                 android:layout_height="wrap_content" />

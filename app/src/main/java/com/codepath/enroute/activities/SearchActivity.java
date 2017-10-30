@@ -1,29 +1,23 @@
 package com.codepath.enroute.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
@@ -101,8 +95,11 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
     protected GoogleApiClient mGoogleApiClient;
 
+    ArrayAdapter<String> fromAdapter;
+    ArrayAdapter<String> toAdapter;
+
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(37.4077692, -122.136638), new LatLng(37.4077692, -122.136638));
+            new LatLng(37.3639514,-121.9311315 ), new LatLng(37.6213171, -122.3811494));
 
 
     private PlaceAutocompleteAdapter mFromAdapter;
@@ -127,8 +124,15 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
         Fabric.with(this, new Crashlytics());
         YelpClient.getInstance();
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
+
+        mAutocompleteViewFrom = (AutoCompleteTextView)
+                findViewById(R.id.autocomplte_from_place);
+        mAutocompleteViewTo = (AutoCompleteTextView)
+                findViewById(R.id.autocomplte_to_place);
+
         //etToLocation = findViewById(R.id.etTo);
         //etFromLocation = findViewById(R.id.etFrom);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -151,22 +155,98 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 //            }
 //        });
 
-        mAutocompleteViewFrom = (AutoCompleteTextView)
-                findViewById(R.id.autocomplte_from_place);
-        mAutocompleteViewTo = (AutoCompleteTextView)
-                findViewById(R.id.autocomplte_to_place);
+
 
         // Register a listener that receives callbacks when a suggestion has been selected
         mAutocompleteViewFrom.setOnItemClickListener(mAutocompleteClickListener);
         mAutocompleteViewTo.setOnItemClickListener(mAutocompleteClickListener);
 
-        mFromAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
+        mAutocompleteViewFrom.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+
+                    if (mAutocompleteViewFrom.getText().length()==0){
+                        mAutocompleteViewFrom.setAdapter(fromAdapter);
+                    }
+
+                    ((AutoCompleteTextView)v).showDropDown();
+                }
+            }
+        });
+
+        mAutocompleteViewTo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+
+                    if (mAutocompleteViewTo.getText().length()==0){
+                        mAutocompleteViewTo.setAdapter(toAdapter);
+                    }
+
+                    ((AutoCompleteTextView)v).showDropDown();
+                }
+            }
+        });
+
+        mFromAdapter = new PlaceAutocompleteAdapter(SearchActivity.this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
-        mAutocompleteViewFrom.setAdapter(mFromAdapter);
+
+        mAutocompleteViewFrom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d("DEBUGME",s+":"+start+":"+count+":"+after);
+                if (s.length()>1) {
+                    if (!mAutocompleteViewFrom.getAdapter().equals(mFromAdapter)) {
+                        mAutocompleteViewFrom.setAdapter(mFromAdapter);
+                    }
+
+                }else{
+                    mAutocompleteViewFrom.setAdapter(fromAdapter);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+
 
         mToAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
-        mAutocompleteViewTo.setAdapter(mToAdapter);
+
+
+        mAutocompleteViewTo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (s.length()>1) {
+                    if (!mAutocompleteViewTo.getAdapter().equals(mToAdapter)) {
+                        mAutocompleteViewTo.setAdapter(mToAdapter);
+                    }else{
+                        mAutocompleteViewFrom.setAdapter(toAdapter);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void setUpViews() {
@@ -234,15 +314,15 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
     * */
 
     private void fromSetAutoCompleteSource() {
-//        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.etInput);
-        ArrayAdapter<String> fromAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, fromHistory.toArray(new String[fromHistory.size()]));
+        fromAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, fromHistory.toArray(new String[fromHistory.size()]));
         //etFromLocation.setAdapter(fromAdapter);
+        mAutocompleteViewFrom.setAdapter(fromAdapter);
     }
 
     private void toSetAutoCompleteSource() {
-//        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.etInput);
-        ArrayAdapter<String> toAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, toHistory.toArray(new String[toHistory.size()]));
+        toAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, toHistory.toArray(new String[toHistory.size()]));
         //etToLocation.setAdapter(toAdapter);
+        mAutocompleteViewTo.setAdapter(toAdapter);
     }
 
 
@@ -366,6 +446,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         intent.putExtra(KEY_DIRECTIONS, encodedPolyLine);
         intent.putExtra(KEY_RESPONSE_JSON, jsonResponse.toString());
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void setError(String error) {
@@ -458,23 +539,27 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
              The adapter stores each Place suggestion in a AutocompletePrediction from which we
              read the place ID and title.
               */
-            final AutocompletePrediction item = mFromAdapter.getItem(position);
-            final String placeId = item.getPlaceId();
-            final CharSequence primaryText = item.getPrimaryText(null);
 
-            Log.i(TAG, "Autocomplete item selected: " + primaryText);
+            if (parent.getAdapter() instanceof PlaceAutocompleteAdapter) {
+
+            final AutocompletePrediction item = mFromAdapter.getItem(position);
+                final String placeId = item.getPlaceId();
+                final CharSequence primaryText = item.getPrimaryText(null);
+
+                Log.i(TAG, "Autocomplete item selected: " + primaryText);
 
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
              details about the place.
               */
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                        .getPlaceById(mGoogleApiClient, placeId);
+                placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
-                    Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
+                Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
+                        Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
+            }
         }
     };
 

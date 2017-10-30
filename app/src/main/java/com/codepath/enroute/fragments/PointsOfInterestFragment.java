@@ -26,6 +26,7 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 
 import static android.content.Context.MODE_PRIVATE;
+import static java.lang.Boolean.getBoolean;
 
 /**
  * Created by vidhya on 10/17/17.
@@ -84,7 +85,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
                         BitmapDescriptor icon =
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
                         for (int i = 0; i < yelpBusinesses.length(); i++) {
-                            YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
+                            final YelpBusiness aYelpBusiness = YelpBusiness.fromJson(yelpBusinesses.getJSONObject(i));
 
                             LatLng newLatLng = new LatLng(aYelpBusiness.getLatitude(),aYelpBusiness.getLongitude());
                                 //Skip if there is a duplicate.
@@ -92,7 +93,25 @@ public abstract class PointsOfInterestFragment extends Fragment {
                                 mPointsOfInterest.put(newLatLng,aYelpBusiness);
                                 // Add data to arraylist
                                 yelpBusinessList.add(aYelpBusiness);
-                            }}
+                                client.getBusiness(aYelpBusiness.getId(), new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Log.e("at least i am here", response.toString());
+                                        try {
+                                            aYelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        super.onFailure(statusCode, headers, responseString, throwable);
+                                    }
+                                });
+                            }
+                        }
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -130,8 +149,27 @@ public abstract class PointsOfInterestFragment extends Fragment {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                 }
             });
-
         }
+/*        for (final YelpBusiness yelpBusiness : yelpBusinessList) {
+            String id = yelpBusiness.getId();
+                client.getBusiness(id, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        Log.e("at least i am here", response.toString());
+                        try {
+                            yelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                    }
+                });
+        }
+        postYelpSearch();*/
     }
 
     public abstract void postYelpSearch();

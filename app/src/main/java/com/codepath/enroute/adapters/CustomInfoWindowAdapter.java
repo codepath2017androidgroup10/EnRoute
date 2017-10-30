@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.codepath.enroute.R;
 import com.codepath.enroute.models.YelpBusiness;
 import com.google.android.gms.maps.GoogleMap;
@@ -66,13 +65,14 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             String detourStr = "+ " + df.format(mYelpBusiness.getDistance()) + " miles";
             tvDetourTime.setText(detourStr);
             if (mCategory.equals("gas")) {
-                Glide.with(mContext).load(R.drawable.ic_placeholder_gas).placeholder(R.drawable.ic_placeholder_gas).override(50, 50).into(ivCategory);
+                ivCategory.setImageResource(R.drawable.ic_placeholder_gas);
             } else if (mCategory.equals("coffee")) {
-                Glide.with(mContext).load(R.drawable.ic_coffee_placeholder).placeholder(R.drawable.ic_coffee_placeholder).override(50, 50).into(ivCategory);
+                ivCategory.setImageResource(R.drawable.ic_coffee_placeholder);
+            } else if (mCategory.equals("restaurant")){
+                ivCategory.setImageResource(getImageForCateory(mYelpBusiness));
             } else {
-                Glide.with(mContext).load(getImageForCateory(mYelpBusiness)).placeholder(R.drawable.ic_food_placeholder).override(50, 50).into(ivCategory);
+                ivCategory.setImageResource(R.drawable.ic_default_place);
             }
-
         }
         return view;
     }

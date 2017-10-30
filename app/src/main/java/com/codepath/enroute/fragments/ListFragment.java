@@ -1,10 +1,13 @@
 package com.codepath.enroute.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -33,6 +36,7 @@ import java.util.Arrays;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static android.R.attr.fragment;
+import static com.codepath.enroute.R.id.ivProfileImage;
 
 
 public class ListFragment extends PointsOfInterestFragment {
@@ -42,17 +46,32 @@ public class ListFragment extends PointsOfInterestFragment {
     private FragmentListBinding mBinding;
     ArrayList<YelpBusiness> yelpBusinessArrayListist;
     FragmentManager fragmentManager;
-    ArrayList<String> categories = new ArrayList<>(Arrays.asList("asian", "italian", "american", "veg", "chinese", "seafood", "sandwich", "breakfast"));
+    ArrayList<String> categories = new ArrayList<>(Arrays.asList("asian", "italian", "american", "veg", "chinese", "seafood", "sandwich", "breakfast", "mexican"));
     RecyclerView rvCategory;
     CategoryAdapter categoryAdapter;
+    OnSearchDoneListener listener;
 
     public ListFragment() {
         // Required empty public constructor
+    }
+    public interface OnSearchDoneListener {
+        public void notifyActivity(ArrayList<YelpBusiness> list);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnSearchDoneListener) context;
+    }
+
+    public void setBusinessList(ArrayList<YelpBusiness> list) {
+        yelpBusinessList = list;
     }
 
     @Override
     public void postYelpSearch() {
        restaurantAdapter.notifyDataSetChanged();
+        listener.notifyActivity(yelpBusinessList);
 /*        ItemClickSupport.addTo(rvRestaurants).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -63,6 +82,10 @@ public class ListFragment extends PointsOfInterestFragment {
                 startActivity(i);
             }
         });*/
+    }
+
+    public void updateList() {
+        restaurantAdapter.notifyDataSetChanged();
     }
 
     public static ListFragment newInstance(ArrayList<YelpBusiness> list) {
@@ -126,7 +149,7 @@ public class ListFragment extends PointsOfInterestFragment {
         RecyclerView.ItemDecoration itemDecoration2 = new
                 DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
         RecyclerView.ItemDecoration itemDecoration3 = new
-                DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
+                DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rvCategory.addItemDecoration(itemDecoration2);
         rvCategory.addItemDecoration(itemDecoration3);
         rvCategory.setItemAnimator(new SlideInUpAnimator());
@@ -157,7 +180,11 @@ public class ListFragment extends PointsOfInterestFragment {
                 YelpBusiness yelpBusiness = yelpBusinessList.get(position);
                 Intent i = new Intent(getContext(), DetailActivity.class);
                 i.putExtra("YELP_BUSINESS", Parcels.wrap(yelpBusiness));
-                startActivity(i);
+                Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivProfileImage), "profile");
+                Pair<View, String> p2 = Pair.create(v.findViewById(R.id.ratingBar), "rBar");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(getActivity(), p1, p2);
+                startActivity(i, options.toBundle());
             }
         });
 
