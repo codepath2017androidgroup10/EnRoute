@@ -17,8 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.AutoCompleteTextView;
+
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
 import com.codepath.enroute.connection.GoogleClient;
@@ -44,9 +43,6 @@ import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
-
-import static android.R.id.input;
-import static java.security.AccessController.getContext;
 
 @RuntimePermissions
 public class SearchActivity extends AppCompatActivity {

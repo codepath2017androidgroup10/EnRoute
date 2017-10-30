@@ -198,13 +198,13 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     @Override
     public void onResume() {
-        super.onResume();
-        mapView.onResume();
         if (mCurrentLocation != null) {
             mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             onLocationChanged(mCurrentLocation);
             PlacesMapFragmentPermissionsDispatcher.startLocationUpdatesWithCheck(this);
         }
+        mapView.onResume();
+        super.onResume();
     }
 
     @Override
@@ -221,8 +221,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     @Override
     public void onLowMemory() {
-        super.onLowMemory();
         mapView.onLowMemory();
+        super.onLowMemory();
     }
 
     @Override
@@ -299,43 +299,43 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         BitmapDescriptor marker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
 
-/*        if(!mPointsOfInterest.isEmpty()) {
-            for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
-
-                if (zoom < 12) {
-                    if (searchTerm.equals("gas")) {
-                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
-                        aMarker.setTag(poi.getValue());
-                    } else if (searchTerm.equals("coffee")) {
-                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
-                        aMarker.setTag(poi.getValue());
-                    } else {
-                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
-                        aMarker.setTag(poi.getValue());
-                    }
-//                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
-//                    aMarker.setTag(poi.getValue());
-                } else if (zoom >= 12) {
-                    if (searchTerm.equals("gas")) {
-                        Marker aMarker = MapUtil.addGasMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
-                        aMarker.setTag(poi.getValue());
-                    } else if (searchTerm.equals("coffee")) {
-                        Marker aMarker = MapUtil.addCoffeeMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
-                        aMarker.setTag(poi.getValue());
-                    } else {
-                        Marker aMarker = MapUtil.addRestaurantMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
-                        aMarker.setTag(poi.getValue());
-                    }
-                }
-//                else if (zoom >= 10 && zoom < 13){
-//                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker2);
-//                    aMarker.setTag(poi.getValue());
-//                } else if (zoom >= 13){
-//                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
-//                    aMarker.setTag(poi.getValue());
+//       if(!mPointsOfInterest.isEmpty()) {
+//            for (Map.Entry<LatLng, YelpBusiness> poi : mPointsOfInterest.entrySet()) {
+//
+//                if (zoom < 12) {
+//                    if (searchTerm.equals("gas")) {
+//                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
+//                        aMarker.setTag(poi.getValue());
+//                    } else if (searchTerm.equals("coffee")) {
+//                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
+//                        aMarker.setTag(poi.getValue());
+//                    } else {
+//                        Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
+//                        aMarker.setTag(poi.getValue());
+//                    }
+////                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
+////                    aMarker.setTag(poi.getValue());
+//                } else if (zoom >= 12) {
+//                    if (searchTerm.equals("gas")) {
+//                        Marker aMarker = MapUtil.addGasMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
+//                        aMarker.setTag(poi.getValue());
+//                    } else if (searchTerm.equals("coffee")) {
+//                        Marker aMarker = MapUtil.addCoffeeMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
+//                        aMarker.setTag(poi.getValue());
+//                    } else {
+//                        Marker aMarker = MapUtil.addRestaurantMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), getContext());
+//                        aMarker.setTag(poi.getValue());
+//                    }
 //                }
-            }
-        }*/
+////                else if (zoom >= 10 && zoom < 13){
+////                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker2);
+////                    aMarker.setTag(poi.getValue());
+////                } else if (zoom >= 13){
+////                    Marker aMarker = MapUtil.addMarker(map, poi.getKey(), poi.getValue().getName(), poi.getValue().getDescription(), marker);
+////                    aMarker.setTag(poi.getValue());
+////                }
+//            }
+//        }
 
 
 
@@ -404,7 +404,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                 BitmapDescriptorFactory.fromBitmap(resizeMapIcons("flag",120,120));
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         Marker fromMarker = addMarker(map, directionPoints.get(0), "From", "", defaultMarker);
-        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", destinationMarker);
+        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", defaultMarker);
     }
 
     public Bitmap resizeMapIcons(String iconName,int width, int height){
