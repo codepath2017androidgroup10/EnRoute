@@ -1,34 +1,58 @@
 package com.codepath.enroute.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
+
 import com.codepath.enroute.Manifest;
 import com.codepath.enroute.R;
+import com.codepath.enroute.adapters.PlaceAutocompleteAdapter;
 import com.codepath.enroute.connection.GoogleClient;
 import com.codepath.enroute.connection.YelpClient;
 import com.codepath.enroute.databinding.ActivitySearchBinding;
 import com.codepath.enroute.fragments.SettingFragment;
 import com.codepath.enroute.models.Direction;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -46,18 +70,20 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 import static android.R.id.input;
+import static com.codepath.enroute.R.id.autocomplte_to_place;
 import static java.security.AccessController.getContext;
 
 @RuntimePermissions
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
+    public static final String TAG = "SearchActivity";
     public static final String KEY_DIRECTIONS = "Directions";
     public static final String KEY_RESPONSE_JSON = "JSON_RESPONSE";
     private ActivitySearchBinding mBinding;
     private String fromLocation = "";
     private String toLocation = "";
-    private AutoCompleteTextView etToLocation;
-    private AutoCompleteTextView etFromLocation;
+    //private AutoCompleteTextView etToLocation;
+    //private AutoCompleteTextView etFromLocation;
 
     static final String KEY_FROM_LAT = "FROM_LAT";
     static final String KEY_TO_LAT = "TO_LAT";
@@ -71,18 +97,76 @@ public class SearchActivity extends AppCompatActivity {
     SharedPreferences settingPreference;
     private Set<String> toHistory;
     private Set<String> fromHistory;
+ //   SupportPlaceAutocompleteFragment autocompleteFragment;
+
+    protected GoogleApiClient mGoogleApiClient;
+
+    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+            new LatLng(37.4077692, -122.136638), new LatLng(37.4077692, -122.136638));
+
+
+    private PlaceAutocompleteAdapter mFromAdapter;
+    private PlaceAutocompleteAdapter mToAdapter;
+    private AutoCompleteTextView mAutocompleteViewFrom;
+    private AutoCompleteTextView mAutocompleteViewTo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Construct a GoogleApiClient for the {@link Places#GEO_DATA_API} using AutoManage
+        // functionality, which automatically sets up the API client to handle Activity lifecycle
+        // events. If your activity does not extend FragmentActivity, make sure to call connect()
+        // and disconnect() explicitly.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, 0 /* clientId */, this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+
+
+
         Fabric.with(this, new Crashlytics());
         YelpClient.getInstance();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(R.layout.activity_search);
-        etToLocation = findViewById(R.id.etTo);
-        etFromLocation = findViewById(R.id.etFrom);
+        //etToLocation = findViewById(R.id.etTo);
+        //etFromLocation = findViewById(R.id.etFrom);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         setUpViews();
+
+//        autocompleteFragment = new SupportPlaceAutocompleteFragment();
+//        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+//
+//        fm.beginTransaction().replace(R.id.autoComplete,autocompleteFragment).commit();
+//
+//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//
+//            }
+//        });
+
+        mAutocompleteViewFrom = (AutoCompleteTextView)
+                findViewById(R.id.autocomplte_from_place);
+        mAutocompleteViewTo = (AutoCompleteTextView)
+                findViewById(R.id.autocomplte_to_place);
+
+        // Register a listener that receives callbacks when a suggestion has been selected
+        mAutocompleteViewFrom.setOnItemClickListener(mAutocompleteClickListener);
+        mAutocompleteViewTo.setOnItemClickListener(mAutocompleteClickListener);
+
+        mFromAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
+                null);
+        mAutocompleteViewFrom.setAdapter(mFromAdapter);
+
+        mToAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
+                null);
+        mAutocompleteViewTo.setAdapter(mToAdapter);
     }
 
     private void setUpViews() {
@@ -92,53 +176,53 @@ public class SearchActivity extends AppCompatActivity {
         fromHistory = settingPreference.getStringSet("fromHistory", new HashSet());
         fromSetAutoCompleteSource();
         toSetAutoCompleteSource();
-        etFromLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                etFromLocation.setError(null);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.toString().isEmpty()) {
-                    etFromLocation.setError("Please enter location");
-                }
-            }
-        });
-        etToLocation.requestFocus();
-        etToLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                etToLocation.setError(null);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.toString().isEmpty()) {
-                    etToLocation.setError("Please enter location");
-                }
-            }
-        });
-        etToLocation.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(SearchActivity.this);
-                    return true;
-                }
-                return false;
-            }
-        });
+//        etFromLocation.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                etFromLocation.setError(null);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                if (editable.toString().isEmpty()) {
+//                    etFromLocation.setError("Please enter location");
+//                }
+//            }
+//        });
+//        etToLocation.requestFocus();
+//        etToLocation.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                etToLocation.setError(null);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                if (editable.toString().isEmpty()) {
+//                    etToLocation.setError("Please enter location");
+//                }
+//            }
+//        });
+//        etToLocation.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+//                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+//                    SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(SearchActivity.this);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
 
 
@@ -152,19 +236,21 @@ public class SearchActivity extends AppCompatActivity {
     private void fromSetAutoCompleteSource() {
 //        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.etInput);
         ArrayAdapter<String> fromAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, fromHistory.toArray(new String[fromHistory.size()]));
-        etFromLocation.setAdapter(fromAdapter);
+        //etFromLocation.setAdapter(fromAdapter);
     }
 
     private void toSetAutoCompleteSource() {
 //        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.etInput);
         ArrayAdapter<String> toAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, toHistory.toArray(new String[toHistory.size()]));
-        etToLocation.setAdapter(toAdapter);
+        //etToLocation.setAdapter(toAdapter);
     }
 
 
     public void onButtonSearch(View view) {
-        fromLocation = etFromLocation.getEditableText().toString();
-        toLocation = etToLocation.getEditableText().toString();
+//        fromLocation = etFromLocation.getEditableText().toString();
+//        toLocation = etToLocation.getEditableText().toString();
+        fromLocation = mAutocompleteViewFrom.getEditableText().toString();
+        toLocation = mAutocompleteViewTo.getEditableText().toString();
         SearchActivityPermissionsDispatcher.getCurrentLocationOfUserWithCheck(this);
     }
 
@@ -182,7 +268,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void getCurrentLocationOfUser() {
-        if(fromLocation.equals("Current Location")) {
+        if(!fromLocation.equals("Current Location")) {
             // Get location from FusedLocationClient.
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -284,14 +370,19 @@ public class SearchActivity extends AppCompatActivity {
 
     private void setError(String error) {
         if (error.equals("both")) {
-            etToLocation.setError("Invalid address");
-            etFromLocation.setError("Invalid address");
+//            etToLocation.setError("Invalid address");
+//            etFromLocation.setError("Invalid address");
+            mAutocompleteViewFrom.setError("Invalid address");
+            mAutocompleteViewTo.setError("Invalid address");
         } else if (error.equals("from")) {
-            etFromLocation.setError("Invalid address");
+            //etFromLocation.setError("Invalid address");
+            mAutocompleteViewFrom.setError("Invalid address");
         } else if (error.equals("to")) {
-            etToLocation.setError("Invalid address");
+            //etToLocation.setError("Invalid address");
+            mAutocompleteViewTo.setError("Invalid address");
         } else {
-            etToLocation.setError(error);
+            //etToLocation.setError(error);
+            mAutocompleteViewTo.setError("Invalid address");
         }
 
     }
@@ -322,4 +413,106 @@ public class SearchActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //autocompleteFragment.onActivityResult(requestCode,resultCode,data);
+    }
+
+    /**
+     * Called when the Activity could not connect to Google Play services and the auto manager
+     * could resolve the error automatically.
+     * In this case the API is not available and notify the user.
+     *
+     * @param connectionResult can be inspected to determine the cause of the failure
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+        Log.e("SEARCH ACTIVITY", "onConnectionFailed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+
+        // TODO(Developer): Check error code and notify the user of error state and resolution.
+        Toast.makeText(this,
+                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Listener that handles selections from suggestions from the AutoCompleteTextView that
+     * displays Place suggestions.
+     * Gets the place id of the selected item and issues a request to the Places Geo Data API
+     * to retrieve more details about the place.
+     *
+     * @see com.google.android.gms.location.places.GeoDataApi#getPlaceById(com.google.android.gms.common.api.GoogleApiClient,
+     * String...)
+     */
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            /*
+             Retrieve the place ID of the selected item from the Adapter.
+             The adapter stores each Place suggestion in a AutocompletePrediction from which we
+             read the place ID and title.
+              */
+            final AutocompletePrediction item = mFromAdapter.getItem(position);
+            final String placeId = item.getPlaceId();
+            final CharSequence primaryText = item.getPrimaryText(null);
+
+            Log.i(TAG, "Autocomplete item selected: " + primaryText);
+
+            /*
+             Issue a request to the Places Geo Data API to retrieve a Place object with additional
+             details about the place.
+              */
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
+                    Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
+        }
+    };
+
+    /**
+     * Callback for results from a Places Geo Data API query that shows the first place result in
+     * the details view on screen.
+     */
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                // Request did not complete successfully
+                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final Place place = places.get(0);
+
+//            // Format details of the place for display and show it in a TextView.
+//            mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
+//                    place.getId(), place.getAddress(), place.getPhoneNumber(),
+//                    place.getWebsiteUri()));
+
+            // Display the third party attributions if set.
+//            final CharSequence thirdPartyAttribution = places.getAttributions();
+//            if (thirdPartyAttribution == null) {
+//                mPlaceDetailsAttribution.setVisibility(View.GONE);
+//            } else {
+//                mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
+//                mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
+//            }
+
+            Log.i(TAG, "Place details received: " + place.getName());
+
+            places.release();
+        }
+    };
+
 }
