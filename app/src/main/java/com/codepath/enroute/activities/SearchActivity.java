@@ -164,20 +164,22 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         mAutocompleteViewFrom.setOnItemClickListener(mAutocompleteClickListener);
         mAutocompleteViewTo.setOnItemClickListener(mAutocompleteClickListener);
 
-        mAutocompleteViewFrom.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
 
-                    if (mAutocompleteViewFrom.getText().length()==0){
-                        mAutocompleteViewFrom.setAdapter(null);
-                        mAutocompleteViewFrom.setAdapter(fromAdapter);
-                    }
-
-                    ((AutoCompleteTextView)v).showDropDown();
-                }
-            }
-        });
+        //Turn off history from from view.
+//        mAutocompleteViewFrom.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus){
+//
+//                    if (mAutocompleteViewFrom.getText().length()==0){
+//                        mAutocompleteViewFrom.setAdapter(null);
+//                        mAutocompleteViewFrom.setAdapter(fromAdapter);
+//                    }
+//
+//                    ((AutoCompleteTextView)v).showDropDown();
+//                }
+//            }
+//        });
 
         mAutocompleteViewTo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -207,13 +209,17 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
                     return;
                 }
                 if (s.length()>3)  {
-                    if (!mAutocompleteViewFrom.getAdapter().equals(mFromAdapter)) {
+
+                    if (mAutocompleteViewFrom.getAdapter()==null || !mAutocompleteViewFrom.getAdapter().equals(mFromAdapter)) {
                         mAutocompleteViewFrom.setAdapter(mFromAdapter);
                     }
 
-                }else if (s.length()==0){
-                    mAutocompleteViewFrom.setAdapter(fromAdapter);
                 }
+
+                //turn off from view.
+//                else if (s.length()==0){
+//                    mAutocompleteViewFrom.setAdapter(fromAdapter);
+//                }
             }
 
             @Override
@@ -223,9 +229,11 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s==null || s.length()==0){
-                    mAutocompleteViewFrom.setAdapter(fromAdapter);
-                }
+
+                //turn off history from from view.
+//                if (s==null || s.length()==0){
+//                    mAutocompleteViewFrom.setAdapter(fromAdapter);
+//                }
             }
         });
 
@@ -264,6 +272,8 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
                 }
             }
         });
+
+
     }
 
     private void setUpViews() {
@@ -335,7 +345,9 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
     private void fromSetAutoCompleteSource() {
         fromAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, fromHistory.toArray(new String[fromHistory.size()]));
         //etFromLocation.setAdapter(fromAdapter);
-        mAutocompleteViewFrom.setAdapter(fromAdapter);
+
+        //Turn off history for from view.
+        //mAutocompleteViewFrom.setAdapter(fromAdapter);
     }
 
     private void toSetAutoCompleteSource() {
@@ -625,4 +637,16 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         }
     };
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
 }
