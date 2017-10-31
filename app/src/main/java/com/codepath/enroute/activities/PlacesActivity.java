@@ -84,6 +84,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         settingPreference = getSharedPreferences(String.valueOf(R.string.setting_preference), MODE_PRIVATE);
+
         searchHistory = settingPreference.getStringSet("searchHistory", new HashSet());
         setAutoCompleteSource();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

@@ -53,6 +53,7 @@ public abstract class PointsOfInterestFragment extends Fragment {
     public void getYelpBusinesses() {
         //TESTME Jim
         settingPreference = getContext().getSharedPreferences(String.valueOf(R.string.setting_preference), MODE_PRIVATE);
+
         int range = settingPreference.getInt("range", 1);
         final int rating = settingPreference.getInt("rating", 1);
         List<LatLng> googlePoints = null;

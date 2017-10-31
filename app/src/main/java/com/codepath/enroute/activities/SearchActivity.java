@@ -251,7 +251,9 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
     private void setUpViews() {
         // TODO: Change it to get text from binding
+
         settingPreference = getSharedPreferences(String.valueOf(R.string.setting_preference), MODE_PRIVATE);
+        //settingPreference = getPreferences( MODE_PRIVATE);
         toHistory = settingPreference.getStringSet("toHistory", new HashSet());
         fromHistory = settingPreference.getStringSet("fromHistory", new HashSet());
         fromSetAutoCompleteSource();
@@ -336,13 +338,19 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
     private void toSavePrefs() {
 
-        settingPreference.edit().putStringSet("toHistory", toHistory).commit();
+        SharedPreferences.Editor editor = settingPreference.edit();
+
+        editor.putStringSet("toHistory", toHistory);
+        editor.apply();
+        //editor.commit();
 
     }
 
     private void fromSavePrefs() {
-
-        settingPreference.edit().putStringSet("fromHistory", fromHistory).commit();
+        SharedPreferences.Editor editor = settingPreference.edit();
+        editor.putStringSet("fromHistory", fromHistory);
+        editor.apply();
+        //editor.commit();
 
     }
 
@@ -542,7 +550,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
             if (parent.getAdapter() instanceof PlaceAutocompleteAdapter) {
 
-            final AutocompletePrediction item = mFromAdapter.getItem(position);
+            final AutocompletePrediction item = (AutocompletePrediction)parent.getAdapter().getItem(position);
                 final String placeId = item.getPlaceId();
                 final CharSequence primaryText = item.getPrimaryText(null);
 
