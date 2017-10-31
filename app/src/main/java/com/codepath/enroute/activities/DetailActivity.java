@@ -116,6 +116,34 @@ public class DetailActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_detail);
         yelpBusiness = (YelpBusiness) Parcels.unwrap(getIntent().getParcelableExtra("YELP_BUSINESS"));
 
+        YelpClient client = YelpClient.getInstance();
+        client.getBusiness(yelpBusiness.getId(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+
+                    ArrayList<String> listdata = new ArrayList<String>();
+                    JSONArray jArray = response.getJSONArray("photos");
+                    if (jArray != null) {
+                        for (int i=0;i<jArray.length();i++){
+                            listdata.add(jArray.getString(i));
+                            mYelpReviews.add(0,new YelpReview(yelpBusiness.getId(),jArray.getString(i)));
+                            mYelpReviewAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    yelpBusiness.setPhotosList(listdata);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
         String yelpBusinessID = yelpBusiness.getId();
