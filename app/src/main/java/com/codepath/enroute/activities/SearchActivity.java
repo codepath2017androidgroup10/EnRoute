@@ -195,16 +195,20 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         mFromAdapter = new PlaceAutocompleteAdapter(SearchActivity.this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
 
+
         mAutocompleteViewFrom.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("DEBUGME",s+":"+start+":"+count+":"+after);
-                if (s.length()>1) {
+                //Log.d("DEBUGME",s+":"+start+":"+count+":"+after);
+                if (count>1) {
+                    return;
+                }
+                if (s.length()>3)  {
                     if (!mAutocompleteViewFrom.getAdapter().equals(mFromAdapter)) {
                         mAutocompleteViewFrom.setAdapter(mFromAdapter);
                     }
 
-                }else{
+                }else if (s.length()==0){
                     mAutocompleteViewFrom.setAdapter(fromAdapter);
                 }
             }
@@ -216,7 +220,9 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s==null || s.length()==0){
+                    mAutocompleteViewFrom.setAdapter(fromAdapter);
+                }
             }
         });
 
@@ -230,11 +236,14 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
         mAutocompleteViewTo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.length()>1) {
+                if (count>1) {
+                    return;
+                }
+                if (s.length()>3) {
                     if (!mAutocompleteViewTo.getAdapter().equals(mToAdapter)) {
                         mAutocompleteViewTo.setAdapter(mToAdapter);
-                    }else{
-                        mAutocompleteViewFrom.setAdapter(toAdapter);
+                    }else if (s.length()==0){
+                        mAutocompleteViewTo.setAdapter(toAdapter);
                     }
 
                 }
@@ -247,7 +256,9 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s==null || s.length()==0){
+                    mAutocompleteViewTo.setAdapter(toAdapter);
+                }
             }
         });
     }
