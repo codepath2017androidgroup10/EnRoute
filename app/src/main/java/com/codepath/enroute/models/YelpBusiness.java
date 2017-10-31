@@ -35,6 +35,7 @@ public class YelpBusiness {
     String description;
     String categories;
     List<String> categoriesList = new ArrayList<>();
+    List<String> photosList = new ArrayList<>();
 
     //Mark: Do we really need distance here?
     public YelpBusiness() {
@@ -58,8 +59,14 @@ public class YelpBusiness {
         return categoriesList;
     }
 
+    public List<String> getPhotosList() { return photosList;}
+
     public void setCategoriesList(List<String> categoriesList) {
         this.categoriesList = categoriesList;
+    }
+
+    public void setPhotosList(List<String> photosList){
+        this.photosList=photosList;
     }
 
     public double getDistance() {
@@ -210,6 +217,17 @@ public class YelpBusiness {
                 aYelpBusiness.categories += ", ";
             }
         }
+
+        if (jsonObject.has("photos")) {
+            JSONArray jsonPhotoArray = jsonObject.getJSONArray("photos");
+
+            for (int i = 0; i < jsonPhotoArray.length(); i++) {
+
+                aYelpBusiness.photosList.add(jsonPhotoArray.getString(i));
+
+            }
+        }
+
         aYelpBusiness.setDescription(aYelpBusiness.getCategories());
         aYelpBusiness.latLng = new LatLng(jsonObject.getJSONObject("coordinates").getDouble("latitude"),jsonObject.getJSONObject("coordinates").getDouble("longitude"));
         return aYelpBusiness;
