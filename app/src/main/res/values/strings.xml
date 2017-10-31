@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">EnRoute</string>
+    <string name="app_name">En Route</string>
     <string name="strHintFrom">From</string>
     <string name="strHintTo">To</string>
-    <string name="strSearch">En Route</string>
+    <string name="strSearch">Search en route</string>
     <string name="google_maps_api_key">AIzaSyAfa5N3xhcHHr60leENZSv-xP996hQiZf0</string>
     <string name="setting_preference">settingPreference</string>
     <string name="originDefaultValue">Current Location</string>

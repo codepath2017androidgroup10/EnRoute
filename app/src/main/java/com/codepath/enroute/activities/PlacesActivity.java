@@ -141,7 +141,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
             ft.replace(R.id.placeHolder, placesListFragment);
         //ft.add(placesListFragment, "list_fragment");
-            ft.addToBackStack(null);
+//            ft.addToBackStack(null);
             ft.commit();
 //            placesListFragment.setBusinessList(yelpBusinessArrayList);
 //            placesListFragment.updateList();

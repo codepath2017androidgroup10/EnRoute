@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+
 import android.widget.Toast;
 
 import com.codepath.enroute.Manifest;
@@ -63,9 +64,11 @@ import io.fabric.sdk.android.Fabric;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+
 import static android.R.id.input;
 import static com.codepath.enroute.R.id.autocomplte_to_place;
 import static java.security.AccessController.getContext;
+
 
 @RuntimePermissions
 public class SearchActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{

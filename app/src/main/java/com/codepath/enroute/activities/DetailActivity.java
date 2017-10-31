@@ -203,7 +203,7 @@ public class DetailActivity extends AppCompatActivity {
         tvName = mBinding.tvName;
         tvAddress = mBinding.tvAddress;
         tvOpen = mBinding.tvOpen;
-        ivDirection = mBinding.ivDirection;
+//        ivDirection = mBinding.ivDirection;
 
         //ivWriteReview = mBinding.ivWriteReview;
         tvCategory = mBinding.tvCategory;
@@ -250,10 +250,10 @@ public class DetailActivity extends AppCompatActivity {
             tvOpen.setTextColor(Color.RED);
         } else {
             tvOpen.setText("open");
-            tvOpen.setTextColor(Color.GREEN);
+            tvOpen.setTextColor(Color.parseColor("#8BC34A"));
         }
-        tvDistance.setText(new DecimalFormat("##.#").format(yelpBusiness.getDistance()) + " mi");
-        tvReviewCount.setText(String.valueOf(yelpBusiness.getReview_count()) + " reviews");
+        tvDistance.setText(new DecimalFormat("##.#").format(yelpBusiness.getDistance()) + " mi Away From Route");
+        tvReviewCount.setText(String.valueOf(yelpBusiness.getReview_count()) + " Reviews");
         tvCategory.setText(yelpBusiness.getCategories());
         tvAddress.setText(yelpBusiness.getDisplay_address());
         ratingBar.setRating((float) yelpBusiness.getRating());
