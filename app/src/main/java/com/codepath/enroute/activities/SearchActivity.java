@@ -172,7 +172,6 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
                     if (mAutocompleteViewFrom.getText().length()==0){
                         mAutocompleteViewFrom.setAdapter(null);
                         mAutocompleteViewFrom.setAdapter(fromAdapter);
-
                     }
 
                     ((AutoCompleteTextView)v).showDropDown();
@@ -374,7 +373,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void getCurrentLocationOfUser() {
-        if(!fromLocation.equals("Current Location")) {
+        if(fromLocation.equals("Current Location")) {
             // Get location from FusedLocationClient.
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
