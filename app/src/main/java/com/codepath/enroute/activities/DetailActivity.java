@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,10 +52,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
@@ -286,13 +282,14 @@ public class DetailActivity extends AppCompatActivity {
         tvAddress.setText(yelpBusiness.getDisplay_address());
         ratingBar.setRating((float) yelpBusiness.getRating());
         tvPhone.setText(yelpBusiness.getPhone_number());
-
-        Picasso.with(this)
-                .load(yelpBusiness.getImage_url())
-                .placeholder(R.mipmap.ic_launcher)
-                .transform(new RoundedCornersTransformation(10, 10))
-                .fit()
-                .into(ivProfileImage);
+        if (yelpBusiness.getImage_url() != null || yelpBusiness.getImage_url().isEmpty()) {
+            Picasso.with(this)
+                    .load(yelpBusiness.getImage_url())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .transform(new RoundedCornersTransformation(10, 10))
+                    .fit()
+                    .into(ivProfileImage);
+        }
     }
 
     public void onUploadFromGalleryClick(View view) {

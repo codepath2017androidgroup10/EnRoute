@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -63,12 +64,15 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     private static final String KEY_LOCATION = "location";
     private static final String KEY_POINTS_OF_INTEREST = "poi";
+    private static final String KEY_ZOOM_LEVEL = "zoom_level" ;
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
     LatLng mCurrentLatLng;
     final float[] zoomLevel = new float[1];
+    float zoomLevelToSave = 15;
+
 //    private List<YelpBusiness> mList;
 
     private List<LatLng> directionPoints;
@@ -107,8 +111,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         return placesMapFragment;
     }
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +126,33 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         }else{
             mPointsOfInterest = new HashMap<>();
         }
+        if (savedInstanceState != null) {
+            zoomLevelToSave = savedInstanceState.getFloat(KEY_ZOOM_LEVEL);
+            Log.d("PMF onCreate", "zoomLevel " + zoomLevelToSave);
+        }
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            zoomLevelToSave = savedInstanceState.getFloat(KEY_ZOOM_LEVEL);
+            Log.d("PMF onActivityCreated", "zoomLevel " + zoomLevelToSave);
+        }
+        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
+            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
+            // is not null.
+            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCurrentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            Log.d("PMF onActivityCreated", "cur latlng  " + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
+        }
 
+        if(savedInstanceState!= null && savedInstanceState.keySet().contains(KEY_POINTS_OF_INTEREST)){
+            mPointsOfInterest = savedInstanceState.getParcelable(KEY_POINTS_OF_INTEREST);
+        }else{
+            mPointsOfInterest = new HashMap<>();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,8 +172,10 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_LOCATION, mCurrentLocation);
+        outState.putFloat(KEY_ZOOM_LEVEL, zoomLevelToSave);
         super.onSaveInstanceState(outState);
     }
+
 
     private View setUpViews(View v, Bundle savedInstanceState) {
         mapView = (MapView) v.findViewById(R.id.mapview);
@@ -225,6 +253,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         super.onLowMemory();
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -294,6 +323,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     }
 
     private void placeMarkersWithZoomLevel(float zoom) {
+
         map.clear();
         drawDirections(mCurrentLocation);
         BitmapDescriptor marker =
@@ -347,7 +377,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                     if (searchTerm.equals("gas")) {
                         Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
                         aMarker.setTag(yB);
-                    } else if (searchTerm.equals("coffee") || searchTerm.equals("restaurant") ) {
+                    } else if (searchTerm.equals("coffee") || searchTerm.equals("restaurant")  ) {
                         Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
                         aMarker.setTag(yB);
                     } else {
@@ -358,10 +388,10 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                     if (searchTerm.equals("gas")) {
                         Marker aMarker = MapUtil.addGasMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
                         aMarker.setTag(yB);
-                    } else if (searchTerm.equals("coffee")) {
+                    } else if (searchTerm.equals("coffee") || (searchTerm.equals("tea"))) {
                         Marker aMarker = MapUtil.addCoffeeMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
                         aMarker.setTag(yB);
-                    } else if (searchTerm.equals("restaurant")){
+                    } else if (searchTerm.equals("restaurant") || yB.isCategoryKnown(searchTerm)){
                         Marker aMarker = MapUtil.addRestaurantMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
                         aMarker.setTag(yB);
                     } else {
@@ -420,7 +450,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                 directionPoints.get(directionPoints.size()-1).latitude,
                 directionPoints.get(directionPoints.size()-1).longitude);
 
-        int zoomLevel = 15;
+        float zoomLevel = zoomLevelToSave;
 
         //ZoomLevel
         //1 world

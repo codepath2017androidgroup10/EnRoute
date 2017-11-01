@@ -7,11 +7,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-
 import android.widget.Toast;
 
 import com.codepath.enroute.Manifest;
@@ -35,17 +32,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,11 +55,6 @@ import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
-
-
-import static android.R.id.input;
-import static com.codepath.enroute.R.id.autocomplte_to_place;
-import static java.security.AccessController.getContext;
 
 
 @RuntimePermissions
@@ -457,7 +444,7 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 //super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. " + errorResponse.toString());
+                Log.e("ERROR:" + this.getClass().toString(), "Invalid address. " + throwable.toString());
                 setError("both");
             }
 
@@ -593,8 +580,8 @@ public class SearchActivity extends AppCompatActivity implements GoogleApiClient
                         .getPlaceById(mGoogleApiClient, placeId);
                 placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-                Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
+//                        Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
             }
         }

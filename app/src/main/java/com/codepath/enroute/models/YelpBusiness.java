@@ -276,4 +276,8 @@ public class YelpBusiness {
         return mCategoryIconMap;
     }
 
+    public boolean isCategoryKnown(String searchTerm) {
+        Map<String, Integer> map = loadCategoryIcons();
+        return map.containsKey(searchTerm);
+    }
 }
