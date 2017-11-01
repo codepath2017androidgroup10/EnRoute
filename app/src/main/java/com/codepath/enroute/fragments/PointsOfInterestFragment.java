@@ -26,7 +26,6 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 
 import static android.content.Context.MODE_PRIVATE;
-import static java.lang.Boolean.getBoolean;
 
 /**
  * Created by vidhya on 10/17/17.
@@ -99,7 +98,9 @@ public abstract class PointsOfInterestFragment extends Fragment {
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         Log.e("at least i am here", response.toString());
                                         try {
-                                            aYelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
+                                            if (response.optJSONArray("hours") != null) {
+                                                aYelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
+                                            }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

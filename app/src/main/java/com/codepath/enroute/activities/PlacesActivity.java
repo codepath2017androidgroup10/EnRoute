@@ -63,7 +63,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         placesMapFragment = PlacesMapFragment.newInstance(bundle.getString(SearchActivity.KEY_RESPONSE_JSON), bundle.getString(SearchActivity.KEY_DIRECTIONS));
 //        placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeHolder, placesMapFragment);
+        ft.replace(R.id.placeHolder, placesMapFragment, "mapFragment");
         ft.commit();
         isMapFragment = true;
     }
@@ -139,9 +139,9 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             placesListFragment = ListFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-            ft.replace(R.id.placeHolder, placesListFragment);
+            ft.replace(R.id.placeHolder, placesListFragment, "listFragment");
         //ft.add(placesListFragment, "list_fragment");
-//            ft.addToBackStack(null);
+          // ft.addToBackStack(null);
             ft.commit();
 //            placesListFragment.setBusinessList(yelpBusinessArrayList);
 //            placesListFragment.updateList();
@@ -152,7 +152,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
  //           placesMapFragment = PlacesMapFragment.newInstance(yelpBusinessArrayList, keyReponseJSON, keyDirection);
             ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-            ft.replace(R.id.placeHolder, placesMapFragment);
+            ft.replace(R.id.placeHolder, placesMapFragment, "mapFragment");
             ft.commit();
  //           placesMapFragment.setBusinessList(yelpBusinessArrayList);
 //            placesMapFragment.markBusinesses();
@@ -161,9 +161,22 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         }
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("PA", "onPause");
+        if (getSupportFragmentManager().findFragmentByTag("mapFragment") != null)
+            getSupportFragmentManager().findFragmentByTag("mapFragment").setRetainInstance(true);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("PA", "onResume");
+        if (getSupportFragmentManager().findFragmentByTag("mapFragment") != null)
+            getSupportFragmentManager().findFragmentByTag("mapFragment").getRetainInstance();
+
 
 //        // Display the connection status
 //
