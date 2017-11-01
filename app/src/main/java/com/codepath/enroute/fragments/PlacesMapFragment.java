@@ -68,6 +68,9 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
     LatLng mCurrentLatLng;
+
+    //TODO this is a hack to get the right zoom level.
+    private static float mZoomLevel;
     final float[] zoomLevel = new float[1];
 //    private List<YelpBusiness> mList;
 
@@ -83,6 +86,9 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     public interface OnSearchDoneListener {
        public void notifyActivity(ArrayList<YelpBusiness> list);
     }
+
+
+
 
     public void setBusinessList(ArrayList<YelpBusiness> list) {
         yelpBusinessList = list;
@@ -210,8 +216,11 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     @Override
     public void onPause() {
         mapView.onPause();
+        mZoomLevel = map.getCameraPosition().zoom;
         super.onPause();
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -415,6 +424,8 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
 
     private void zoomToLocation() {
 
+
+
         double distance = distance(directionPoints.get(0).latitude,
                 directionPoints.get(0).longitude,
                 directionPoints.get(directionPoints.size()-1).latitude,
@@ -463,7 +474,13 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         }else if (distance<10000){
             zoomLevel =1;
         }
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, zoomLevel);
+
+        CameraUpdate cameraUpdate;
+        if(mZoomLevel!=0) {
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, mZoomLevel);
+        }else{
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, zoomLevel);
+        }
         map.animateCamera(cameraUpdate);
     }
 
