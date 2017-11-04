@@ -58,7 +58,9 @@
             android:name="io.fabric.ApiKey"
             android:value="7c2bf221baef957fb848cc504a71bead10216dd4" />
 
-        <activity android:name=".activities.SearchActivity" />
+        <activity android:name=".activities.SearchActivity"
+            android:windowSoftInputMode="stateVisible"
+            />
         <activity android:name=".activities.PlacesActivity" />
 
         <uses-library
