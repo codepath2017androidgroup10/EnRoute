@@ -52,7 +52,6 @@ import java.util.List;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
-import static com.codepath.enroute.util.MapUtil.addMarker;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 /**
@@ -90,7 +89,6 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
     public interface OnSearchDoneListener {
        public void notifyActivity(ArrayList<YelpBusiness> list);
     }
-
 
 
 
@@ -435,15 +433,7 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         lineOptions = lineOptions.color(ContextCompat.getColor(mContext, R.color.colorPrimary));
 
         map.addPolyline(lineOptions);
-
-        BitmapDescriptor defaultMarker =
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-
-        BitmapDescriptor destinationMarker =
-                BitmapDescriptorFactory.fromBitmap(resizeMapIcons("flag",120,120));
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Marker fromMarker = addMarker(map, directionPoints.get(0), "From", "", defaultMarker);
-        Marker toMarker = addMarker(map, directionPoints.get(directionPoints.size() - 1), "Destination", "", defaultMarker);
     }
 
     public Bitmap resizeMapIcons(String iconName,int width, int height){

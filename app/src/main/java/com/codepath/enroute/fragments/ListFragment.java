@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.enroute.R;
-import com.codepath.enroute.activities.DetailActivity;
+import com.codepath.enroute.activities.DetailActivity2;
 import com.codepath.enroute.adapters.CategoryAdapter;
 import com.codepath.enroute.adapters.RestaurantAdapter;
 import com.codepath.enroute.databinding.FragmentListBinding;
@@ -174,7 +174,7 @@ public class ListFragment extends PointsOfInterestFragment {
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 //               Toast.makeText(getContext(), "got it", Toast.LENGTH_LONG).show();
                 YelpBusiness yelpBusiness = yelpBusinessList.get(position);
-                Intent i = new Intent(getContext(), DetailActivity.class);
+                Intent i = new Intent(getContext(), DetailActivity2.class);
                 i.putExtra("YELP_BUSINESS", Parcels.wrap(yelpBusiness));
                 Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivProfileImage), "profile");
                 Pair<View, String> p2 = Pair.create(v.findViewById(R.id.ratingBar), "rBar");
