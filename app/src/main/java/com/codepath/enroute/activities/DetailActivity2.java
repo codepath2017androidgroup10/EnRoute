@@ -93,7 +93,6 @@ public class DetailActivity2 extends AppCompatActivity {
                     float moveY = event.getRawY()-startY;
                     Log.d("HELLO", "moved "+ moveY);
 
-
                     ViewGroup.LayoutParams params = ivBusinessPhoto.getLayoutParams();
                         ViewGroup.LayoutParams paramsLayoutHeader=layoutHeader.getLayoutParams();
 
@@ -101,12 +100,9 @@ public class DetailActivity2 extends AppCompatActivity {
                         ivBusinessPhoto.setLayoutParams(params);
                         paramsLayoutHeader.height = (int)(startHeight+moveY);
 
-
                     int alpha = Math.min(Math.max((153-(int)moveY/4),0),255);
                     layoutHeader.setBackgroundColor(Color.argb(alpha,255,255,255));
                         layoutHeader.setLayoutParams(paramsLayoutHeader);
-
-
 
                     if (moveY>400) {
                         Toast.makeText(getApplicationContext(), "Swiping down", Toast.LENGTH_SHORT).show();
@@ -120,8 +116,6 @@ public class DetailActivity2 extends AppCompatActivity {
                     }
 
                 }
-
-
                 return true;
             }
         });
@@ -154,21 +148,6 @@ public class DetailActivity2 extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
-
-//        ivBusinessPhoto.setOnTouchListener(new OnSwipeTouchListener(this) {
-//            @Override
-//            public void onSwipeDown() {
-//                Toast.makeText(getApplicationContext(), "Swiping down", Toast.LENGTH_SHORT).show();
-//                PhotoViewerFragment photoViewerFragment = PhotoViewerFragment.newInstance();
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                Bundle b = new Bundle();
-//                b.putStringArrayList("photos", images);
-//                photoViewerFragment.setArguments(b);
-//                ft.replace(R.id.photo_viewer_placeholder, photoViewerFragment);
-//                ft.commit();
-//            }
-//        });
-
     }
 
 }
