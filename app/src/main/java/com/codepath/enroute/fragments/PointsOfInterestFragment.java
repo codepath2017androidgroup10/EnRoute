@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.codepath.enroute.R;
 import com.codepath.enroute.connection.YelpClient;
+import com.codepath.enroute.models.OpenHour;
 import com.codepath.enroute.models.YelpBusiness;
 import com.codepath.enroute.util.MapUtil;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -99,7 +100,13 @@ public abstract class PointsOfInterestFragment extends Fragment {
                                         Log.e("at least i am here", response.toString());
                                         try {
                                             if (response.optJSONArray("hours") != null) {
-                                                aYelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
+                                                JSONArray jsonArray = response.optJSONArray("hours");
+                                                aYelpBusiness.setOpenNow(jsonArray.getJSONObject(0).getBoolean("is_open_now"));
+                                                ArrayList<ArrayList<OpenHour>> lists = new ArrayList<>();
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    lists.add(OpenHour.fromJSONArray(jsonArray.getJSONObject(i).getJSONArray("open")));
+                                                }
+                                                aYelpBusiness.setOpenHourSummary(lists);
                                             }
                                             ArrayList<String> images = new ArrayList<String>();
                                             JSONArray jArray = response.getJSONArray("photos");
@@ -110,6 +117,8 @@ public abstract class PointsOfInterestFragment extends Fragment {
                                                     //mYelpReviewAdapter.notifyDataSetChanged();
                                                 }
                                             }
+
+
 
                                             aYelpBusiness.setPhotosList(images);
                                         } catch (JSONException e) {

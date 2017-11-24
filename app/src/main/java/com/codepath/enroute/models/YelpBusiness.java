@@ -36,6 +36,15 @@ public class YelpBusiness {
     String categories;
     List<String> categoriesList = new ArrayList<>();
     ArrayList<String> photosList = new ArrayList<>();
+    ArrayList<ArrayList<OpenHour>> openHourSummary = new ArrayList<>();
+
+    public ArrayList<ArrayList<OpenHour>> getOpenHourSummary() {
+        return openHourSummary;
+    }
+
+    public void setOpenHourSummary(ArrayList<ArrayList<OpenHour>> openHourSummary) {
+        this.openHourSummary = openHourSummary;
+    }
 
     //Mark: Do we really need distance here?
     public YelpBusiness() {
