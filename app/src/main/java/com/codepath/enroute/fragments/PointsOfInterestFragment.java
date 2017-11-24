@@ -101,6 +101,17 @@ public abstract class PointsOfInterestFragment extends Fragment {
                                             if (response.optJSONArray("hours") != null) {
                                                 aYelpBusiness.setOpenNow(response.getJSONArray("hours").getJSONObject(0).getBoolean("is_open_now"));
                                             }
+                                            ArrayList<String> images = new ArrayList<String>();
+                                            JSONArray jArray = response.getJSONArray("photos");
+                                            if (jArray != null) {
+                                                for (int i=0;i<jArray.length();i++){
+                                                    images.add(jArray.getString(i));
+                                                    //mYelpReviews.add(0,new YelpReview(yelpBusiness.getId(),jArray.getString(i)));
+                                                    //mYelpReviewAdapter.notifyDataSetChanged();
+                                                }
+                                            }
+
+                                            aYelpBusiness.setPhotosList(images);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

@@ -35,7 +35,7 @@ public class YelpBusiness {
     String description;
     String categories;
     List<String> categoriesList = new ArrayList<>();
-    List<String> photosList = new ArrayList<>();
+    ArrayList<String> photosList = new ArrayList<>();
 
     //Mark: Do we really need distance here?
     public YelpBusiness() {
@@ -59,13 +59,13 @@ public class YelpBusiness {
         return categoriesList;
     }
 
-    public List<String> getPhotosList() { return photosList;}
+    public ArrayList<String> getPhotosList() { return photosList;}
 
     public void setCategoriesList(List<String> categoriesList) {
         this.categoriesList = categoriesList;
     }
 
-    public void setPhotosList(List<String> photosList){
+    public void setPhotosList(ArrayList<String> photosList){
         this.photosList=photosList;
     }
 
