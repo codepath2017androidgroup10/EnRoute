@@ -36,6 +36,7 @@ public class YelpBusiness {
     String categories;
     List<String> categoriesList = new ArrayList<>();
     List<String> photosList = new ArrayList<>();
+    float gasPrice;
 
     //Mark: Do we really need distance here?
     public YelpBusiness() {
@@ -43,6 +44,7 @@ public class YelpBusiness {
 
     public double distance;
 
+    public float getGasPrice(){return gasPrice;}
     public String getDescription() {
         return description;
     }
@@ -124,6 +126,8 @@ public class YelpBusiness {
     public void setId(String id) {
         this.id = id;
     }
+
+    public void setGasPrice(float price){this.gasPrice=price;}
 
     public void setName(String name) {
         this.name = name;

@@ -1,8 +1,13 @@
 package com.codepath.enroute.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 
@@ -20,6 +25,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.bitmap;
+import static android.R.attr.y;
 
 /**
  * Created by vidhya on 10/13/17.
@@ -189,8 +197,9 @@ public class MapUtil {
                 .title(title)
                 .snippet(snippet)
                 .icon(icon);
+
         Marker marker = map.addMarker(options);
-        marker.setDraggable(true);
+        //marker.setDraggable(true);
         return marker;
     }
 
@@ -203,7 +212,7 @@ public class MapUtil {
                 .snippet(snippet)
                 .icon(icon);
         Marker marker = map.addMarker(options);
-        marker.setDraggable(true);
+        //marker.setDraggable(true);
         return marker;
     }
     public static Marker addRestaurantMarker(GoogleMap map, LatLng point, String title,
@@ -215,20 +224,22 @@ public class MapUtil {
                 .snippet(snippet)
                 .icon(icon);
         Marker marker = map.addMarker(options);
-        marker.setDraggable(true);
+        //marker.setDraggable(true);
         return marker;
     }
 
     public static Marker addGasMarker(GoogleMap map, LatLng point, String title,
-                                             String snippet, Context context) {
-        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_themed_marker_gas, context);
+                                             String snippet, Context context, float gasPrice) {
+        BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_themed_marker_gas, context,String.valueOf(gasPrice));
+
         MarkerOptions options = new MarkerOptions()
                 .position(point)
                 .title(title)
                 .snippet(snippet)
+                //.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
                 .icon(icon);
         Marker marker = map.addMarker(options);
-        marker.setDraggable(true);
+        //marker.setDraggable(true);
         return marker;
     }
 
@@ -241,7 +252,7 @@ public class MapUtil {
                 .snippet(snippet)
                 .icon(icon);
         Marker marker = map.addMarker(options);
-        marker.setDraggable(true);
+        //marker.setDraggable(true);
         return marker;
     }
 
@@ -256,12 +267,85 @@ public class MapUtil {
 
             Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bm);
+
             vectorDrawable.draw(canvas);
 
             return BitmapDescriptorFactory.fromBitmap(bm);
 
         } else {
             return BitmapDescriptorFactory.fromResource(id);
+        }
+    }
+
+    private static  BitmapDescriptor getBitmapDescriptor(int id, Context context,String mText) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            VectorDrawable vectorDrawable = (VectorDrawable) context.getDrawable(id);
+
+            int h = vectorDrawable.getIntrinsicHeight();
+            int w = vectorDrawable.getIntrinsicWidth();
+            float scale = context.getResources().getDisplayMetrics().density;
+            vectorDrawable.setBounds(0, h, w, 2*h);
+
+            Bitmap bm = Bitmap.createBitmap(w, 2*h, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bm);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setColor(Color.RED);
+            paint.setTextSize((int) (10 * scale));
+            paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY);
+            vectorDrawable.draw(canvas);
+
+            Rect bounds = new Rect();
+            paint.getTextBounds(mText, 0, mText.length(), bounds);
+            int x = (bm.getWidth() - bounds.width())/2;
+            int y = (bm.getHeight() - bounds.height())/2;
+
+            canvas.drawText(mText, x , y , paint);
+
+            return BitmapDescriptorFactory.fromBitmap(bm);
+
+        } else {
+            return BitmapDescriptorFactory.fromResource(id);
+        }
+    }
+
+    public static Bitmap GetBitmapMarker(Context mContext, int resourceId,  String mText)
+    {
+        try
+        {
+            Resources resources = mContext.getResources();
+            float scale = resources.getDisplayMetrics().density;
+            Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceId);
+
+            android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+
+            // set default bitmap config if none
+            if(bitmapConfig == null)
+                bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+
+            bitmap = bitmap.copy(bitmapConfig, true);
+
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setColor(Color.WHITE);
+            paint.setTextSize((int) (14 * scale));
+            paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY);
+
+            // draw text to the Canvas center
+            Rect bounds = new Rect();
+            paint.getTextBounds(mText, 0, mText.length(), bounds);
+            int x = (bitmap.getWidth() - bounds.width())/2;
+            int y = (bitmap.getHeight() + bounds.height())/2;
+
+            canvas.drawText(mText, x * scale, y * scale, paint);
+
+            return bitmap;
+
+        }
+        catch (Exception e)
+        {
+            Resources resources = mContext.getResources();
+            Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceId);
+            return bitmap;
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -44,10 +45,16 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -379,11 +386,15 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         if (yelpBusinessList != null && yelpBusinessList.size() > 0) {
             for (int i = 0; i < yelpBusinessList.size(); i++) {
                 YelpBusiness yB = yelpBusinessList.get(i);
-                if (zoom < 12) {
+                if (zoom < 11) {
 
                     if (searchTerm.equals("gas")) {
-                        Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
-                        aMarker.setTag(yB);
+                        //if (yB.getGasPrice()>0) {
+                            Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.teal_dot));
+                            aMarker.setTag(yB);
+
+
+                        //}
                     } else if (searchTerm.equals("coffee") || searchTerm.equals("restaurant")  ) {
                         Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
                         aMarker.setTag(yB);
@@ -391,10 +402,12 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
                         Marker aMarker = MapUtil.addMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), BitmapDescriptorFactory.fromResource(R.drawable.orange_dot));
                         aMarker.setTag(yB);
                     }
-                } else if (zoom >= 12) {
+                } else if (zoom >= 11) {
                     if (searchTerm.equals("gas")) {
-                        Marker aMarker = MapUtil.addGasMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
-                        aMarker.setTag(yB);
+                        //if (yB.getGasPrice()>0) {
+                            Marker aMarker = MapUtil.addGasMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext(),yB.getGasPrice());
+                            aMarker.setTag(yB);
+                        //}
                     } else if (searchTerm.equals("coffee") || (searchTerm.equals("tea"))) {
                         Marker aMarker = MapUtil.addCoffeeMarker(map, yB.getLatLng(), yB.getName(), yB.getDescription(), getContext());
                         aMarker.setTag(yB);
@@ -533,4 +546,9 @@ public class PlacesMapFragment extends PointsOfInterestFragment implements Googl
         }
         return true;
     }
+
+
+
+
+
 }

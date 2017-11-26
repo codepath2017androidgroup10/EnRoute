@@ -314,6 +314,7 @@ public class PlacesActivity extends AppCompatActivity implements PlacesMapFragme
         Log.d("DEBUG:", "Gas Menu clicked");
         PointsOfInterestFragment aFragment = (PointsOfInterestFragment)getSupportFragmentManager().findFragmentById(R.id.placeHolder);
         aFragment.setSearchTerm("gas");
+        aFragment.setSearchCategory("servicestations");
         aFragment.getYelpBusinesses();
     }
 
