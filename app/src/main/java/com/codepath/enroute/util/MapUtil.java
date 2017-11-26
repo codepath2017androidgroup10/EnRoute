@@ -279,6 +279,10 @@ public class MapUtil {
 
     private static  BitmapDescriptor getBitmapDescriptor(int id, Context context,String mText) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if (Float.valueOf(mText)<=0.1f){
+                mText="??";
+            }
             VectorDrawable vectorDrawable = (VectorDrawable) context.getDrawable(id);
 
             int h = vectorDrawable.getIntrinsicHeight();

@@ -74,6 +74,7 @@ public class DetailActivity2 extends AppCompatActivity {
 
 
         yelpBusiness = (YelpBusiness) Parcels.unwrap(getIntent().getParcelableExtra("YELP_BUSINESS"));
+        images = yelpBusiness.getPhotosList();
         tvName.setText(yelpBusiness.getName());
 
 
@@ -119,8 +120,8 @@ public class DetailActivity2 extends AppCompatActivity {
                 return true;
             }
         });
-
-        YelpClient client = YelpClient.getInstance();
+        Picasso.with(getApplicationContext()).load(images.get(0)).fit().centerCrop().placeholder(R.drawable.ic_food_placeholder).into(ivBusinessPhoto);
+/*        YelpClient client = YelpClient.getInstance();
         client.getBusiness(yelpBusiness.getId(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -147,7 +148,7 @@ public class DetailActivity2 extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
-        });
+        });*/
     }
 
 }
